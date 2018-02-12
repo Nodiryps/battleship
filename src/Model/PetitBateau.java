@@ -1,3 +1,9 @@
+package Model;
+
+
+import Model.MouvementsBateau;
+import Model.Bateau;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -14,10 +20,7 @@ public class PetitBateau extends Bateau {
         super(portee, vie, id, pos, TypeBateau.PETIT, m);
     }
     
-    
 
-    
-    
     
     
     

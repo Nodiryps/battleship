@@ -1,3 +1,5 @@
+package Model;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,7 +11,8 @@
  *
  * @author Spy
  */
-class Pos {
+public class Pos {
+
     private int posL, posC;
 
     public Pos(int posL, int posC) {

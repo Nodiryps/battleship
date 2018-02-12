@@ -1,3 +1,5 @@
+package Model;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -60,14 +62,28 @@ public class Bateau implements Movable {
         this.pos = nouvPos;
     }
     
-//    public String getType(){
-//        return type.name();
-//    }
+    public String getType(){
+        return type.name();
+    }
 //    
 //    public String getMouvmt(){
 //        return mouvmt.name();
 //    }
     
+@Override 
+public void setX(int x){
     
+}
+@Override 
+public void  setY(int y){
     
+}   
+@Override 
+public int getY(){
+    return 1;
+}   
+@Override 
+public int getX(){
+    return 1;
+}  
 }
