@@ -13,11 +13,11 @@ public class Bateau implements Movable {
     private int portee;
     private int pv;
     private int id;
-    private Position pos;
+    private Pos pos;
     private TypeBateau type;
     private MouvementsBateau mouvmt;
     
-    public Bateau(int portee, int vie, int id, Position pos, TypeBateau type, MouvementsBateau m){
+    public Bateau(int portee, int vie, int id, Pos pos, TypeBateau type, MouvementsBateau m){
         this.portee = portee;
         this.pv = vie;
         this.id = id;
@@ -52,11 +52,11 @@ public class Bateau implements Movable {
         this.id = nouvId;
     }
     
-    public Position getPos(){
+    public Pos getPos(){
         return pos;
     }
     
-    public void setPos(Position nouvPos){
+    public void setPos(Pos nouvPos){
         this.pos = nouvPos;
     }
     

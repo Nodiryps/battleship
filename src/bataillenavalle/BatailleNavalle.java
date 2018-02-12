@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package bataillenavalle;
+import Controller.GameBoard;
 
 /**
  *
@@ -15,7 +16,8 @@ public class BatailleNavalle {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        GameBoard gb = new GameBoard();
+        
     }
     
 }

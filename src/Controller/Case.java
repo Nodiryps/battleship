@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package Controller;
 
 /**
@@ -10,5 +11,5 @@ package Controller;
  * @author 0205frwarens
  */
 public class Case {
-    
+    Pos position ;
 }

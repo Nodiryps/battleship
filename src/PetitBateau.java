@@ -10,7 +10,7 @@
  */
 public class PetitBateau extends Bateau {
 
-    public PetitBateau(int portee, int vie, int id, Position pos, TypeBateau type, MouvementsBateau m) {
+    public PetitBateau(int portee, int vie, int id, Pos pos, TypeBateau type, MouvementsBateau m) {
         super(portee, vie, id, pos, TypeBateau.PETIT, m);
     }
     
