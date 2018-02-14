@@ -2,6 +2,7 @@ package Model;
 
 
 import Model.Bateau;
+import java.util.Random;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,6 +20,11 @@ public class GrandBateau extends Bateau {
         super(portee, vie, id, pos, TypeBateau.GRAND, m);
     }
     
-
+    private int random(){
+        Random generateur = new Random();
+        for(int k = 0; k < ; ++k)
+        System.out.println(generateur.nextInt(100));
+    
+    }
     
 }

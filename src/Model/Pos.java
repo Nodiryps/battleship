@@ -36,5 +36,25 @@ public class Pos {
         this.posC = posC;
     }
     
-  /*Ajouter le Hash ???? */  
+    //Pour voir si deux bateaux sont sur la meme case 
+    //ou si un bateau croise une mine
+    @Override
+    public boolean equals(Object o){
+        return(
+                o instanceof Pos &&
+                o.equals(posL) && 
+                o.equals(posC)
+              );
+    }
+
+    //pas de equals sans hashCode :)
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + this.posL;
+        hash = 97 * hash + this.posC;
+        return hash;
+    }
+  
+    
 }

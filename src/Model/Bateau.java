@@ -28,8 +28,6 @@ public class Bateau implements Movable {
         this.mouvmt = m;
     }
     
-    
-    
     public int getPortee(){
         return this.portee;
     }
@@ -70,20 +68,20 @@ public class Bateau implements Movable {
 //        return mouvmt.name();
 //    }
     
-@Override 
-public void setX(int x){
-    
-}
-@Override 
-public void  setY(int y){
-    
-}   
-@Override 
-public int getY(){
-    return 1;
-}   
-@Override 
-public int getX(){
-    return 1;
-}  
+    @Override 
+    public void setX(int x){
+        pos.setPosC(x);
+    }
+    @Override 
+    public void  setY(int y){
+        pos.setPosL(y);
+    }   
+    @Override 
+    public int getX(){
+        return pos.getPosC();
+    }   
+    @Override 
+    public int getY(){
+        return pos.getPosL();
+    }  
 }

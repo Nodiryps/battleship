@@ -17,7 +17,7 @@ import java.util.Observable;
 public class GameBoard extends Observable {
     private int LIGNES  = 5;
     private int COLONNES  = 5;
-    private boolean fagOktoSet= false;
+    private boolean flagOktoSet= false;
     private int MIN = 0;
     Case mer[][] = new Case[LIGNES][COLONNES];
     private int randLigne, randCol;
@@ -37,27 +37,27 @@ public class GameBoard extends Observable {
         /*placement des bateaux et des mines : +++++ Peut-etre optimisé */
         /*position grand bateau */
         /*Choix de la position */
-        while (fagOktoSet){
+        while (flagOktoSet){
             randLigne = MIN + (int)(Math.random() * ((LIGNES - MIN) + 0));
             randCol = MIN + (int)(Math.random() * ((COLONNES - MIN) + 0));
             if  (!mer[randLigne][randCol].isBloquee()) {
                 mer[randLigne][randCol].setBloquee(true);
                 mer[randLigne][randCol].TypeBat.setId(1);
                 mer[randLigne][randCol].Setattribute(TypeBateau.GRAND);
-                fagOktoSet = true;
+                flagOktoSet = true;
 
             }
         }
         /*Petit bateau */
         for (int a = 0; a<2; ++a){
-           while (fagOktoSet){
+           while (flagOktoSet){
             randLigne = MIN + (int)(Math.random() * ((LIGNES - MIN) + 0));
             randCol = MIN + (int)(Math.random() * ((COLONNES - MIN) + 0));
             if  (!mer[randLigne][randCol].isBloquee()) {
                 mer[randLigne][randCol].setBloquee(true);
                 mer[randLigne][randCol].TypeBat.setId(1);
                 mer[randLigne][randCol].Setattribute(TypeBateau.PETIT);
-                fagOktoSet = true;
+                flagOktoSet = true;
 
                 }
             }  
