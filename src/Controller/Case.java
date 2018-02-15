@@ -35,24 +35,25 @@ public class Case {
         this.position = position;
     }
 
-    public boolean isBloquee() {
+    public boolean getBloquee() {
         return bloquee;
     }
 
     public void setBloquee(boolean bloquee) {
         this.bloquee = bloquee;
     }
-    public void Setattribute(TypeBateau TBat){
+    
+    public void setAttribute(TypeBateau TBat){
         if (TBat.equals("GRAND")) {
-            TypeBat= new GrandBateau(0, 0, 0, position, TBat, MouvementsBateau.BAS);
+            TypeBat= new GrandBateau();
             
         }
         else if (TBat.equals("PETIT")) {
-            TypeBat= new PetitBateau(0, 0, 0, position, TBat, MouvementsBateau.BAS);
+            TypeBat= new PetitBateau();
         }
     }
     
-    public String Getattribute () {
+    public String getAttribute () {
         return TypeBat.getType();
     }
 }

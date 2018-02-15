@@ -11,22 +11,23 @@ package Model;
  *
  * @author Spy
  */
-public class Bateau implements Movable {
+public abstract class Bateau implements Movable {
     private int portee;
     private int pv;
-    private int id;
+    private static int id;
     private Pos pos;
     private TypeBateau type;
     private MouvementsBateau mouvmt;
     
-    public Bateau(int portee, int vie, int id, Pos pos, TypeBateau type, MouvementsBateau m){
-        this.portee = portee;
-        this.pv = vie;
-        this.id = id;
-        this.pos = pos;
-        this.type = type;
-        this.mouvmt = m;
+    public Bateau(){
+        
     }
+    
+    public abstract void touche();
+    
+    public abstract boolean coule();
+    
+    public abstract void randomPortee();
     
     public int getPortee(){
         return this.portee;
@@ -72,14 +73,17 @@ public class Bateau implements Movable {
     public void setX(int x){
         pos.setPosC(x);
     }
+    
     @Override 
     public void  setY(int y){
         pos.setPosL(y);
     }   
+    
     @Override 
     public int getX(){
         return pos.getPosC();
     }   
+    
     @Override 
     public int getY(){
         return pos.getPosL();

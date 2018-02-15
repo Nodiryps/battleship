@@ -8,6 +8,7 @@ package Controller;
 import Model.Pos;
 import Model.TypeBateau;
 import java.util.Observable;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 /**
@@ -19,10 +20,15 @@ public class GameBoard extends Observable {
     private int COLONNES  = 5;
     private boolean flagOktoSet= false;
     private int MIN = 0;
-    Case mer[][] = new Case[LIGNES][COLONNES];
+    Case[][] mer = new Case[LIGNES][COLONNES];
     private int randLigne, randCol;
     
     public GameBoard() {
+    }
+    
+//    pour placer les mines et bateaux aléatoirement
+    private int randomPos(){
+        return ThreadLocalRandom.current().nextInt(0,5);
     }
 
     public void CreationMer (){
@@ -33,34 +39,52 @@ public class GameBoard extends Observable {
         }
     }
 
+//    public void InitialisationOpt(TypeBateau type){
+//        while (flagOktoSet){
+//            randLigne = MIN + (int)(Math.random() * ((LIGNES - MIN) + 0));
+//            randCol = MIN + (int)(Math.random() * ((COLONNES - MIN) + 0));
+//            if  (!mer[randLigne][randCol].getBloquee()) {
+//                mer[randLigne][randCol].setBloquee(true);
+//                mer[randLigne][randCol].TypeBat.setId(1);
+//                mer[randLigne][randCol].setAttribute(type);
+//                flagOktoSet = true;
+//    }
+    
     public void Initialisation () {
-        /*placement des bateaux et des mines : +++++ Peut-etre optimisé */
-        /*position grand bateau */
-        /*Choix de la position */
+//      placement des bateaux et des mines: +++++ Peut-etre optimisé 
+//      position grand bateau 
+//      Choix de la position 
         while (flagOktoSet){
             randLigne = MIN + (int)(Math.random() * ((LIGNES - MIN) + 0));
             randCol = MIN + (int)(Math.random() * ((COLONNES - MIN) + 0));
-            if  (!mer[randLigne][randCol].isBloquee()) {
+            if  (!mer[randLigne][randCol].getBloquee()) {
                 mer[randLigne][randCol].setBloquee(true);
                 mer[randLigne][randCol].TypeBat.setId(1);
-                mer[randLigne][randCol].Setattribute(TypeBateau.GRAND);
+                mer[randLigne][randCol].setAttribute(TypeBateau.GRAND);
                 flagOktoSet = true;
 
             }
         }
-        /*Petit bateau */
+//        Petit bateau 
         for (int a = 0; a<2; ++a){
            while (flagOktoSet){
-            randLigne = MIN + (int)(Math.random() * ((LIGNES - MIN) + 0));
-            randCol = MIN + (int)(Math.random() * ((COLONNES - MIN) + 0));
-            if  (!mer[randLigne][randCol].isBloquee()) {
-                mer[randLigne][randCol].setBloquee(true);
-                mer[randLigne][randCol].TypeBat.setId(1);
-                mer[randLigne][randCol].Setattribute(TypeBateau.PETIT);
-                flagOktoSet = true;
+               randLigne = MIN + (int)(Math.random() * ((LIGNES - MIN) + 0));
+                randCol = MIN + (int)(Math.random() * ((COLONNES - MIN) + 0));
+                if  (!mer[randLigne][randCol].getBloquee()) {
+                    mer[randLigne][randCol].setBloquee(true);
+                    mer[randLigne][randCol].TypeBat.setId(1);
+                    mer[randLigne][randCol].setAttribute(TypeBateau.PETIT);
+                    flagOktoSet = true;
 
                 }
             }  
         }
+    }
+    
+    
+    public static void main(String[] args) {
+        GameBoard g = new GameBoard();
+        g.CreationMer();
+        System.out.println(g);
     }
 }

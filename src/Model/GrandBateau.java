@@ -1,8 +1,8 @@
 package Model;
 
 
-import Model.Bateau;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -16,15 +16,36 @@ import java.util.Random;
  */
 public class GrandBateau extends Bateau {
     
-    public GrandBateau(int portee, int vie, int id, Pos pos, TypeBateau type, MouvementsBateau m) {
-        super(portee, vie, id, pos, TypeBateau.GRAND, m);
+    public GrandBateau() {
     }
     
-    private int random(){
-        Random generateur = new Random();
-        for(int k = 0; k < ; ++k)
-        System.out.println(generateur.nextInt(100));
-    
+    @Override
+    public void randomPortee(){
+        Random rand = new Random();
+        double d = rand.nextDouble();
+        if(d <= 0.5){
+            setPortee(2);
+        }
+        else if(d <= 0.3){
+            setPortee(1);
+        }
+        else if(d <= 0.2){
+            setPortee(0);
+        }
     }
+
+    @Override
+    public void touche() {
+        this.setPv(this.getPv() - 1);
+    }
+
+    @Override
+    public boolean coule() {
+        return this.getPv() <= 0;
+    }
+    
+       
+
+    
     
 }
