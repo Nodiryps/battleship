@@ -1,0 +1,32 @@
+ackage couleurconsole;
+
+enum Couleur {
+    RESET("\u001B[0m"),
+    BLACK("\u001B[30m"),
+    RED("\u001B[31m"),
+    GREEN("\u001B[32m"),
+    YELLOW("\u001B[33m"),
+    BLUE("\u001B[34m"),
+    PURPLE("\u001B[35m"),
+    CYAN("\u001B[36m"),
+    WHITE("\u001B[37m");
+
+    private final String code;
+    private Couleur(String code) { this.code = code; }
+    @Override public String toString() { return code; }
+}
+
+public class CouleurConsole {
+
+    public static void main(String[] args) {
+        System.out.println("Ce texte est en noir par dÃ©faut");
+        System.out.println(Couleur.GREEN + "Celui-ci est en vert");
+        System.out.println("Ca se rÃ©initialise Ã  chaque println");
+        System.out.print(Couleur.PURPLE + "Mais pas aprÃ¨s un print. ");
+        System.out.println("La suite de la ligne a la mÃªme couleur");
+        System.out.println(Couleur.RED + "DÃ©but en rouge, " +
+                Couleur.BLUE + "et suite en bleu");
+        System.out.println("");
+    }
+
+}

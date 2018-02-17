@@ -9,6 +9,7 @@ import Model.Pos;
 import Model.TypeBateau;
 import java.util.Observable;
 import java.util.concurrent.ThreadLocalRandom;
+import Vue.AfficheurConsole;
 
 
 /**
@@ -21,9 +22,30 @@ public class GameBoard extends Observable {
     private boolean flagOktoSet= false;
     private int MIN = 0;
     Case[][] mer = new Case[LIGNES][COLONNES];
+
+    public int getLIGNES() {
+        return LIGNES;
+    }
+
+    public int getCOLONNES() {
+        return COLONNES;
+    }
+
+    public Case[][] getMer() {
+        return mer;
+    }
     private int randLigne, randCol;
     
     public GameBoard() {
+        AfficheurConsole aff = new AfficheurConsole();
+        aff.CreateJoueur();
+        Joueur joueur1 = new Joueur(aff.getJoueur(),0);
+        aff.CreateJoueur();
+        Joueur joueur2 = new Joueur(aff.getJoueur(),0);
+    }
+
+    public void setMer(Case[][] mer) {
+        this.mer = mer;
     }
     
 //    pour placer les mines et bateaux aléatoirement
@@ -82,6 +104,7 @@ public class GameBoard extends Observable {
     }
     
     
+ 
     public static void main(String[] args) {
         GameBoard g = new GameBoard();
         g.CreationMer();
