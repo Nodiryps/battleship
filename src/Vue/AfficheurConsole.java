@@ -85,9 +85,16 @@ public class AfficheurConsole implements Observer {
         }
     //Afficher les autres lignes
           for (int i =  0 ; i<gB.getLIGNES();i++) {
-               System.out.print(FIRSTCOL[i]+ " " + Couleur.BLACK+"|"); //+Ajouter la détection des bateaux (1ère lettre du nom)
+              for (int j=0; j<gB.getCOLONNES();j++)
+                  //Voir pour récupérer le nom du joueur par rapport au bateau pour donner la couleur
+               System.out.print(FIRSTCOL[i]+ " " + Couleur.BLACK+"|"+gB.GetCaseAttribute(i, j)); 
         }
+          System.out.println("|");
     }  
+    
+    public static void TableauEtat() {
+        //A compléter
+    }
  @Override
     public void update(Observable obs, Object obj) {
         GameBoard gB = (GameBoard) obs;

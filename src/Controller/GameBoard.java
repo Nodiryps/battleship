@@ -103,7 +103,10 @@ public class GameBoard extends Observable {
         }
     }
     
-    
+    public String GetCaseAttribute(int l, int c){//Attribut du bateau devrait être J1 ou J2 et type de bateau : à discuter
+        return mer[l][c].getAttribute();
+                
+                }
  
     public static void main(String[] args) {
         GameBoard g = new GameBoard();
