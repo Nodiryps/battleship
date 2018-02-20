@@ -11,8 +11,8 @@ package Model;
  */
 public class MineAtomique extends Mine {
 
-    public MineAtomique(TypeMine type) {
-        super(type.ATOMIQUE);
+    public MineAtomique() {
+        super();
     }
 
     @Override

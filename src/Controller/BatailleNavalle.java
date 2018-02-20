@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bataillenavalle;
-import Controller.GameBoard;
+package Controller;
+import Model.GameBoard;
+import Model.Joueur;
+import Vue.AfficheurConsole;
 
 /**
  *
@@ -17,7 +19,12 @@ public class BatailleNavalle {
      */
     public static void main(String[] args) {
         GameBoard gb = new GameBoard();
-       
+        AfficheurConsole aff = new AfficheurConsole();
+        aff.CreateJoueur();
+        Joueur joueur1 = new Joueur(aff.getJoueur(),0);
+        aff.CreateJoueur();
+        Joueur joueur2 = new Joueur(aff.getJoueur(),0);
+        aff.AfficherGrille(gb);//mettre dans un update
         
         
         

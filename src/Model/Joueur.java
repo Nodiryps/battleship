@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controller;
+package Model;
 
 import Model.Bateau;
 import Model.MouvementsBateau;
@@ -68,9 +68,9 @@ public class Joueur {
         return res;
     }
     
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         Joueur j = new Joueur("Paul");
         
         System.out.println(j);
-    }
+    }*/
 }

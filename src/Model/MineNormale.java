@@ -11,8 +11,8 @@ package Model;
  */
 public class MineNormale extends Mine {
 
-    public MineNormale(TypeMine type) {
-        super(type.NORMALE);
+    public MineNormale() {
+        super();
     }
 
     @Override

@@ -4,7 +4,14 @@
  * and open the template in the editor.
  */
 package Vue;
-import Controller.GameBoard;
+
+
+import Model.Bateau;
+import Model.GameBoard;
+import Model.GrandBateau;
+import Model.MineAtomique;
+import Model.MineNormale;
+import Model.PetitBateau;
 import Model.Pos;
 import java.util.Observable;
 
@@ -36,6 +43,7 @@ public class AfficheurConsole implements Observer {
     private Pos positionB;
     private boolean modeDebug;
     Scanner sc = new Scanner(System.in);
+    private static Object temp;
     public String getJoueur() {
         return joueur;
     }
@@ -91,7 +99,26 @@ public class AfficheurConsole implements Observer {
               System.out.print(FIRSTCOL[i]+" "); 
               for (int j=0; j<gB.getCOLONNES();j++){
                   //Voir pour récupérer le nom du joueur par rapport au bateau pour donner la couleur
-               System.out.print( Couleur.BLACK+"|"+"x"+gB.GetCaseAttribute(i, j)); 
+                  temp=gB.RetObj(i, j);
+                  if (temp instanceof GrandBateau){
+                      System.out.print(Couleur.BLACK+"|"+ "GB"); 
+                  }
+                  else if (temp instanceof PetitBateau){
+                      System.out.print(Couleur.BLACK+"|"+ "PB"); 
+                  }
+                    else if (temp instanceof MineAtomique){
+                      System.out.print(Couleur.BLACK+"|"+ "MA"); 
+                  }
+                    
+                    else if (temp instanceof MineNormale){
+                      System.out.print(Couleur.BLACK+"|"+ "MN"); 
+                  }
+                    else{
+                        System.out.print(Couleur.BLACK+"|"+ " ");
+                    } 
+                        
+                          
+              
             }
               System.out.println("|");
           }

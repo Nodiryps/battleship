@@ -4,14 +4,11 @@
  * and open the template in the editor.
  */
 
-package Controller;
+package Model;
 
-import Model.Bateau;
-import Model.GrandBateau;
-import Model.MouvementsBateau;
-import Model.PetitBateau;
-import Model.Pos;
-import Model.TypeBateau;
+import javax.lang.model.element.Element;
+
+
 
 /**
  *
@@ -21,6 +18,7 @@ public class Case {
     Pos position ;
     boolean bloquee;
     Bateau TypeBat;
+    Mine TMine;
   
     public Case(Pos position, boolean bloquee) {
         this.position = position;
@@ -43,25 +41,31 @@ public class Case {
         this.bloquee = bloquee;
     }
     
-    public void setAttribute(TypeBateau TBat){
-        if (TBat.equals("GRAND")) {
-            TypeBat= new GrandBateau();
-            
+  
+public void SetMine (Mine element ){
+        if (element instanceof MineNormale){
+          TMine= element;
         }
-        else if (TBat.equals("PETIT")) {
-            TypeBat= new PetitBateau();
+        else if (element instanceof MineAtomique){
+           TMine= element;
+       }
+        
+}
+public void SetBateau (Bateau element ){
+        if (element instanceof PetitBateau){
+          TypeBat= element;
         }
-        ;
-    }
-    
-    public String getAttribute () {
-        /*if (TypeBat.getType().equals(""))
-            return " " ;
-        else 
+        else if (element instanceof GrandBateau){
+           TypeBat= element;
+       }
         
-        return TypeBat.getType();
-    */return "Y";}
-        
+}
+public Bateau GetBateau(){
+    return TypeBat;
+}
+public Mine getMine(){
+    return TMine;
+}
 }
 
 

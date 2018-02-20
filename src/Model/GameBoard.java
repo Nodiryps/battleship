@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controller;
+package Model;
 
+import Model.Joueur;
+import Model.Case;
 import Model.Pos;
 import Model.TypeBateau;
 import java.util.Observable;
@@ -37,12 +39,7 @@ public class GameBoard extends Observable {
     private int randLigne, randCol;
     
     public GameBoard() {
-        AfficheurConsole aff = new AfficheurConsole();
-        aff.CreateJoueur();
-        Joueur joueur1 = new Joueur(aff.getJoueur(),0);
-        aff.CreateJoueur();
-        Joueur joueur2 = new Joueur(aff.getJoueur(),0);
-        aff.AfficherGrille(this);//mettre dans un update
+       
     }
 
     public void setMer(Case[][] mer) {
@@ -83,7 +80,7 @@ public class GameBoard extends Observable {
             if  (!mer[randLigne][randCol].getBloquee()) {
                 mer[randLigne][randCol].setBloquee(true);
                 mer[randLigne][randCol].TypeBat.setId(1);//à revoir pour l'id
-                mer[randLigne][randCol].setAttribute(TypeBateau.GRAND);
+                mer[randLigne][randCol].SetBateau(new GrandBateau());
                 flagOktoSet = true;
 
             }
@@ -98,7 +95,8 @@ public class GameBoard extends Observable {
                 if  (!mer[randLigne][randCol].getBloquee()) {
                     mer[randLigne][randCol].setBloquee(true);
                     mer[randLigne][randCol].TypeBat.setId(2);
-                    mer[randLigne][randCol].setAttribute(TypeBateau.PETIT);
+                    mer[randLigne][randCol].SetBateau(new PetitBateau());
+                    /*mer[randLigne][randCol].setAttribute(TypeBateau.PETIT)*/;
                     flagOktoSet = true;
 
                 }
@@ -106,13 +104,16 @@ public class GameBoard extends Observable {
         }
     }
     
-    public String GetCaseAttribute(int l, int c){//Attribut du bateau devrait être J1 ou J2 et type de bateau : à discuter
-        return  mer[l][c].getAttribute() /*return "G"*/;
+    public Case GetCase(int l, int c){//Attribut du bateau devrait être J1 ou J2 et type de bateau : à discuter
+        return  mer[l][c] /*return "G"*/;
         /*return "l " + l + "c "+c;*/
-                
+             
                 
                 }
- 
+   public Object RetObj (int l , int c){
+        /*return mer[l][c].GetObject();*/
+        return "X";
+     } 
    /* public static void main(String[] args) {
         GameBoard g = new GameBoard();
         g.CreationMer();

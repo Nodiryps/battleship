@@ -11,10 +11,10 @@ package Model;
  */
 public abstract class Mine {
    
-    private TypeMine type;
+   /* private TypeMine type;*/
 
-    public Mine(TypeMine type) {
-        this.type = type;
+    public Mine() {
+        
     }
     
     public abstract void explode();
