@@ -42,30 +42,30 @@ public class Case {
     }
     
   
-public void SetMine (Mine element ){
-        if (element instanceof MineNormale){
-          TMine= element;
-        }
-        else if (element instanceof MineAtomique){
-           TMine= element;
-       }
-        
-}
-public void SetBateau (Bateau element ){
-        if (element instanceof PetitBateau){
-          TypeBat= element;
-        }
-        else if (element instanceof GrandBateau){
-           TypeBat= element;
-       }
-        
-}
-public Bateau GetBateau(){
-    return TypeBat;
-}
-public Mine getMine(){
-    return TMine;
-}
+    public void SetMine (Mine element ){
+            if (element instanceof MineNormale){
+              TMine= element;
+            }
+            else if (element instanceof MineAtomique){
+               TMine= element;
+           }
+
+    }
+    public void SetBateau (Bateau element ){
+            if (element instanceof PetitBateau){
+              TypeBat= element;
+            }
+            else if (element instanceof GrandBateau){
+               TypeBat= element;
+           }
+
+    }
+    public Bateau getBateau(){
+        return TypeBat;
+    }
+    public Mine getMine(){
+        return TMine;
+    }
 }
 
 

@@ -36,6 +36,22 @@ public class GameBoard extends Observable {
     public Case[][] getMer() {
         return mer;
     }
+    public Mine getMine(int l, int c){
+        return mer[l][c].TMine;
+    }
+    
+    public Bateau getBat(int l, int c){
+        return mer[l][c].TypeBat;
+    }
+    
+    public boolean isBat(int l, int c){
+        return mer[l][c].TypeBat != null;
+    }
+    
+    public boolean isMine(int l, int c){
+        return mer[l][c].TMine != null;
+    }
+    
     private int randLigne, randCol;
     
     public GameBoard() {
