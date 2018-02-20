@@ -51,11 +51,17 @@ public class Case {
         else if (TBat.equals("PETIT")) {
             TypeBat= new PetitBateau();
         }
+        ;
     }
     
     public String getAttribute () {
+        /*if (TypeBat.getType().equals(""))
+            return " " ;
+        else 
+        
         return TypeBat.getType();
-    }
+    */return "Y";}
+        
 }
 
 

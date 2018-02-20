@@ -42,6 +42,7 @@ public class GameBoard extends Observable {
         Joueur joueur1 = new Joueur(aff.getJoueur(),0);
         aff.CreateJoueur();
         Joueur joueur2 = new Joueur(aff.getJoueur(),0);
+        aff.AfficherGrille(this);//mettre dans un update
     }
 
     public void setMer(Case[][] mer) {
@@ -81,20 +82,22 @@ public class GameBoard extends Observable {
             randCol = MIN + (int)(Math.random() * ((COLONNES - MIN) + 0));
             if  (!mer[randLigne][randCol].getBloquee()) {
                 mer[randLigne][randCol].setBloquee(true);
-                mer[randLigne][randCol].TypeBat.setId(1);
+                mer[randLigne][randCol].TypeBat.setId(1);//à revoir pour l'id
                 mer[randLigne][randCol].setAttribute(TypeBateau.GRAND);
                 flagOktoSet = true;
 
             }
         }
 //        Petit bateau 
+        
         for (int a = 0; a<2; ++a){
+            flagOktoSet =false;
            while (flagOktoSet){
                randLigne = MIN + (int)(Math.random() * ((LIGNES - MIN) + 0));
                 randCol = MIN + (int)(Math.random() * ((COLONNES - MIN) + 0));
                 if  (!mer[randLigne][randCol].getBloquee()) {
                     mer[randLigne][randCol].setBloquee(true);
-                    mer[randLigne][randCol].TypeBat.setId(1);
+                    mer[randLigne][randCol].TypeBat.setId(2);
                     mer[randLigne][randCol].setAttribute(TypeBateau.PETIT);
                     flagOktoSet = true;
 
@@ -104,13 +107,15 @@ public class GameBoard extends Observable {
     }
     
     public String GetCaseAttribute(int l, int c){//Attribut du bateau devrait être J1 ou J2 et type de bateau : à discuter
-        return mer[l][c].getAttribute();
+        return  mer[l][c].getAttribute() /*return "G"*/;
+        /*return "l " + l + "c "+c;*/
+                
                 
                 }
  
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         GameBoard g = new GameBoard();
         g.CreationMer();
         System.out.println(g);
-    }
+    }*/
 }

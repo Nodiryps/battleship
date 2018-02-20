@@ -62,14 +62,16 @@ public class AfficheurConsole implements Observer {
     
     
    public void CreateJoueur(){
-       System.out.println(Couleur.BLACK+"Nom de l'armée");
+       System.out.println(Couleur.BLACK+"Nom de l'armée : ");
        setJoueur(sc.nextLine());
+       
+       
        
        
    } 
    private static final AfficheurConsole AFFICHEURCONSOLE = new AfficheurConsole();
    private static final char FIRSTLINE[]= {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-    private static final char FIRSTCOL[]= {'1','2','3','4','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    private static final String FIRSTCOL[]= {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26"};
     public AfficheurConsole() {
     }
 //Renvoie une instance de la vue 
@@ -81,16 +83,20 @@ public class AfficheurConsole implements Observer {
     public static void AfficherGrille( GameBoard gB){
      //Afficher la première ligne      
         for (int i =  0 ; i<gB.getLIGNES();i++) {
-               System.out.println(Couleur.BLACK+" " + FIRSTLINE[i]);
+               System.out.print(Couleur.BLACK+" " + FIRSTLINE[i]);
         }
+        System.out.println("");
     //Afficher les autres lignes
           for (int i =  0 ; i<gB.getLIGNES();i++) {
-              for (int j=0; j<gB.getCOLONNES();j++)
+              System.out.print(FIRSTCOL[i]+" "); 
+              for (int j=0; j<gB.getCOLONNES();j++){
                   //Voir pour récupérer le nom du joueur par rapport au bateau pour donner la couleur
-               System.out.print(FIRSTCOL[i]+ " " + Couleur.BLACK+"|"+gB.GetCaseAttribute(i, j)); 
-        }
-          System.out.println("|");
-    }  
+               System.out.print( Couleur.BLACK+"|"+"x"+gB.GetCaseAttribute(i, j)); 
+            }
+              System.out.println("|");
+          }
+          System.out.println(""); 
+    } 
     
     public static void TableauEtat() {
         //A compléter
