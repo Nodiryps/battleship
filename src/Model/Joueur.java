@@ -5,12 +5,8 @@
  */
 package Model;
 
-import Model.Bateau;
-import Model.MouvementsBateau;
-import Model.PetitBateau;
-import Model.TypeBateau;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -19,58 +15,51 @@ import java.util.List;
 public class Joueur {
     private String nom;
     private int score;
-    private List<Bateau> listB = new ArrayList();
+    private Map<Bateau,Pos> map = new HashMap(); 
 
-    public Joueur(String nom, int score) {
-        this.nom = nom;
-        this.score = score;
-    }
-    
-    public Joueur(String nom){
-        this(nom,0);
+    public Joueur(String n){
+        this.nom = n;
     }
 
     public String getNom() {
         return nom;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setNom(String n) {
+        this.nom = n;
     }
 
     public int getScore() {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setScore(int s) {
+        this.score = s;
     }
 
-    public List<Bateau> getListB() {
-        return listB;
+    public Map<Bateau,Pos> getMapBat() {
+        return map;
     }
 
-    public void setListB(List<Bateau> listB) {
-        this.listB = listB;
-    }
-
-    @Override
-    public String toString(){
-        String res = "Liste des Bateaux de l'armée de: " + nom + "\n";
-        for(Bateau b : listB)
-            res += "\t-" + "Bateau "
-                         + b.getId() 
-                         + "\test un " 
-                         + b.getType()
-                         + " et est en "
-                         + b.getPos()
-                         + "\n";
-        return res;
+    public void setMapBat(Map<Bateau,Pos> m) {
+        this.map = m;
     }
     
-   /* public static void main(String[] args) {
-        Joueur j = new Joueur("Paul");
-        
-        System.out.println(j);
-    }*/
+    
+
+//    @Override
+//    public String toString(){
+//        String res = "Liste des Bateaux de l'armée de: " + nom + "\n";
+//        map.getOrDefault(Bateau.getId(), defaultValue);
+//            res += "\t-" + "Bateau "
+//                         + b.getId() 
+//                         + "\test un " 
+//                         + b.getType()
+//                         + " et est en "
+//                         + b.getPos()
+//                         + "\n";
+//        return res;
+//    }
+    
+
 }

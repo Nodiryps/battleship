@@ -1,5 +1,7 @@
 package Model;
 
+import static Model.TypeBateau.GRAND;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -16,7 +18,7 @@ public abstract class Bateau implements Movable {
     private int pv;
     private static int id;
     private Pos pos;
-    private TypeBateau type;
+    private static TypeBateau type;
     private MouvementsBateau mouvmt;
     
     public Bateau(){
@@ -33,8 +35,8 @@ public abstract class Bateau implements Movable {
         return this.portee;
     }
     
-    public void setPortee(int nouvPortee){
-        this.portee = nouvPortee;
+    public void setPortee(int nouvP){
+        this.portee = nouvP;
     }
     
     public int getPv(){
@@ -42,7 +44,7 @@ public abstract class Bateau implements Movable {
     }
     
     public void setPv(int nouvPv){
-        this.pv = nouvPv;
+        this.pv = nouvPv;  
     }
     
     public int getId(){
@@ -61,13 +63,9 @@ public abstract class Bateau implements Movable {
         this.pos = nouvPos;
     }
     
-    public String getType(){
+    public static String getType(){
         return type.name();
     }
-//    
-//    public String getMouvmt(){
-//        return mouvmt.name();
-//    }
     
     @Override 
     public void setX(int x){
@@ -88,4 +86,23 @@ public abstract class Bateau implements Movable {
     public int getY(){
         return pos.getPosL();
     }  
+    
+    @Override
+    public boolean equals(Object o){
+        return(
+                o instanceof Bateau &&
+                o.equals(id) && 
+                o.equals(pos)
+              );
+    }
+
+    //pas de equals sans hashCode :)
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + getId();
+        hash = 97 * hash + getPos();
+        return hash;
+    }
+    
 }

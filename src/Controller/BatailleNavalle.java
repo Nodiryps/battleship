@@ -21,10 +21,11 @@ public class BatailleNavalle {
         GameBoard gb = new GameBoard();
         AfficheurConsole aff = new AfficheurConsole();
         aff.CreateJoueur();
-        Joueur joueur1 = new Joueur(aff.getJoueur(),0);
+        Joueur J1 = new Joueur(aff.getJoueur());
         aff.CreateJoueur();
-        Joueur joueur2 = new Joueur(aff.getJoueur(),0);
-        aff.AfficherGrille(gb);//mettre dans un update
+        Joueur J2 = new Joueur(aff.getJoueur());
+        aff.affGrille(gb);
+        
         
         
         

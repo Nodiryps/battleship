@@ -6,9 +6,6 @@
 
 package Model;
 
-import javax.lang.model.element.Element;
-
-
 
 /**
  *
@@ -17,7 +14,7 @@ import javax.lang.model.element.Element;
 public class Case {
     Pos position ;
     boolean bloquee;
-    Bateau TypeBat;
+    Bateau TBat;
     Mine TMine;
   
     public Case(Pos position, boolean bloquee) {
@@ -43,25 +40,25 @@ public class Case {
     
   
     public void SetMine (Mine element ){
-            if (element instanceof MineNormale){
-              TMine= element;
-            }
-            else if (element instanceof MineAtomique){
-               TMine= element;
-           }
+        if (element instanceof MineNormale){
+          TMine= element;
+        }
+        else if (element instanceof MineAtomique){
+           TMine= element;
+       }
 
     }
     public void SetBateau (Bateau element ){
-            if (element instanceof PetitBateau){
-              TypeBat= element;
-            }
-            else if (element instanceof GrandBateau){
-               TypeBat= element;
-           }
+        if (element instanceof PetitBateau){
+          TBat= element;
+        }
+        else if (element instanceof GrandBateau){
+           TBat= element;
+        }
 
     }
     public Bateau getBateau(){
-        return TypeBat;
+        return TBat;
     }
     public Mine getMine(){
         return TMine;
