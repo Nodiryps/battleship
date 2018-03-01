@@ -3,66 +3,60 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Model;
-
 
 /**
  *
- * @author 0205frwarens
+ * @author 2208sptheodorou
  */
 public class Case {
-    Pos position ;
-    boolean bloquee;
-    Bateau TBat;
-    Mine TMine;
-  
-    public Case(Pos position, boolean bloquee) {
-        this.position = position;
-        this.bloquee = bloquee;
+    
+    private Bateau bat;
+    private MineNormale mineN;
+    private MineAtomique mineA;
+    boolean modeDebug = false;
+
+    public Case() {
     }
 
-    public Pos getPosition() {
-        return position;
-    }
-
-    public void setPosition(Pos position) {
-        this.position = position;
-    }
-
-    public boolean getBloquee() {
-        return bloquee;
-    }
-
-    public void setBloquee(boolean bloquee) {
-        this.bloquee = bloquee;
+    public Case(Bateau b){
+        this.bat = b;
     }
     
-  
-    public void SetMine (Mine element ){
-        if (element instanceof MineNormale){
-          TMine= element;
-        }
-        else if (element instanceof MineAtomique){
-           TMine= element;
-       }
+    public Case(MineNormale m){
+        this.mineN =  m;
+    }
+    
+    public Case(MineAtomique m){
+        this.mineA =  m;
+    }
+    
+    public boolean explosionMineA(){
+        return bat != null && mineA != null;
+    }
+    
+    public boolean explosionMineN(){
+        return bat != null && mineN != null;
+    }
+    
+    public boolean caseAccessible() {
+        return bat == null && !explosionMineA();
+    }
 
+    public String toStringGBat() {
+        return "" +bat;
     }
-    public void SetBateau (Bateau element ){
-        if (element instanceof PetitBateau){
-          TBat= element;
-        }
-        else if (element instanceof GrandBateau){
-           TBat= element;
-        }
-
+    
+    public String toStringPBat() {
+        return "" +bat;
     }
-    public Bateau getBateau(){
-        return TBat;
+    
+    public String toStringMine(){
+        if(!modeDebug){
+            return "";
+        }else
+            return "" + mineN;
     }
-    public Mine getMine(){
-        return TMine;
-    }
+    
+    
 }
-
-

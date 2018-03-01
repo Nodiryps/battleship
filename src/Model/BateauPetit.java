@@ -5,13 +5,19 @@
  */
 package Model;
 
+
 /**
  *
  * @author 2208sptheodorou
  */
-public class MineAtomique extends Mine {
+public class BateauPetit extends Bateau {
 
-     @Override
+    public BateauPetit() {
+        this.pm = 2;
+        this.pv = 1;
+    }
+    
+    @Override
     public int getX() {
         return this.getX();
     }
@@ -30,10 +36,10 @@ public class MineAtomique extends Mine {
     public void setY(int y) {
         this.setY(y);
     }
-
+    
     @Override
-    public String toString() {
-        return "X";
+    public void touché() {
+        --this.pv;
     }
     
 }

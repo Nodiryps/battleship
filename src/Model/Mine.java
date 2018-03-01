@@ -7,16 +7,22 @@ package Model;
 
 /**
  *
- * @author Spy
+ * @author 2208sptheodorou
  */
-public abstract class Mine {
-   
-   /* private TypeMine type;*/
+public abstract class Mine implements Positionnable {
+    
+    protected TypeM type;
+    protected boolean debugMode = false;
 
-    public Mine() {
-        
+    public TypeM getTypeM() {
+        return type;
     }
     
-    public abstract void explode();
+    
+    
+    
+
+    
+    
     
 }
