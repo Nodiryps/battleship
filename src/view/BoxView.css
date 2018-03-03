@@ -1,0 +1,25 @@
+.empty {
+    -fx-border-color: white;
+    -fx-background-color: seagreen;
+}
+
+.mine {
+    -fx-border-color: white;
+    -fx-background-color: seagreen;
+}
+
+.batG {
+    -fx-border-color: white;
+    -fx-background-color: seagreen;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+    -fx-background-image: url("IMG/grandBateau.png");
+}
+
+.batP {
+    -fx-border-color: white;
+    -fx-background-color: seagreen;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+    -fx-background-image: url("IMG/petitBateau.png");
+}
