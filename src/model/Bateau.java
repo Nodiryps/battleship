@@ -18,6 +18,7 @@ import java.util.Random;
  */
 public abstract class Bateau implements Movable{
     
+    Position posBat = new Position(0,0);
     protected int portee;//portée du tir
     protected int pv;    //points de vie
     protected int pm;    //points de mouvement
@@ -53,27 +54,28 @@ public abstract class Bateau implements Movable{
     }
 
     public void setPos(int x, int y) {
-        setX(x); setY(y);
+        this.posBat.setPosX(x);
+        this.posBat.setPosY(y);
     }
 
     @Override
     public int getX() {
-        return this.getX();
+        return this.posBat.getPosX();
     }
 
     @Override
     public int getY() {
-        return this.getY();
+        return this.posBat.getPosY();
     }
 
     @Override
     public void setX(int x) {
-        this.setX(x);
+        this.posBat.setPosX(x);
     }
 
     @Override
     public void setY(int y) {
-        this.setY(y);
+        this.posBat.setPosY(y);
     }
     
     public void randomPortee(){

@@ -76,7 +76,7 @@ public class NouvPartie extends Observable {
     private String posToString(int x, int y) {
         Position p = new Position(0,0);
 
-        x = p.getX(); y = p.getY();
+        x = p.getPosX(); y = p.getPosY();
         String res = "";
         for (int i = 0; i < gb.getTAILLE(); ++i) {
             for (int j = 0; j < gb.getTAILLE(); ++j) {
@@ -90,7 +90,7 @@ public class NouvPartie extends Observable {
 
     public boolean posValide(String s) {
         Position p = stringToPos(s);
-        return p.getX() >=0 && p.getX() < gb.getTAILLE() && p.getY() >=0 && p.getY() < gb.getTAILLE();
+        return p.getPosX() >=0 && p.getPosX() < gb.getTAILLE() && p.getPosY() >=0 && p.getPosY() < gb.getTAILLE();
     }
     
     public void tir(Armee a) {
@@ -127,6 +127,11 @@ public class NouvPartie extends Observable {
 //        Vue v = new Vue();
 //        v.afficheMer(c.getGB());
 //    }
+
+    public void setChangedAndNotify() {
+        setChanged();
+        notifyObservers();
+    }
 
     
 }

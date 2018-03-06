@@ -92,9 +92,9 @@ public class Gameboard extends Observable {
     private void randPosBat(Armee a){
         for(int i = 0; i < a.getSizeListBat(); ++i){
             Position p = randomPosSet(setPosOccupados);
-            if(mer[p.getX()][p.getY()].caseAccessible()){
-                mer[p.getX()][p.getY()] = new Case(a.getBatList(i));
-                a.getBatList(i).setPos(p.getX(),p.getY());
+            if(mer[p.getPosX()][p.getPosY()].caseAccessible()){
+                mer[p.getPosX()][p.getPosY()] = new Case(a.getBatList(i));
+                a.getBatList(i).setPos(p.getPosX(),p.getPosY());
                 setPosOccupados.add(p);
             }
             

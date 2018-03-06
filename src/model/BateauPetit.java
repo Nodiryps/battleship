@@ -19,22 +19,22 @@ public class BateauPetit extends Bateau {
     
     @Override
     public int getX() {
-        return this.getX();
+        return this.posBat.getPosX();
     }
 
     @Override
     public int getY() {
-        return this.getY();
+        return this.posBat.getPosY();
     }
 
     @Override
     public void setX(int x) {
-        this.setX(x);
+        this.posBat.setPosX(x);
     }
 
     @Override
     public void setY(int y) {
-        this.setY(y);
+        this.posBat.setPosY(y);
     }
     
     @Override

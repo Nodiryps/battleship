@@ -1,20 +1,26 @@
 package view;
 
 import control.ControleurFx;
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import javafx.scene.Scene;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
-import model.Model;
+import model.Gameboard;
+import model.NouvPartie;
+import model.Position;
 
 public class VuePartie extends GridPane implements Observer {
 
     private final int SIZE;
     private final ControleurFx control;
+    private Gameboard gb = new Gameboard(5);
+    private final Set<Position> listPosOcc = gb.getPosOccupados();
 
     public VuePartie(Stage stage, int size, ControleurFx ctrl) {
         control = ctrl;
@@ -39,17 +45,25 @@ public class VuePartie extends GridPane implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        Model model = (Model) o;
+        NouvPartie np = (NouvPartie) o;
+        Position tmp;
+        System.out.println(listPosOcc.size());
+        Iterator<Position> it = listPosOcc.iterator();
         getChildren().clear();
-        for (int c = 0; c < SIZE; ++c) {
-            for (int l = 0; l < SIZE; ++l) {
-                if (model.getX() == c && model.getY() == l) {
-                    add(new caseBat(c, l), c, l);
-                } else {
-                    add(new caseVide(c, l), c, l);
+            while(it.hasNext()){
+                for (int c = 0; c < SIZE; ++c) {
+                    for (int l = 0; l < SIZE; ++l) {
+                        tmp = it.next();
+                        if (tmp.getPosX() == c && tmp.getPosY() == l) {
+                            add(new caseBat(c, l), c, l);
+                        } 
+                        else {
+                            add(new caseVide(c, l), c, l);
+                        }
+                    }
+                
                 }
             }
-        }
     }
     
     // La vue d'une "case"
@@ -74,5 +88,4 @@ public class VuePartie extends GridPane implements Observer {
             setOnMouseClicked(e -> control.boatClicked(x, y));
         }
     }
-
 }

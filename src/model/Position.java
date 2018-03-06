@@ -19,11 +19,11 @@ public class Position {
         this.posY = col;
     }
 
-    public int getX() {
+    public int getPosX() {
         return posX;
     }
 
-    public int getY() {
+    public int getPosY() {
         return posY;
     }
 

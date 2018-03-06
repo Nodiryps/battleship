@@ -113,7 +113,7 @@ public class VueConsole implements Observer {
         }
     }
 
-    public void affBougerBat() {
+  /*  public void affBougerBat() {
         String ouiNon = "";
         do{
             print("Déplacer un bateau de votre armée? (y/n): ");
@@ -142,10 +142,10 @@ public class VueConsole implements Observer {
         }
         
     }
-
+*/
     @Override
     public void update(Observable obs, Object o) {
-
+        
     }
 
     

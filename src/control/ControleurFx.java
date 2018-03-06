@@ -11,6 +11,7 @@ import view.VueParamPartie;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.stage.Stage;
+import model.NouvPartie;
 
 /**
  *
@@ -18,7 +19,7 @@ import javafx.stage.Stage;
  */
 public class ControleurFx extends Application {
     private Stage stage;
-    private Gameboard gb;
+    private NouvPartie np;
     
     // Vrai si on a cliqué sur un bateau pour le déplacer
     private boolean etatDeplacementBateau = false; 
@@ -31,10 +32,10 @@ public class ControleurFx extends Application {
 
     // fait apparaître la fenêtre principale de l'application
     public void switchToMainWindow(int size) {
-        VuePartie mainWindow = new VuePartie(stage, gb.getTAILLE(), this);
-        gb = new Gameboard(gb.getTAILLE());
-        gb.addObserver(mainWindow);
-        gb.setChangedAndNotify(); // Provoque un 1er affichage
+        np = new NouvPartie(size);
+        VuePartie mainWindow = new VuePartie(stage, size, this);
+        np.addObserver(mainWindow);
+        np.setChangedAndNotify(); // Provoque un 1er affichage
     }
     
     // Quand l'utilisateur clique sur une case vide
