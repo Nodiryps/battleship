@@ -1,25 +1,23 @@
 .empty {
     -fx-border-color: white;
-    -fx-background-color: seagreen;
+    -fx-background-image: url("sea.png");
 }
 
 .mine {
     -fx-border-color: white;
-    -fx-background-color: seagreen;
+    -fx-background-image: url("sea.png");
 }
 
 .batG {
     -fx-border-color: white;
-    -fx-background-color: seagreen;
     -fx-background-position: center;
     -fx-background-size: stretch;
-    -fx-background-image: url("IMG/grandBateau.png");
+    -fx-background-image: url("grandBateau.png");
 }
 
 .batP {
     -fx-border-color: white;
-    -fx-background-color: seagreen;
     -fx-background-position: center;
     -fx-background-size: stretch;
-    -fx-background-image: url("IMG/petitBateau.png");
+    -fx-background-image: url("petitBateau.png");
 }

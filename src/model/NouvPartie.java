@@ -33,9 +33,16 @@ public class NouvPartie extends Observable {
 
     }
 
+    public Gameboard getGb() {
+        return gb;
+    }
+
+    public int getNbJ() {
+        return nbJ;
+    }
+    
     private void creationArmees() {
         for (int i = 1; i <= nbJ; ++i) {
-            System.out.println("Nom Joueur " + i + ": ");
             listArmee.add(new Armee());
         }
     }

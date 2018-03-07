@@ -59,39 +59,37 @@ public class VueConsole implements Observer {
 
     public void AfficheEtatArmees(Armee a) {
         printLN("Etat des Armées");
-        printLN("Position"); affichePosBat();
-        printLN("Armée"); afficheArmee(a);
-        printLN("Intégrité"); affichePV();
+        printLN("Armée"); 
+        afficheArmee(a);
     }
 
-    public void affichePosBat() {
-        Armee a = new Armee();
-
-        for (Bateau b : a.getListBat()) {
-            printLN(np.convertPosToStr(b.getX(), b.getY()));
-        }
-    }
-
-//    affiche noms et listBat des amrées
+//    affiche noms, listBat, Pv et pos
     private void afficheArmee(Armee a) {
         
         for (Entry<String, List> entry : a.getMapJoueur().entrySet()) {
             String key = entry.getKey();
             List val = entry.getValue();
-            printLN(key); printLN(val);
+            printLN(key); 
+            printLN(val);
+            affichePV(a);
+            affichePosBat(a);
+        }
+    }
+    
+    private void affichePosBat(Armee a) {
+        for (Bateau b : a.getListBat()) {
+            printLN(np.convertPosToStr(b.getX(), b.getY()));
         }
     }
 
-    public void affichePV() {
-        Armee a = new Armee();
-
+    private void affichePV(Armee a) {
         for (Bateau b : a.getListBat()) {
             System.out.println(b.getPv());
         }
     }
     
 //    destinations possibles
-    public List destPoss(){
+    private List destPoss(){
         List<Position> dest = new LinkedList();
         List<Armee> armee = np.getListArmees();
         for(Armee a : armee){
@@ -106,43 +104,43 @@ public class VueConsole implements Observer {
         } return dest;
     }
     
-    private void affDestPoss() {
+    public void affDestPoss() {
         List<Position> list = destPoss();
         for(Position p : list){
             print(p);
         }
     }
 
-  /*  public void affBougerBat() {
-        String ouiNon = "";
-        do{
-            print("Déplacer un bateau de votre armée? (y/n): ");
-            ouiNon = insert.nextLine();
-            
-        }while(ouiNon.compareTo("y") <=0 || ouiNon.compareTo("n") <=0);
-        
-        if(ouiNon.equals('y')){
-            do{
-                print("Quel bateau déplacer? (ex: B5): ");
-                Position batChoisi = np.selectBat(toUpperCase(insert.nextLine()));
-            }while(!np.posValide(insert.nextLine()));
-            if(np.posValide(insert.nextLine())){
-                do{
-                    printLN("Sélectionner une des destinations possibles: ");
-                    affDestPoss();
-                    
-                }
-                //put les pos ds une list
-                        si pos entrée est ds la list, on bouge le bat
-                                sinon do while
-            }
-        }
-        else{
-            c est a l adevrsaire de jouer
-        }
-        
-    }
-*/
+//    public void affBougerBat() {
+//        String ouiNon = "";
+//        do{
+//            print("Déplacer un bateau de votre armée? (y/n): ");
+//            ouiNon = insert.nextLine();
+//            
+//        }while(ouiNon.compareTo("y") <=0 || ouiNon.compareTo("n") <=0);
+//        
+//        if(ouiNon.equals('y')){
+//            do{
+//                print("Quel bateau déplacer? (ex: B5): ");
+//                Position batChoisi = np.selectBat(toUpperCase(insert.nextLine()));
+//            }while(!np.posValide(insert.nextLine()));
+//            if(np.posValide(insert.nextLine())){
+//                do{
+//                    printLN("Sélectionner une des destinations possibles: ");
+//                    affDestPoss();
+//                    
+//                }
+//                //put les pos ds une list
+//                        si pos entrée est ds la list, on bouge le bat
+//                                sinon do while
+//            }
+//        }
+//        else{
+//            c est a l adevrsaire de jouer
+//        }
+//        
+//    }
+
     @Override
     public void update(Observable obs, Object o) {
         

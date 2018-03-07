@@ -9,10 +9,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import control.ControleurFx;
 import javafx.scene.input.KeyCode;
+import model.NouvPartie;
 
 public class VueParamPartie extends VBox {
 
     private final ControleurFx control;
+    private static NouvPartie npVue;
 
     public VueParamPartie(Stage stage, ControleurFx ctrl) {
         control = ctrl;
@@ -20,6 +22,10 @@ public class VueParamPartie extends VBox {
         stage.setTitle("Paramètres Partie");
         stage.setScene(new Scene(this, 300, 200));
         stage.show();
+    }
+
+    public static NouvPartie getNouvPartie() {
+        return npVue;
     }
 
     // Mise en place de la (racine de la) scene
@@ -30,7 +36,7 @@ public class VueParamPartie extends VBox {
         Button bt = new Button("OK");
         bt.setOnAction(e -> {
             if (!tf.getText().isEmpty()) 
-                switchToMainWindow(Integer.valueOf(tf.getText()));
+                switchToMainWindow(j1.getText(), j2.getText(), Integer.valueOf(tf.getText()));
             else
                 tf.requestFocus(); // Laisse le focus au TextField
         });
@@ -41,8 +47,12 @@ public class VueParamPartie extends VBox {
         setSpacing(20);
     }
 
-    private void switchToMainWindow(int size) {
-        control.switchToMainWindow(size);
+    private void switchToMainWindow(String j1, String j2, int size) {
+        npVue = new NouvPartie(size);
+        for(int i = 0; i < npVue.getListArmees().size(); ++i){
+            npVue.getListArmees().get(i);
+        }
+        control.switchToMainWindow(npVue);
     }
     
     // Un TextField qui n'accepte que des saisies de nombre entiers naturels
@@ -64,7 +74,7 @@ public class VueParamPartie extends VBox {
             // Capture du Enter pour valider saisie
             setOnKeyPressed(ke -> {
                 if (ke.getCode().equals(KeyCode.ENTER) && !getText().isEmpty()) {
-                    switchToMainWindow(Integer.valueOf(getText()));
+                    switchToMainWindow(getText(), getText(), Integer.valueOf(getText()));
                 }
             });            
         }
@@ -74,7 +84,7 @@ public class VueParamPartie extends VBox {
     private class InputJoueur extends TextField {
         InputJoueur() {
             super("Armée de: ");
-            setAlignment(Pos.CENTER);
+            setAlignment(Pos.CENTER_LEFT);
             setMaxWidth(150);
             installListeners();
         }
@@ -83,7 +93,7 @@ public class VueParamPartie extends VBox {
             // Capture du Enter pour valider saisie
             setOnKeyPressed(ke -> {
                 if (ke.getCode().equals(KeyCode.ENTER) && !getText().isEmpty()) {
-                    switchToMainWindow(Integer.valueOf(getText()));
+                    switchToMainWindow(getText(), getText(),Integer.valueOf(getText()));
                 }
             });            
         }

@@ -33,9 +33,9 @@ public class Armee  {
     }
     
     private void nouvArmee(){
-        for(int i = 0; i <= nbGBat; ++i)
+        for(int i = 0; i < nbGBat; ++i)
             ListBat.add(new BateauGrand());
-        for(int j = 0; j <= nbPBat; ++j)
+        for(int j = 0; j < nbPBat; ++j)
             ListBat.add(new BateauPetit());
     }
     
@@ -79,14 +79,6 @@ public class Armee  {
         this.score = score;
     }
 
-        @Override
-    public String toString(){
-        String s = "";
-        for(Bateau b : this.ListBat )
-            s = this.getNom();
-        return s;
-    }
-    
     public void removeBat(List<Bateau> list) {
         List<Bateau> l = list;//enregistre d'abord dans une tmp sinon ça foire :p
         for(Bateau b : l){

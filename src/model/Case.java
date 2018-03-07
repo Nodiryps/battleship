@@ -42,14 +42,6 @@ public class Case {
     public boolean caseAccessible() {
         return bat == null && !explosionMineA();
     }
-
-    public String toStringGBat() {
-        return "" +bat;
-    }
-    
-    public String toStringPBat() {
-        return "" +bat;
-    }
     
     public String toStringMine(){
         if(!modeDebug){
