@@ -30,7 +30,6 @@ public class NouvPartie extends Observable {
         this.nbJ = 2;
         creationArmees();
         this.gb.nouvMer(listArmee);
-
     }
 
     public Gameboard getGb() {
@@ -51,7 +50,7 @@ public class NouvPartie extends Observable {
         return listArmee;
     }
     
-    //    récupéation pos insert par le user
+    //    récupéation pos inséré par le user ("B5" -> pos)
     public Position selectBat(String s) {
         return stringToPos(s);
     }
@@ -59,10 +58,11 @@ public class NouvPartie extends Observable {
     private Position stringToPos(String s) {
         Position p = new Position(0, 0);
 
-        char[] toCharArray = s.toCharArray();            //découpe le String "B5" en tab de char
+        char[] toCharArray = s.toCharArray();//découpe le String "B5" en tab de char
         char x = toCharArray[0];
-        char y = toCharArray[1];                         //x == 'B' et y == '5'
-        int i = getNumericValue(y);                      //converti '5' en 5
+        char y = toCharArray[1];
+        //x = 'B' et y = '5'
+        int i = getNumericValue(y);//converti '5' en 5
 
         for (int j = 0; j < gb.getTAILLE(); ++j) {
             for (int k = 0; k < gb.getTAILLE(); ++k) {
@@ -75,7 +75,7 @@ public class NouvPartie extends Observable {
         return p;
     }
 
-    //    récupération pos au format "B5" par exemple
+    //    convert pos en string pour pouvoir afficher la position (pos -> "B5")
     public String convertPosToStr(int x, int y) {
         return posToString(x, y);
     }
@@ -85,25 +85,23 @@ public class NouvPartie extends Observable {
 
         x = p.getPosX(); y = p.getPosY();
         String res = "";
-        for (int i = 0; i < gb.getTAILLE(); ++i) {
-            for (int j = 0; j < gb.getTAILLE(); ++j) {
-                if (gb.getAXE_X()[i] == x && gb.getAXE_Y()[j] == y) {
+        for (int i = 0; i < gb.getTAILLE(); ++i) 
+            for (int j = 0; j < gb.getTAILLE(); ++j) 
+                if (gb.getAXE_X()[i] == x && gb.getAXE_Y()[j] == y) 
                     res += x + "" + y;
-                }
-            }
-        }
         return res;
     }
 
     public boolean posValide(String s) {
         Position p = stringToPos(s);
-        return p.getPosX() >=0 && p.getPosX() < gb.getTAILLE() && p.getPosY() >=0 && p.getPosY() < gb.getTAILLE();
+        return p.getPosX() >= 0 && p.getPosX() < gb.getTAILLE() &&
+               p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE();
     }
     
     public void tir(Armee a) {
         
         Position batChoisi = selectBat(insert.nextLine());
-        List<Position> zoneTir = null;
+        List<Position> zoneTir = new LinkedList<>();
 
         for (Bateau b : a.getListBat()) {
             Position p = new Position(b.getX(), b.getY());//choppe la pos des bat de la liste
@@ -112,29 +110,32 @@ public class NouvPartie extends Observable {
                 if (b.getPortee() != 0) {
                     zoneTir = b.porteeTir();
                     for(Position p2 : zoneTir) {
-                        ////////////////////////////////////p2 => circulaire
-                       for(Armee ar: this.listArmee){
-                           if(!ar.getNom().equals(a.getNom())){
-                                for(Bateau ba : ar.getListBat()){
-                                    ba.touché();
+///////////////////////////////////////////////////////////////////////////////////////////p2 -> circulaire
+                        for(Armee ar : this.listArmee){
+                            if(!ar.getNom().equals(a.getNom())){
+                                for(Bateau bat : ar.getListBat()){
+                                    bat.touché();
+                                    if(bat.getPv() <= 0){
+                                        coulé(bat);
+                                    }
                                 }
                             }
                        }
                     }
 
                 }
-                else
-                    System.out.println("plouf! °~°");
             }
         }
     }
 
-//    public static void main(String[] args) {
-//        NouvPartie c = new NouvPartie();
-//        Vue v = new Vue();
-//        v.afficheMer(c.getGB());
-//    }
-
+    public void coulé(Bateau b) {
+        List<Armee> list = this.listArmee;
+        for(Armee a : list)
+            for(Bateau bat : a.getListBat())
+                if(bat.equals(b))
+                    a.getListBat().remove(b);
+    }
+    
     public void setChangedAndNotify() {
         setChanged();
         notifyObservers();

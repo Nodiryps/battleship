@@ -24,7 +24,7 @@ public class Gameboard extends Observable {
     private static final int[] AXE_Y = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26};
     private final int TAILLE;
     private Case[][] mer;
-    private Set<Position> setPosOccupados = new HashSet(); //enregistre les pos occupées
+    private Set<Position> setPosOccupados = new HashSet<>(); //enregistre les pos occupées
     
     public Gameboard(int size) {
         this.TAILLE = size;
@@ -79,10 +79,10 @@ public class Gameboard extends Observable {
         return new Position(randomPos(), randomPos());
     }
     
-//    rand qui sauve les pos ds un Set
-    private Position randomPosSet(Set<Position> set){
+//    retourne une pos libre par rapport au setPosOccupados
+    private Position randPosFree(){
         Position pos = randomPos2();
-        while(set.contains(pos)){
+        while(setPosOccupados.contains(pos)){
             pos = randomPos2();//on rejette les "dés" en somme... 
         }
         return pos;
@@ -91,10 +91,12 @@ public class Gameboard extends Observable {
 //    disposition random de la flotte
     private void randPosBat(Armee a){
         for(int i = 0; i < a.getSizeListBat(); ++i){
-            Position p = randomPosSet(setPosOccupados);
-            if(mer[p.getPosX()][p.getPosY()].caseAccessible()){
-                mer[p.getPosX()][p.getPosY()] = new Case(a.getBatList(i));
-                a.getBatList(i).setPos(p.getPosX(),p.getPosY());
+            Position p = randPosFree();
+            int x = p.getPosX(), 
+                y = p.getPosY();
+            if(this.mer[x][y].getBat() == null){
+                this.mer[x][y] = new Case(a.getBatList(i));
+                a.getBatList(i).setPos(x,y);
                 setPosOccupados.add(p);
             }
             
@@ -107,25 +109,30 @@ public class Gameboard extends Observable {
             for(int j = 0; j < TAILLE; ++j){
                 Random rand = new Random();
                 double d = rand.nextDouble();
-                Case c = new Case();
-                if(c.caseAccessible()){
-                    if(d <= 0.1){
-                        if(d <= 0.5){
-                            Mine mn = new MineNormale();
-                            mer[i][j] = new Case((MineNormale) mn);
-                        }
-                        else{
-                            Mine ma = new MineAtomique();
-                            mer[i][j] = new Case((MineAtomique) ma);
+                Position p = new Position(i,j);
+                
+                //si p contient un bat et si p contient une mine
+
+                
+                    if(!setPosOccupados.contains(p) ||this.mer[i][j].getMineA() == null || this.mer[i][j].getMineN() == null){
+                        if(d <= 0.1){
+                            if(d <= 0.05){
+                                //Mine mn = new MineNormale();
+                                this.mer[i][j] = new Case(new MineNormale());
+                            }
+                            else{
+                                //Mine ma = new MineAtomique();
+                                this.mer[i][j] = new Case(new MineAtomique());
+                            }
                         }
                     }
-                }
             }
         }
     }
 
     public void setChangedAndNotify() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setChanged();
+        notifyObservers();
     }
     
 

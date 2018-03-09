@@ -67,7 +67,7 @@ public class VueParamPartie extends VBox {
         private void installListeners() {
             // N'accepte que les chiffres
             textProperty().addListener((obs, oldValue, newValue) -> {
-                if (!newValue.matches("\\d*")) {
+                if (!newValue.matches("\\d*")){ ////////////////////////&& (newValue >= 5 && newValue <= 26)) {
                     setText(oldValue);
                 }
             });

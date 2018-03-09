@@ -36,31 +36,33 @@ public class VueConsole implements Observer {
         System.out.print(msg);
     }
 
-    public void afficheMer(Gameboard gb) {
-        affMer(gb);
+    public void afficheMer() {
+        affMer();
     }
 
-    private void affMer(Gameboard gb) {
+    private void affMer() {
 
         print("   ");
-        for (int i = 0; i < gb.getTAILLE(); i++) {
-            print(gb.getAXE_X()[i] + " ");
+        for (int i = 0; i < np.getGb().getTAILLE(); i++) {
+            print(np.getGb().getAXE_X()[i] + " ");
         }
         printLN("");
-        for (int i = 0; i < gb.getTAILLE(); i++) {
-            print(gb.getAXE_Y()[i] + " ");
-            for (int j = 0; j < gb.getTAILLE(); j++) {
-                System.out.println(" " + gb.getMer()[i][j]);
+        for (int i = 0; i < np.getGb().getTAILLE(); i++) {
+            print(np.getGb().getAXE_Y()[i] + " ");
+            for (int j = 0; j < np.getGb().getTAILLE(); j++) {
+                System.out.println(" " + np.getGb().getMer()[i][j]);
             }
             printLN("");
         }
         printLN("");
     }
 
-    public void AfficheEtatArmees(Armee a) {
+    public void AfficheEtatArmees() {
+        List<Armee> list = np.getListArmees();
         printLN("Etat des Armées");
         printLN("Armée"); 
-        afficheArmee(a);
+        for(Armee a : list)
+            afficheArmee(a);
     }
 
 //    affiche noms, listBat, Pv et pos
@@ -77,6 +79,7 @@ public class VueConsole implements Observer {
     }
     
     private void affichePosBat(Armee a) {
+        
         for (Bateau b : a.getListBat()) {
             printLN(np.convertPosToStr(b.getX(), b.getY()));
         }
@@ -90,7 +93,7 @@ public class VueConsole implements Observer {
     
 //    destinations possibles
     private List destPoss(){
-        List<Position> dest = new LinkedList();
+        List<Position> dest = new LinkedList<>();
         List<Armee> armee = np.getListArmees();
         for(Armee a : armee){
             for(Bateau b : a.getListBat()){
@@ -111,35 +114,35 @@ public class VueConsole implements Observer {
         }
     }
 
-//    public void affBougerBat() {
-//        String ouiNon = "";
-//        do{
-//            print("Déplacer un bateau de votre armée? (y/n): ");
-//            ouiNon = insert.nextLine();
-//            
-//        }while(ouiNon.compareTo("y") <=0 || ouiNon.compareTo("n") <=0);
-//        
-//        if(ouiNon.equals('y')){
-//            do{
-//                print("Quel bateau déplacer? (ex: B5): ");
-//                Position batChoisi = np.selectBat(toUpperCase(insert.nextLine()));
-//            }while(!np.posValide(insert.nextLine()));
-//            if(np.posValide(insert.nextLine())){
-//                do{
-//                    printLN("Sélectionner une des destinations possibles: ");
-//                    affDestPoss();
-//                    
-//                }
-//                //put les pos ds une list
-//                        si pos entrée est ds la list, on bouge le bat
-//                                sinon do while
-//            }
-//        }
-//        else{
-//            c est a l adevrsaire de jouer
-//        }
-//        
-//    }
+    public void affBougerBat() {
+        String ouiNon = "";
+        do{
+            print("Déplacer un bateau de votre armée? (y/n): ");
+            ouiNon = insert.nextLine();
+            
+        }while(ouiNon.compareTo("y") <=0 || ouiNon.compareTo("n") <=0);
+        
+        if(ouiNon.equals('y')){
+            do{
+                print("Quel bateau déplacer? (ex: B5): ");
+                Position batChoisi = np.selectBat(toUpperCase(insert.nextLine()));
+            }while(!np.posValide(insert.nextLine()));
+            if(np.posValide(insert.nextLine())){
+                do{
+                    printLN("Sélectionner une des destinations possibles: ");
+                    affDestPoss();
+                    
+                }
+                put les pos ds une list
+                        si pos entrée est ds la list, on bouge le bat
+                                sinon do while
+            }
+        }
+        else{
+            c est a l adevrsaire de jouer
+        }
+        
+    }
 
     @Override
     public void update(Observable obs, Object o) {

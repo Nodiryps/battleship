@@ -1,23 +1,27 @@
 .empty {
-    -fx-border-color: white;
-    -fx-background-image: url("sea.png");
+    -fx-border-color: #6666ff;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+    -fx-background-image: url("sea.gif");
 }
 
 .mine {
-    -fx-border-color: white;
-    -fx-background-image: url("sea.png");
+    -fx-border-color: #6666ff;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+    -fx-background-image: url("sea.gif");
 }
 
 .batG {
-    -fx-border-color: white;
+    -fx-border-color: #6666ff;
     -fx-background-position: center;
     -fx-background-size: stretch;
-    -fx-background-image: url("grandBateau.png");
+    -fx-background-image: url("grandBateau.gif");
 }
 
 .batP {
-    -fx-border-color: white;
+    -fx-border-color: #6666ff;
     -fx-background-position: center;
     -fx-background-size: stretch;
-    -fx-background-image: url("petitBateau.png");
+    -fx-background-image: url("petitBateau.gif");
 }

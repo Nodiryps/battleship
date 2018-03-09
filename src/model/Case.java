@@ -30,6 +30,18 @@ public class Case {
     public Case(MineAtomique m){
         this.mineA =  m;
     }
+
+    public Bateau getBat() {
+        return bat;
+    }
+
+    public MineNormale getMineN() {
+        return mineN;
+    }
+
+    public MineAtomique getMineA() {
+        return mineA;
+    }
     
     public boolean explosionMineA(){
         return bat != null && mineA != null;

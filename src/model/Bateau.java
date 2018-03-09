@@ -7,6 +7,7 @@ package model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -25,7 +26,6 @@ public abstract class Bateau implements Movable{
     protected TypeB type;
     protected Direction dir;
     
-
     public Bateau() {
     }
 
@@ -93,7 +93,7 @@ public abstract class Bateau implements Movable{
     }
     
     public List porteeTir(){
-        List<Position> zoneTir = new LinkedList();
+        List<Position> zoneTir = new LinkedList<>();
         for(int i = getX()-getPortee(); i <= getX()+getPortee() ;++i){      //les cases à gauche du bateau
             for(int j = getY()-getPortee(); j <= getY()-getPortee(); ++j){  //les cases à droite
                 Position pos = new Position(i,j);
@@ -103,43 +103,23 @@ public abstract class Bateau implements Movable{
     }
     
     public void touché() {};
-        
-//    public void choixDir() {
-//        Vue v = new Vue();
-//        do {
-//            dir = v.saisirDir();
-//            switch (dir) {
-//                case HAUT:
-//                    goUp();
-//                    break;
-//                case BAS:
-//                    goDown();
-//                    break;
-//                case GAUCHE:
-//                    goLeft();
-//                    break;
-//                case DROITE:
-//                    goRight();
-//                    break;
-//            }
-//        } while (dir != Direction.QUITTER);
-//    }
-//
-//    public void goUp() {
-//        this.setX(this.getX() - this.getPm());
-//    }
-//
-//    public void goDown() {
-//        this.setX(this.getX() + this.getPm());
-//    }
-//
-//    public void goLeft() {
-//        this.setY(this.getY() - this.getPm());
-//    }
-//
-//    public void goRight() {
-//        this.setY(this.getY() + this.getPm());
-//    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 79 * hash + Objects.hashCode(this.posBat);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Bateau){
+            Bateau b = (Bateau) obj;
+            return b.posBat == ((Bateau) obj).posBat;
+        }
+        return false;
+    }
+
 
     
 

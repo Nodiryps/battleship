@@ -18,8 +18,8 @@ public class Armee  {
     
     private String nom;
     private int score;
-    private List<Bateau> ListBat = new LinkedList();
-    private Map<String,List> mapJoueur = new HashMap(); //pr lier les joueurs à leur flotte
+    private List<Bateau> ListBat = new LinkedList<>();
+    private Map<String,List> mapJoueur = new HashMap<>(); //pr lier les joueurs à leur flotte
     private static int nbGBat = 1;
     private static int nbPBat = 2;
 
@@ -78,18 +78,18 @@ public class Armee  {
     public void setScore(int score) {
         this.score = score;
     }
+    
+    
 
-    public void removeBat(List<Bateau> list) {
-        List<Bateau> l = list;//enregistre d'abord dans une tmp sinon ça foire :p
-        for(Bateau b : l){
-            if(b.getPv() <= 0)
-                l.remove(b);
-        }
-    }
 //    public static void main(String[] args) {
 //        Armee armee = new Armee();
 //        System.out.println(armee);
 //    }
+
+    @Override
+    public String toString() {
+        return "Armee{" + "nom=" + nom + ", score=" + score + ", ListBat=" + ListBat + ", mapJoueur=" + mapJoueur + '}';
+    }
 
     
     

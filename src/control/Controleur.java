@@ -28,7 +28,6 @@ public class Controleur {
     public void lancer(){
         VueConsole v = new VueConsole();
         
-        
                 
     }
 
