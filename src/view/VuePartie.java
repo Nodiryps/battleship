@@ -20,15 +20,17 @@ public class VuePartie extends BorderPane implements Observer {
     private final ControleurFx control;
     private static NouvPartie np = VueParamPartie.getNouvPartie();
     private GrilleView grille;
-    private VBox vbox1;
-    private VBox vbox2;
+    private Vbox vbox1;
+    private Vbox vbox2;
 
     public VuePartie(Stage stage, int size, ControleurFx ctrl) {
         control = ctrl;
         SIZE = size;
         grille = new GrilleView();
-        vbox1 = new VBox();
-        vbox2 = new VBox();
+        vbox1 = new Vbox();
+        vbox2 = new Vbox();
+        vbox1.setAlignment();
+        vbox2.setAlignment();
         grille.setSizeConstraints();
         this.setCenter(grille);
         stage.setScene(new Scene(this, 500, 500));
@@ -40,13 +42,11 @@ public class VuePartie extends BorderPane implements Observer {
     public void update(Observable o, Object arg) {
             grille.nouvGridPane();
         }
-    private class vbox extends VBox{
+    private class Vbox extends VBox{
         
         public void setAlignment(){
-            vbox1.setAlignment(Pos.TOP_LEFT);
-            vbox1.setMaxSize(250, 200);
-            vbox2.setAlignment(Pos.BOTTOM_LEFT);
-            vbox2.setMaxSize(250, 200);
+            this.setAlignment(Pos.TOP_LEFT);
+            this.setMaxSize(250, 200);
         }
         
     

@@ -92,14 +92,10 @@ public class Gameboard extends Observable {
     private void randPosBat(Armee a){
         for(int i = 0; i < a.getSizeListBat(); ++i){
             Position p = randPosFree();
-            int x = p.getPosX(), 
-                y = p.getPosY();
-            if(this.mer[x][y].getBat() == null){
-                this.mer[x][y] = new Case(a.getBatList(i));
-                a.getBatList(i).setPos(x,y);
-                setPosOccupados.add(p);
-            }
-            
+            int x = p.getPosX(), y = p.getPosY();
+            this.mer[x][y] = new Case(a.getBatList(i));
+            a.getBatList(i).setPos(x,y);
+            setPosOccupados.add(p);
         }
     }
     
@@ -107,25 +103,20 @@ public class Gameboard extends Observable {
     private void randPosMine(){
         for(int i = 0; i < TAILLE; ++i){
             for(int j = 0; j < TAILLE; ++j){
-                Random rand = new Random();
-                double d = rand.nextDouble();
-                Position p = new Position(i,j);
-                
-                //si p contient un bat et si p contient une mine
-
-                
-                    if(!setPosOccupados.contains(p) ||this.mer[i][j].getMineA() == null || this.mer[i][j].getMineN() == null){
-                        if(d <= 0.1){
-                            if(d <= 0.05){
-                                //Mine mn = new MineNormale();
-                                this.mer[i][j] = new Case(new MineNormale());
-                            }
-                            else{
-                                //Mine ma = new MineAtomique();
-                                this.mer[i][j] = new Case(new MineAtomique());
-                            }
+                int uneSurDix = ThreadLocalRandom.current().nextInt(1,100);
+                int uneSurDeux = ThreadLocalRandom.current().nextInt(1,100);
+                if(this.mer[i][j].getBat()== null && 
+                   this.mer[i][j].getMineA() == null && 
+                   this.mer[i][j].getMineN() == null){//bool caseVide à faire
+                    if(uneSurDix <= 10){
+                        if(uneSurDeux <= 50){
+                            this.mer[i][j] = new Case(new MineNormale());
+                        }
+                        else{
+                            this.mer[i][j] = new Case(new MineAtomique());
                         }
                     }
+                }
             }
         }
     }

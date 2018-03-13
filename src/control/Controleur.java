@@ -5,6 +5,7 @@
  */
 package control;
 
+import model.NouvPartie;
 import view.VueConsole;
 
 /**
@@ -17,18 +18,24 @@ public class Controleur {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
         Controleur ctrl = new Controleur();
         ctrl.lancer();
-        
     }
     
     
     
     public void lancer(){
         VueConsole v = new VueConsole();
+        NouvPartie npVue = v.getNpVue();
         
-                
+        v.affNomArmees();
+        
+        while(!npVue.getListArmees().isEmpty()){
+        v.affMer();
+        v.affEtatArmees();
+        v.affTir();
+        v.affMouvBat();
+        }
     }
 
     

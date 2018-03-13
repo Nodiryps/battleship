@@ -71,10 +71,6 @@ public class Armee  {
         return mapJoueur.get(n);
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
     public void setScore(int score) {
         this.score = score;
     }

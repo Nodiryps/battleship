@@ -51,7 +51,7 @@ public class NouvPartie extends Observable {
     }
     
     //    récupéation pos inséré par le user ("B5" -> pos)
-    public Position selectBat(String s) {
+    public Position convertStrToPos(String s) {
         return stringToPos(s);
     }
 
@@ -100,7 +100,7 @@ public class NouvPartie extends Observable {
     
     public void tir(Armee a) {
         
-        Position batChoisi = selectBat(insert.nextLine());
+        Position batChoisi = convertStrToPos(insert.nextLine());
         List<Position> zoneTir = new LinkedList<>();
 
         for (Bateau b : a.getListBat()) {
