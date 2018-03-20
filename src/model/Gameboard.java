@@ -8,7 +8,6 @@ package model;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Observable;
-import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 

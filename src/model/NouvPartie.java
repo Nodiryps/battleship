@@ -6,7 +6,6 @@
 package model;
 
 import static java.lang.Character.getNumericValue;
-import java.util.Scanner;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -16,9 +15,6 @@ import java.util.Observable;
  * @author Spy
  */
 public class NouvPartie extends Observable {
-
-    Scanner insert = new Scanner(System.in);
-
     private Gameboard gb;
     private final int nbJ;
     private final List<Armee> listArmee = new LinkedList<>();
@@ -41,13 +37,12 @@ public class NouvPartie extends Observable {
     }
     
     private void creationArmees() {
-        for (int i = 1; i <= nbJ; ++i) {
+        for (int i = 1; i <= nbJ; ++i) 
             listArmee.add(new Armee());
-        }
     }
 
     public List<Armee> getListArmees() {
-        return listArmee;
+        return this.listArmee;
     }
     
     //    récupéation pos inséré par le user ("B5" -> pos)
@@ -64,14 +59,12 @@ public class NouvPartie extends Observable {
         //x = 'B' et y = '5'
         int i = getNumericValue(y);//converti '5' en 5
 
-        for (int j = 0; j < gb.getTAILLE(); ++j) {
-            for (int k = 0; k < gb.getTAILLE(); ++k) {
+        for (int j = 0; j < gb.getTAILLE(); ++j) 
+            for (int k = 0; k < gb.getTAILLE(); ++k) 
                 if (gb.getAXE_X()[j] == x && gb.getAXE_Y()[k] == i) {
                     p.setPosX(j);
                     p.setPosY(k);
                 }
-            }
-        }
         return p;
     }
 
@@ -98,14 +91,14 @@ public class NouvPartie extends Observable {
                p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE();
     }
     
-    public void tir(Armee a) {
+    public void tir(Armee a, String pos) {
         
-        Position batChoisi = convertStrToPos(insert.nextLine());
+        Position batChoisi = convertStrToPos(pos);
         List<Position> zoneTir = new LinkedList<>();
 
         for (Bateau b : a.getListBat()) {
             Position p = new Position(b.getX(), b.getY());//choppe la pos des bat de la liste
-            if (batChoisi.equals(p)) {                    //choppe le bateau choisi
+            if (batChoisi.equals(p)) {                    //choppe la pos du bateau choisi
                 b.randomPortee();                         //set la portée
                 if (b.getPortee() != 0) {
                     zoneTir = b.porteeTir();

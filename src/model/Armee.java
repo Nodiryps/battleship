@@ -75,19 +75,8 @@ public class Armee  {
         this.score = score;
     }
     
-    
-
-//    public static void main(String[] args) {
-//        Armee armee = new Armee();
-//        System.out.println(armee);
-//    }
-
-    @Override
-    public String toString() {
-        return "Armee{" + "nom=" + nom + ", score=" + score + ", ListBat=" + ListBat + ", mapJoueur=" + mapJoueur + '}';
+    public void setNom(String n){
+        this.nom = n;
     }
-
-    
-    
     
 }

@@ -44,9 +44,9 @@ public class VueConsole implements Observer {
 
     public void affNomArmees(){
         print("J1: ");
-        J1 = new Armee(insert.nextLine());
+        J1.setNom(insert.nextLine());
         print("\nJ2: ");
-        J2 = new Armee(insert.nextLine());
+        J2.setNom(insert.nextLine());
     }
     
     public void affMer() {
@@ -83,9 +83,9 @@ public class VueConsole implements Observer {
     private void afficheArmee(Armee a) {
         
         for (Entry<String, List> entry : a.getMapJoueur().entrySet()) {
-            String key = entry.getKey();
+            String nomArmee = entry.getKey();
             List val = entry.getValue();
-            printLN(key); 
+            printLN(nomArmee); 
             printLN(val);
             affichePV(a);
             affichePosBat(a);
@@ -101,11 +101,11 @@ public class VueConsole implements Observer {
 
     private void affichePV(Armee a) {
         for (Bateau b : a.getListBat()) {
-            System.out.println(b.getPv());
+            printLN(b.getPv());
         }
     }
     
-    public void affTir() {
+    public void affTir() {.
         np.tir(J1);
     }
     
@@ -131,6 +131,15 @@ public class VueConsole implements Observer {
             print(p);
         }
     }
+    
+    //    vérifie si un bateau fait partie de l'armée courante
+    public boolean batAppartientArmee(Armee armeeCou, Position p){//remplacer la fin de tir() par cette méthode
+        for(Armee e : np.getListArmees())
+            for(Bateau bat : e.getListBat())
+                if(!e.getNom().equals(armeeCou.getNom()))
+                    return bat.getPosBat() == p;
+        return false;
+    }
 
     public void affMouvBat() {
         for(int i = 0; i < np.getNbJ(); ++i) {  
@@ -146,8 +155,9 @@ public class VueConsole implements Observer {
                 do{
                     print("Quel bateau déplacer? (ex: B5): ");
                     batChoisi = toUpperCase(insert.nextLine());
-                }while(!np.posValide(batChoisi));
-                if(np.posValide(batChoisi)){
+                }while(!np.posValide(batChoisi) || !batAppartientArmee(np.convertStrToPos(batChoisi)));
+                
+                if(np.posValide(batChoisi) && ){
                     String destChoisi = "";
                     do{
                         printLN("Sélectionner une des destinations possibles: ");
@@ -155,11 +165,8 @@ public class VueConsole implements Observer {
                         destChoisi = toUpperCase(insert.nextLine());
                     }while(!listDestPoss().contains(np.convertStrToPos(destChoisi)));
                     if(listDestPoss().contains(np.convertStrToPos(destChoisi))){
-                        le bateau de cette case bouge ds la case choisi
+                        le bateau de cette case bouge ds la case choisi;
                     }
-    //                put les pos ds une list
-    //                        si pos entrée est ds la list, on bouge le bat
-    //                                sinon do while
                 }
             }
 //            else{

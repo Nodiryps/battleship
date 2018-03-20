@@ -28,6 +28,10 @@ public abstract class Bateau implements Movable{
     
     public Bateau() {
     }
+    
+    public Position getPosBat(){
+        return this.posBat;
+    }
 
     public int getPortee() {
         return portee;
