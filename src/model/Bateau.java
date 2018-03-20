@@ -17,7 +17,7 @@ import java.util.Random;
  *
  * @author 2208sptheodorou
  */
-public abstract class Bateau implements Movable{
+public abstract class Bateau implements Positionnable{
     
     Position posBat = new Position(0,0);
     protected int portee;//portée du tir

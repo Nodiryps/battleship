@@ -5,7 +5,6 @@
  */
 package control;
 
-import model.NouvPartie;
 import view.VueConsole;
 
 /**
@@ -26,16 +25,15 @@ public class Controleur {
     
     public void lancer(){
         VueConsole v = new VueConsole();
-        NouvPartie npVue = v.getNpVue();
         
         v.affNomArmees();
         
-        while(!npVue.getListArmees().isEmpty()){
-        v.affMer();
-        v.affEtatArmees();
-        v.affTir();
-        v.affMouvBat();
-        }
+        do{
+            v.affMer();
+            v.affEtatArmees();
+            v.affTir();
+            v.affMouvBat();
+        }while(!v.partieFinie());
     }
 
     

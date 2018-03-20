@@ -103,7 +103,7 @@ public class NouvPartie extends Observable {
                 if (b.getPortee() != 0) {
                     zoneTir = b.porteeTir();
                     for(Position p2 : zoneTir) {
-///////////////////////////////////////////////////////////////////////////////////////////p2 -> circulaire
+////////////////////////////////////////////////////////////////////////////////p2 -> circulaire
                         for(Armee ar : this.listArmee){
                             if(!ar.getNom().equals(a.getNom())){
                                 for(Bateau bat : ar.getListBat()){
@@ -133,6 +133,8 @@ public class NouvPartie extends Observable {
         setChanged();
         notifyObservers();
     }
+
+    
 
     
 }

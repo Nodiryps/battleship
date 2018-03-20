@@ -27,7 +27,7 @@ public class VueConsole implements Observer {
     private Controleur ctrl = new Controleur();
     private final Scanner insert = new Scanner(System.in);
     private final NouvPartie np = new NouvPartie(insert.nextInt());
-    private Armee J1, J2;
+    private Armee joueur;
     
 
     public static void printLN(Object msg) {
@@ -44,9 +44,9 @@ public class VueConsole implements Observer {
 
     public void affNomArmees(){
         print("J1: ");
-        J1.setNom(insert.nextLine());
+        joueur.setNom(insert.nextLine());
         print("\nJ2: ");
-        J2.setNom(insert.nextLine());
+        joueur.setNom(insert.nextLine());
     }
     
     public void affMer() {
@@ -66,9 +66,10 @@ public class VueConsole implements Observer {
 //        printLN("");
     }
     
-    @Overrid
+    @Override
     public void update(Observable obs, Object o) {
-        
+        affMer();
+        affEtatArmees();
     }
 
     public void affEtatArmees() {
@@ -105,10 +106,6 @@ public class VueConsole implements Observer {
         }
     }
     
-    public void affTir() {.
-        np.tir(J1);
-    }
-    
 //    destinations possibles
     private List listDestPoss(){
         List<Position> dest = new LinkedList<>();
@@ -140,9 +137,35 @@ public class VueConsole implements Observer {
                     return bat.getPosBat() == p;
         return false;
     }
+    
+    public boolean partieFinie() {
+        for(Armee a : np.getListArmees())
+            return a.getSizeListBat() == 0;
+        return false;
+    }
+    
+    public void affTir() {
+        if(!partieFinie()){
+            String batChoisi = "";
+                    do{
+                        print("Avec quel bateau voulez-vous tirer, " + this.joueur.getNom() + "? (ex: B5): ");
+                        batChoisi = toUpperCase(insert.nextLine());
+                        
+                    }while(!np.posValide(batChoisi) || !batAppartientArmee(this.joueur,np.convertStrToPos(batChoisi)));
+                   
+                    if(np.posValide(batChoisi) && batAppartientArmee(this.joueur,np.convertStrToPos(batChoisi))){
+                        np.tir(joueur, batChoisi);
+                    }
+                    np.getGb().setChangedAndNotify();
+        }
+        else
+            print("GAME OVER!");
+    }
 
     public void affMouvBat() {
-        for(int i = 0; i < np.getNbJ(); ++i) {  
+        int cpt = 1;
+        do
+        {
             String ouiNon = "";
             do{
                 print("Déplacer un bateau de votre armée? (y/n): ");
@@ -155,24 +178,29 @@ public class VueConsole implements Observer {
                 do{
                     print("Quel bateau déplacer? (ex: B5): ");
                     batChoisi = toUpperCase(insert.nextLine());
-                }while(!np.posValide(batChoisi) || !batAppartientArmee(np.convertStrToPos(batChoisi)));
+                    
+                }while(!np.posValide(batChoisi) || !batAppartientArmee(this.joueur, np.convertStrToPos(batChoisi)));
                 
-                if(np.posValide(batChoisi) && ){
+                if(np.posValide(batChoisi) && batAppartientArmee(this.joueur, np.convertStrToPos(batChoisi))){//pas sur
+                    Position courante = new Position(np.convertStrToPos(batChoisi).getPosX(),np.convertStrToPos(batChoisi).getPosY());
                     String destChoisi = "";
                     do{
                         printLN("Sélectionner une des destinations possibles: ");
                         affDestPoss();
                         destChoisi = toUpperCase(insert.nextLine());
+                        
                     }while(!listDestPoss().contains(np.convertStrToPos(destChoisi)));
-                    if(listDestPoss().contains(np.convertStrToPos(destChoisi))){
-                        le bateau de cette case bouge ds la case choisi;
-                    }
+                    
+                    if(listDestPoss().contains(np.convertStrToPos(destChoisi)))
+                        for(Bateau b : joueur.getListBat())
+                            if(b.getX() == courante.getPosX() && b.getY() == courante.getPosY())
+                                b.setPos(np.convertStrToPos(destChoisi).getPosX(), np.convertStrToPos(destChoisi).getPosY());
                 }
             }
-//            else{
-//                c est a l adevrsaire de jouer
-//            }
-        }
+            if(cpt == np.getNbJ())
+                cpt = 1;
+            
+        }while(cpt <= np.getNbJ() && !partieFinie());
     }
 
 
