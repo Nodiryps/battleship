@@ -24,29 +24,28 @@ import static jdk.nashorn.internal.objects.NativeString.toUpperCase;
  */
 public class VueConsole implements Observer {
 
-    private Controleur ctrl = new Controleur();
+    private final int SIZE;
+    private final Controleur ctrl;
     private final Scanner insert = new Scanner(System.in);
-    private final NouvPartie np = new NouvPartie(insert.nextInt());
-    private Armee joueur;
+    private final NouvPartie np;
     
-
-    public static void printLN(Object msg) {
-        System.out.println(msg);
-    }
-
-    public static void print(Object msg) {
-        System.out.print(msg);
+    public VueConsole(){
+        this.ctrl = new Controleur();
+        print("Taille de votre mer (5 à 26): ");
+        this.SIZE = insert.nextInt();
+        this.np = new NouvPartie(SIZE);
     }
     
     public NouvPartie getNpVue(){
         return np;
     }
-
+    
     public void affNomArmees(){
-        print("J1: ");
-        joueur.setNom(insert.nextLine());
-        print("\nJ2: ");
-        joueur.setNom(insert.nextLine());
+        for(int i = 1; i <= np.getNbJ(); i++){
+            print("J" + i + ": ");
+            np.creationArmees(insert.nextLine());
+            printLN("");
+        }
     }
     
     public void affMer() {
@@ -59,11 +58,10 @@ public class VueConsole implements Observer {
         for (int i = 0; i < np.getGb().getTAILLE(); i++) {
             print(np.getGb().getAXE_Y()[i] + " ");
             for (int j = 0; j < np.getGb().getTAILLE(); j++) {
-                printLN("|" + np.getGb().getMer()[i][j]);
+                print("|" + np.getGb().getMer()[i][j]);
             }
             printLN("|");
         }
-//        printLN("");
     }
     
     @Override
@@ -94,7 +92,6 @@ public class VueConsole implements Observer {
     }
     
     private void affichePosBat(Armee a) {
-        
         for (Bateau b : a.getListBat()) {
             printLN(np.convertPosToStr(b.getX(), b.getY()));
         }
@@ -146,62 +143,88 @@ public class VueConsole implements Observer {
     
     public void affTir() {
         if(!partieFinie()){
-            String batChoisi = "";
-                    do{
-                        print("Avec quel bateau voulez-vous tirer, " + this.joueur.getNom() + "? (ex: B5): ");
-                        batChoisi = toUpperCase(insert.nextLine());
-                        
-                    }while(!np.posValide(batChoisi) || !batAppartientArmee(this.joueur,np.convertStrToPos(batChoisi)));
-                   
-                    if(np.posValide(batChoisi) && batAppartientArmee(this.joueur,np.convertStrToPos(batChoisi))){
-                        np.tir(joueur, batChoisi);
-                    }
-                    np.getGb().setChangedAndNotify();
+            List<Armee> joueurList = np.getListArmees();
+            for(int i = 1; i <= joueurList.size(); ++i){
+                Armee joueur = joueurList.get(i);
+                String batChoisi = "";
+                        do{
+                            print("Avec quel bateau voulez-vous tirer, " + joueur.getNom() + "? (ex: B5): ");
+                            batChoisi = toUpperCase(insert.nextLine());
+
+                        }while(batChoisi.length() != 2 || !np.posValide(batChoisi) || !batAppartientArmee(joueur,np.convertStrToPos(batChoisi)));
+
+                        if(batChoisi.length() == 2 && np.posValide(batChoisi) && batAppartientArmee(joueur,np.convertStrToPos(batChoisi))){
+                            np.tir(joueur, batChoisi);
+                        }
+                        np.getGb().setChangedAndNotify();
+            }
         }
         else
             print("GAME OVER!");
     }
 
     public void affMouvBat() {
-        int cpt = 1;
-        do
-        {
-            String ouiNon = "";
-            do{
-                print("Déplacer un bateau de votre armée? (y/n): ");
-                ouiNon = insert.nextLine();
-
-            }while(!ouiNon.equals("y") || !ouiNon.equals("n"));
-
-            if(ouiNon.equals('y')){
-                String batChoisi = "";
+        List<Armee> joueurList = np.getListArmees();
+        for(int cpt = 1; cpt <= joueurList.size(); ++cpt){
+            Armee joueur = joueurList.get(cpt);
+            do
+            {
+                String ouiNon = "";
                 do{
-                    print("Quel bateau déplacer? (ex: B5): ");
-                    batChoisi = toUpperCase(insert.nextLine());
-                    
-                }while(!np.posValide(batChoisi) || !batAppartientArmee(this.joueur, np.convertStrToPos(batChoisi)));
-                
-                if(np.posValide(batChoisi) && batAppartientArmee(this.joueur, np.convertStrToPos(batChoisi))){//pas sur
-                    Position courante = new Position(np.convertStrToPos(batChoisi).getPosX(),np.convertStrToPos(batChoisi).getPosY());
-                    String destChoisi = "";
+                    print("Déplacer un bateau de votre armée? (y/n): ");
+                    ouiNon = insert.nextLine();
+
+                }while(!ouiNon.equals("y") || !ouiNon.equals("n"));
+
+                if(ouiNon.equals('y')){
+                    String batChoisi = "";
                     do{
-                        printLN("Sélectionner une des destinations possibles: ");
-                        affDestPoss();
-                        destChoisi = toUpperCase(insert.nextLine());
-                        
-                    }while(!listDestPoss().contains(np.convertStrToPos(destChoisi)));
-                    
-                    if(listDestPoss().contains(np.convertStrToPos(destChoisi)))
-                        for(Bateau b : joueur.getListBat())
-                            if(b.getX() == courante.getPosX() && b.getY() == courante.getPosY())
-                                b.setPos(np.convertStrToPos(destChoisi).getPosX(), np.convertStrToPos(destChoisi).getPosY());
+                        print("Quel bateau déplacer? (ex: B5): ");
+                        batChoisi = toUpperCase(insert.nextLine());
+
+                    }while(batChoisi.length() != 1 || !np.posValide(batChoisi) || !batAppartientArmee(joueur, np.convertStrToPos(batChoisi)));
+
+                    if(np.posValide(batChoisi) && batAppartientArmee(joueur, np.convertStrToPos(batChoisi))){//pas sur
+                        Position courante = new Position(np.convertStrToPos(batChoisi).getPosX(),np.convertStrToPos(batChoisi).getPosY());
+                        String destChoisi = "";
+                        do{
+                            printLN("Sélectionner une des destinations possibles: ");
+                            affDestPoss();
+                            destChoisi = toUpperCase(insert.nextLine());
+
+                        }while(destChoisi.length() != 1 || !listDestPoss().contains(np.convertStrToPos(destChoisi)));
+
+                        if(listDestPoss().contains(np.convertStrToPos(destChoisi)))
+                            for(Bateau b : joueur.getListBat())
+                                if(b.getX() == courante.getPosX() && b.getY() == courante.getPosY())
+                                    b.setPos(np.convertStrToPos(destChoisi).getPosX(), np.convertStrToPos(destChoisi).getPosY());
+                    }
                 }
-            }
-            if(cpt == np.getNbJ())
-                cpt = 1;
-            
-        }while(cpt <= np.getNbJ() && !partieFinie());
+                if(cpt == np.getNbJ())
+                    cpt = 1;
+
+            }while(cpt <= np.getNbJ() && !partieFinie());
+        }
+    }
+    
+    private String toStringBatGd(){
+        return "B";
+    }
+    
+    private String toStringBatPt(){
+        return "b";
+    }
+    
+    private String toStringCase(){
+        return " ";
     }
 
+    public static void printLN(Object msg) {
+        System.out.println(msg);
+    }
+
+    public static void print(Object msg) {
+        System.out.print(msg);
+    }
 
 }

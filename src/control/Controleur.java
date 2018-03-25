@@ -23,14 +23,16 @@ public class Controleur {
     
     
     
+    
+    
+    
     public void lancer(){
         VueConsole v = new VueConsole();
         
         v.affNomArmees();
-        
+        v.affMer();
+        v.affEtatArmees();
         do{
-            v.affMer();
-            v.affEtatArmees();
             v.affTir();
             v.affMouvBat();
         }while(!v.partieFinie());

@@ -25,9 +25,6 @@ public class Armee  {
 
     public Armee(String nom) {
         this.nom = nom;
-    }
-    
-    public Armee() {
         nouvArmee();
         mapJoueur.put(this.nom, this.ListBat);
     }
@@ -73,10 +70,6 @@ public class Armee  {
 
     public void setScore(int score) {
         this.score = score;
-    }
-    
-    public void setNom(String n){
-        this.nom = n;
     }
     
 }

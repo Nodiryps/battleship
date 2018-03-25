@@ -5,7 +5,7 @@
  */
 package model;
 
-import static java.lang.Character.getNumericValue;
+import static java.lang.Character.getNumericValue; 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -21,10 +21,8 @@ public class NouvPartie extends Observable {
     
 
     public NouvPartie(int size) {
-
         this.gb = new Gameboard(size);
         this.nbJ = 2;
-        creationArmees();
         this.gb.nouvMer(listArmee);
     }
 
@@ -36,9 +34,8 @@ public class NouvPartie extends Observable {
         return nbJ;
     }
     
-    private void creationArmees() {
-        for (int i = 1; i <= nbJ; ++i) 
-            listArmee.add(new Armee());
+    public void creationArmees(String s) {
+        listArmee.add(new Armee(s));
     }
 
     public List<Armee> getListArmees() {
@@ -52,7 +49,7 @@ public class NouvPartie extends Observable {
 
     private Position stringToPos(String s) {
         Position p = new Position(0, 0);
-
+        
         char[] toCharArray = s.toCharArray();//découpe le String "B5" en tab de char
         char x = toCharArray[0];
         char y = toCharArray[1];

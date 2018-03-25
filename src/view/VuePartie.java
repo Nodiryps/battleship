@@ -20,37 +20,34 @@ public class VuePartie extends BorderPane implements Observer {
     private final ControleurFx control;
     private static NouvPartie np = VueParamPartie.getNouvPartie();
     private GrilleView grille;
-    private Vbox vbox1;
-    private Vbox vbox2;
+    private VBox vbox1;
+    private VBox vbox2;
 
     public VuePartie(Stage stage, int size, ControleurFx ctrl) {
         control = ctrl;
         SIZE = size;
         grille = new GrilleView();
-        vbox1 = new Vbox();
-        vbox2 = new Vbox();
-        vbox1.setAlignment();
-        vbox2.setAlignment();
         grille.setSizeConstraints();
         this.setCenter(grille);
+        this.setLeft(vbox1);
+        this.setLeft(vbox2);
         stage.setScene(new Scene(this, 500, 500));
-        stage.setTitle("Bataille Navale (clic pour déplacer)");
+        stage.setTitle("Bataille Navale leFilmAvecRihanna (déplacer avec souris)");
         stage.show();
+        vbox1 = new VBox();
+//        vbox1.setAlignment(Pos.TOP_LEFT);
+        vbox1.setMaxSize(250, 200);
+        vbox2 = new VBox();
+//        vbox2.setAlignment(Pos.BOTTOM_LEFT);
+        vbox2.setMaxSize(250, 200);
+        
     }
     
     @Override
     public void update(Observable o, Object arg) {
             grille.nouvGridPane();
         }
-    private class Vbox extends VBox{
-        
-        public void setAlignment(){
-            this.setAlignment(Pos.TOP_LEFT);
-            this.setMaxSize(250, 200);
-        }
-        
     
-    }
     private class GrilleView extends GridPane {
     
         // Pour que chaque ligne et chaque colonne soit dimensionnée
