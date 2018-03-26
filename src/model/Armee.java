@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import static view.VueConsole.print;
+import static view.VueConsole.printLN;
 
 /**
  *

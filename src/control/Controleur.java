@@ -5,7 +5,10 @@
  */
 package control;
 
+import java.util.Scanner;
+import model.NouvPartie;
 import view.VueConsole;
+import static view.VueConsole.print;
 
 /**
  *
@@ -13,9 +16,8 @@ import view.VueConsole;
  */
 public class Controleur {
 
-    /**
-     * @param args the command line arguments
-     */
+   public NouvPartie np = NouvPartie.getNP();
+    
     public static void main(String[] args) {
         Controleur ctrl = new Controleur();
         ctrl.lancer();
@@ -27,9 +29,8 @@ public class Controleur {
     
     
     public void lancer(){
-        VueConsole v = new VueConsole();
+        VueConsole v = new VueConsole(this);
         
-        v.affNomArmees();
         v.affMer();
         v.affEtatArmees();
         do{

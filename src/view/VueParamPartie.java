@@ -8,6 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import control.ControleurFx;
+import java.util.LinkedList;
+import java.util.List;
 import javafx.scene.input.KeyCode;
 import model.NouvPartie;
 
@@ -48,7 +50,10 @@ public class VueParamPartie extends VBox {
     }
 
     private void switchToMainWindow(String j1, String j2, int size) {
-        npVue = new NouvPartie(size);
+        List<String> noms = new LinkedList();
+        noms.add(j1);
+        noms.add(j2);
+        npVue = new NouvPartie(size, noms);
         for(int i = 0; i < npVue.getListArmees().size(); ++i){
             npVue.getListArmees().get(i);
         }

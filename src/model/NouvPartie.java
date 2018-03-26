@@ -5,10 +5,13 @@
  */
 package model;
 
-import static java.lang.Character.getNumericValue; 
+import static java.lang.Character.getNumericValue;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Scanner;
+import static view.VueConsole.print;
+import static view.VueConsole.printLN;
 
 /**
  *
@@ -16,16 +19,39 @@ import java.util.Observable;
  */
 public class NouvPartie extends Observable {
     private Gameboard gb;
-    private final int nbJ;
-    private final List<Armee> listArmee = new LinkedList<>();
-    
+    private final static int nbJ = 2;
+    private final List<Armee> listArmee;
 
-    public NouvPartie(int size) {
+    public NouvPartie(int size, List<String> noms) {
         this.gb = new Gameboard(size);
-        this.nbJ = 2;
+        this.listArmee = creationArmees(noms);
         this.gb.nouvMer(listArmee);
     }
 
+    public static NouvPartie getNP(){
+        Scanner insert = new Scanner(System.in);
+        List<String> noms = new LinkedList<>();
+        print("Taille de votre mer (5 à 26): ");
+        int size = insert.nextInt();
+        for(int i = 0; i < nbJ; ++i){ 
+            print("J" + (i+1) + ": ");
+            printLN("");
+            noms.add(insert.nextLine());
+        }
+        return new NouvPartie(size, noms);
+    }
+    
+    private static List<Armee> creationArmees(List<String> noms) {
+        List<Armee> list = new LinkedList<>();
+        for(String nom : noms)
+            list.add(new Armee(nom));
+        return list;
+    }
+
+    public NouvPartie(int size) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     public Gameboard getGb() {
         return gb;
     }
@@ -34,10 +60,6 @@ public class NouvPartie extends Observable {
         return nbJ;
     }
     
-    public void creationArmees(String s) {
-        listArmee.add(new Armee(s));
-    }
-
     public List<Armee> getListArmees() {
         return this.listArmee;
     }
