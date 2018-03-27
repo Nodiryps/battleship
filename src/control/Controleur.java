@@ -22,12 +22,7 @@ public class Controleur {
         Controleur ctrl = new Controleur();
         ctrl.lancer();
     }
-    
-    
-    
-    
-    
-    
+
     public void lancer(){
         VueConsole v = new VueConsole(this);
         
@@ -38,7 +33,5 @@ public class Controleur {
             v.affMouvBat();
         }while(!v.partieFinie());
     }
-
-    
     
 }

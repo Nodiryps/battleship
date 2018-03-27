@@ -35,8 +35,9 @@ public class NouvPartie extends Observable {
         int size = insert.nextInt();
         for(int i = 0; i < nbJ; ++i){ 
             print("J" + (i+1) + ": ");
-            printLN("");
-            noms.add(insert.nextLine());
+            String s = insert.next();
+//            printLN("");
+            noms.add(s);
         }
         return new NouvPartie(size, noms);
     }
@@ -108,6 +109,12 @@ public class NouvPartie extends Observable {
         Position p = stringToPos(s);
         return p.getPosX() >= 0 && p.getPosX() < gb.getTAILLE() &&
                p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE();
+    }
+    
+    public void mouvBat(Armee joueur, Position courante, String destChoisi){
+        for(Bateau b : joueur.getListBat())
+            if(b.getX() == courante.getPosX() && b.getY() == courante.getPosY())
+                b.setPos(convertStrToPos(destChoisi).getPosX(), convertStrToPos(destChoisi).getPosY());
     }
     
     public void tir(Armee a, String pos) {

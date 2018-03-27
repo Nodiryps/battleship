@@ -17,6 +17,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
 import static jdk.nashorn.internal.objects.NativeString.toUpperCase;
+import model.BateauGrand;
+import model.Case;
+import model.TypeB;
 
 /**
  *
@@ -41,7 +44,8 @@ public class VueConsole implements Observer {
         for (int i = 0; i < ctrl.np.getGb().getTAILLE(); i++) {
             print(ctrl.np.getGb().getAXE_Y()[i] + " ");
             for (int j = 0; j < ctrl.np.getGb().getTAILLE(); j++) {
-                print("|" + ctrl.np.getGb().getMer()[i][j]);
+                
+                print("|" + toString(ctrl.np.getGb().getMer()[i][j]));
             }
             printLN("|");
         }
@@ -167,7 +171,7 @@ public class VueConsole implements Observer {
 
                     }while(batChoisi.length() != 1 || !ctrl.np.posValide(batChoisi) || !batAppartientArmee(joueur, ctrl.np.convertStrToPos(batChoisi)));
 
-                    if(ctrl.np.posValide(batChoisi) && batAppartientArmee(joueur, ctrl.np.convertStrToPos(batChoisi))){//pas sur
+                    if(ctrl.np.posValide(batChoisi) && batAppartientArmee(joueur, ctrl.np.convertStrToPos(batChoisi))){
                         Position courante = new Position(ctrl.np.convertStrToPos(batChoisi).getPosX(),ctrl.np.convertStrToPos(batChoisi).getPosY());
                         String destChoisi = "";
                         do{
@@ -178,9 +182,7 @@ public class VueConsole implements Observer {
                         }while(destChoisi.length() != 1 || !listDestPoss().contains(ctrl.np.convertStrToPos(destChoisi)));
 
                         if(listDestPoss().contains(ctrl.np.convertStrToPos(destChoisi)))
-                            for(Bateau b : joueur.getListBat())
-                                if(b.getX() == courante.getPosX() && b.getY() == courante.getPosY())
-                                    b.setPos(ctrl.np.convertStrToPos(destChoisi).getPosX(), ctrl.np.convertStrToPos(destChoisi).getPosY());
+                            ctrl.np.mouvBat(joueur, courante, destChoisi);
                     }
                 }
                 if(cpt == ctrl.np.getNbJ())
@@ -190,16 +192,18 @@ public class VueConsole implements Observer {
         }
     }
     
-    private String toStringBatGd(){
-        return "B";
-    }
-    
-    private String toStringBatPt(){
-        return "b";
-    }
-    
-    private String toStringCase(){
-        return " ";
+    private String toString(Case c){
+        if(c.getBat() != null){
+            if(c.getBat().getTypeB() == TypeB.PETIT)
+                return "b";
+            else if(c.getBat().getTypeB() == TypeB.GRAND)
+                return "B";
+            else
+                return " ";
+        }
+        else
+            return " ";
+        
     }
 
     public static void printLN(Object msg) {

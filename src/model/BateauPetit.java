@@ -13,8 +13,11 @@ package model;
 public class BateauPetit extends Bateau {
 
     public BateauPetit() {
+        this.type= TypeB.PETIT;
         this.pm = 2;
         this.pv = 1;
+        
+        
     }
     
     @Override

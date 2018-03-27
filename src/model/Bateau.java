@@ -25,6 +25,7 @@ public abstract class Bateau implements Positionnable{
     protected int pm;    //points de mouvement
     protected TypeB type;
     protected Direction dir;
+   
     
     public Bateau() {
     }
@@ -45,8 +46,8 @@ public abstract class Bateau implements Positionnable{
         return pm;
     }
     
-    public String getTypeB() {
-        return type.name();
+    public TypeB getTypeB() {
+        return type;
     }
 
     public void setPortee(int portee) {

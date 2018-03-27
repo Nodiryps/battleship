@@ -15,6 +15,8 @@ public class BateauGrand extends Bateau {
     public BateauGrand() {
         this.pm = 1;
         this.pv = 2;
+        this.type= TypeB.GRAND;
+        
     }
     
     @Override
