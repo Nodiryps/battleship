@@ -61,12 +61,27 @@ public class VueConsole implements Observer {
         List<Armee> list = ctrl.np.getListArmees();
         printLN("Etat des Armées");
         printLN("Armée"); 
+        int i = 1;
+        System.out.println("Position\t\t" + "Armée\t\t" + "Type\t\t"+"Intégrité (%)\n");
         for(Armee a : list)
-            afficheArmee(a);
+            afficheArmee(a,i);
+            i++;
     }
 
 //    affiche noms, listBat, Pv et pos
-    private void afficheArmee(Armee a) {
+    private void afficheArmee(Armee a,int i) {
+        int nbArmee=1;
+        for (Entry<String, List> entry : a.getMapJoueur().entrySet()) {
+            String nomArmee = entry.getKey();
+            List val = entry.getValue();
+            
+            printLN(a.EtatArmee(i));
+            
+        }
+    }
+   
+//    affiche noms, listBat, Pv et pos
+ /*   private void afficheArmee(Armee a) {
         
         for (Entry<String, List> entry : a.getMapJoueur().entrySet()) {
             String nomArmee = entry.getKey();
@@ -77,7 +92,7 @@ public class VueConsole implements Observer {
             affichePosBat(a);
         }
     }
-    
+   */ 
     private void affichePosBat(Armee a) {
         for (Bateau b : a.getListBat()) {
             printLN(ctrl.np.convertPosToStr(b.getX(), b.getY()));

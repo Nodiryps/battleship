@@ -75,4 +75,17 @@ public class Armee  {
         this.score = score;
     }
     
+    public String EtatArmee (int i){
+       char pstr[]={' ','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+       String out ="";
+       for (int nbl = 0; nbl<ListBat.size();++nbl){
+            out = out + (pstr[ListBat.get(i).posBat.getPosX()+1])+(ListBat.get(i).posBat.getPosY());
+            out = out+"\t\t\t"+ getNom();
+            out = out+"\t\t"+ ListBat.get(i).type;
+            out = out+"\t\t"+ ListBat.get(i).getPv();
+            out = out + "\n";
+       }
+       
+               return out;
+    }
 }
