@@ -152,8 +152,12 @@ public class VueConsole implements Observer {
                         do{
                             print("Avec quel bateau voulez-vous tirer, " + joueur.getNom() + "? (ex: B5): ");
                             batChoisi = toUpperCase(insert.nextLine());
-
-                        }while(batChoisi.length() != 2 || !ctrl.np.posValide(batChoisi) || !batAppartientArmee(joueur,ctrl.np.convertStrToPos(batChoisi)));
+                                
+                            /*tests*/
+                            System.out.println(batChoisi.length());
+                            System.out.println(ctrl.np.posValide(batChoisi));
+                            System.out.println(batAppartientArmee(joueur,ctrl.np.convertStrToPos(batChoisi)));
+                        }while(batChoisi.length() != 2 ||!ctrl.np.posValide(batChoisi) || !batAppartientArmee(joueur,ctrl.np.convertStrToPos(batChoisi)));
 
                         if(batChoisi.length() == 2 && ctrl.np.posValide(batChoisi) && batAppartientArmee(joueur,ctrl.np.convertStrToPos(batChoisi))){
                             ctrl.np.tir(joueur, batChoisi);
