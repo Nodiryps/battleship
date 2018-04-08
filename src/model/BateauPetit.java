@@ -16,6 +16,7 @@ public class BateauPetit extends Bateau {
         this.type= TypeB.PETIT;
         this.pm = 2;
         this.pv = 1;
+        this.maxPV=1;
         
         
     }
