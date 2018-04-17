@@ -53,8 +53,8 @@ public class VueConsole implements Observer {
     
     @Override
     public void update(Observable obs, Object o) {
-        affMer();
-        affEtatArmees();
+//        affMer();
+       // affEtatArmees();
     }
     
     
@@ -88,40 +88,15 @@ public class VueConsole implements Observer {
 //    affiche noms, listBat, Pv et pos
     private void afficheArmee(Armee a, int i) {
 //        int nbArmee = 1;
-        for (Entry<String, List> entry : a.getMapJoueur().entrySet()) {
-            String nomArmee = entry.getKey();
-            List val = entry.getValue();
+//        for (Entry<String, List> entry : a.getMapJoueur().entrySet()) {
+//            String nomArmee = entry.getKey();
+//            List val = entry.getValue();
             
             printLN(EtatArmee(a,i));
             
-        }
+//        }
     }
    
-//    affiche noms, listBat, Pv et pos
- /*   private void afficheArmee(Armee a) {
-        
-        for (Entry<String, List> entry : a.getMapJoueur().entrySet()) {
-            String nomArmee = entry.getKey();
-            List val = entry.getValue();
-            printLN(nomArmee); 
-            printLN(val);
-            affichePV(a);
-            affichePosBat(a);
-        }
-    }
-   */ 
-//    private void affichePosBat(Armee a) {
-//        for (Bateau b : a.getListBat()) {
-//            printLN(ctrl.np.convertPosToStr(b.getX(), b.getY()));
-//        }
-//    }
-
-//    private void affichePV(Armee a) {
-//        for (Bateau b : a.getListBat()) {
-//            printLN(b.getPv());
-//        }
-//    }
-    
 //    destinations possibles
     private List listDestPoss(){
         List<Position> dest = new LinkedList<>();
