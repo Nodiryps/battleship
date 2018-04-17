@@ -56,26 +56,43 @@ public class VueConsole implements Observer {
         affMer();
         affEtatArmees();
     }
+    
+    
+    private String EtatArmee (Armee a, int i){
+       char pstr[] = {' ','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+       String out = "";
+       for (int nbl = 0; nbl < a.getSizeListBat(); ++nbl){
+            out = out + (pstr[a.getBatList(nbl).getPosBat().getPosX()+1])+(a.getBatList(nbl).getPosBat().getPosY());
+            out = out + "\t\t\t" + a.getNom();
+            out = out + "\t\t" + a.getBatList(nbl).getTypeB();
+            out = out + "\t\t" + (a.getBatList(nbl).getPv()/a.getBatList(nbl).getMaxPv())*100+'%';
+            
+            out = out + "\n";
+       }
+       
+               return out;
+    }
 
     public void affEtatArmees() {
         List<Armee> list = ctrl.np.getListArmees();
         printLN("Etat des Armées");
         printLN("Armée"); 
         int i = 1;
-        System.out.println("Position\t\t" + "Armée\t\t" + "Type\t\t"+"Intégrité (%)\n");
-        for(Armee a : list)
+        printLN("Position\t\t" + "Armée\t\t" + "Type\t\t"+"Intégrité (%)\n");
+        for(Armee a : list){
             afficheArmee(a,i);
             i++;
+        }
     }
 
 //    affiche noms, listBat, Pv et pos
-    private void afficheArmee(Armee a,int i) {
-        int nbArmee=1;
+    private void afficheArmee(Armee a, int i) {
+//        int nbArmee = 1;
         for (Entry<String, List> entry : a.getMapJoueur().entrySet()) {
             String nomArmee = entry.getKey();
             List val = entry.getValue();
             
-            printLN(a.EtatArmee(i));
+            printLN(EtatArmee(a,i));
             
         }
     }
@@ -93,17 +110,17 @@ public class VueConsole implements Observer {
         }
     }
    */ 
-    private void affichePosBat(Armee a) {
-        for (Bateau b : a.getListBat()) {
-            printLN(ctrl.np.convertPosToStr(b.getX(), b.getY()));
-        }
-    }
+//    private void affichePosBat(Armee a) {
+//        for (Bateau b : a.getListBat()) {
+//            printLN(ctrl.np.convertPosToStr(b.getX(), b.getY()));
+//        }
+//    }
 
-    private void affichePV(Armee a) {
-        for (Bateau b : a.getListBat()) {
-            printLN(b.getPv());
-        }
-    }
+//    private void affichePV(Armee a) {
+//        for (Bateau b : a.getListBat()) {
+//            printLN(b.getPv());
+//        }
+//    }
     
 //    destinations possibles
     private List listDestPoss(){
@@ -121,7 +138,7 @@ public class VueConsole implements Observer {
         } return dest;
     }
     
-    public void affDestPoss() {
+    private void affDestPoss() {
         List<Position> list = listDestPoss();
         for(Position p : list){
             print(p);
