@@ -22,14 +22,12 @@ public class Armee  {
     private String nom;
     private int score;
     private List<Bateau> ListBat = new LinkedList<>();
-    private Map<String,List> mapJoueur = new HashMap<>(); //pr lier les joueurs à leur flotte
     private static int nbGBat = 1;
     private static int nbPBat = 2;
 
     public Armee(String nom) {
         this.nom = nom;
         nouvArmee();
-        mapJoueur.put(this.nom, this.ListBat);
     }
     
     private void nouvArmee(){
@@ -55,20 +53,8 @@ public class Armee  {
         return ListBat.size();
     }
     
-    public Bateau getBatList(int i){
+    public Bateau getBatFromList(int i){
         return ListBat.get(i);
-    }
-
-    public Map<String, List> getMapJoueur() {
-        return mapJoueur;
-    }
-    
-    public int getSizeMapJoueur(){
-        return mapJoueur.size();
-    }
-    
-    public List getValMapJoueur(String n){
-        return mapJoueur.get(n);
     }
 
     public void setScore(int score) {

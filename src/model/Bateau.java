@@ -19,7 +19,7 @@ import java.util.Random;
  */
 public abstract class Bateau implements Positionnable{
     
-    Position posBat = new Position(0,0);
+    Position posBat = new Position(getX(),getY());
     protected int portee;//portée du tir
     protected int pv;    //points de vie
     protected int maxPV; //Maximum de point de vie
@@ -31,8 +31,18 @@ public abstract class Bateau implements Positionnable{
     public Bateau() {
     }
     
-    public Position getPosBat(){
+    public Position getXY(){
         return this.posBat;
+    }
+    
+    @Override
+    public int getX() {
+        return this.posBat.getPosX();
+    }
+
+    @Override
+    public int getY() {
+        return this.posBat.getPosY();
     }
 
     public int getPortee() {
@@ -64,16 +74,6 @@ public abstract class Bateau implements Positionnable{
     public void setPos(int x, int y) {
         this.posBat.setPosX(x);
         this.posBat.setPosY(y);
-    }
-
-    @Override
-    public int getX() {
-        return this.posBat.getPosX();
-    }
-
-    @Override
-    public int getY() {
-        return this.posBat.getPosY();
     }
 
     @Override

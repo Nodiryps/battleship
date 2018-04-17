@@ -34,6 +34,10 @@ public class Case {
     public Bateau getBat() {
         return bat;
     }
+    
+    public TypeB getTypeBat(){
+        return bat.type;
+    }
 
     public MineNormale getMineN() {
         return mineN;

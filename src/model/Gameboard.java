@@ -92,8 +92,8 @@ public class Gameboard extends Observable {
         for(int i = 0; i < a.getSizeListBat(); ++i){
             Position p = randPosFree();
             int x = p.getPosX(), y = p.getPosY();
-            this.mer[x][y] = new Case(a.getBatList(i));
-            a.getBatList(i).setPos(x,y);
+            this.mer[x][y] = new Case(a.getBatFromList(i));
+            a.getBatFromList(i).setPos(x,y);
             setPosOccupados.add(p);
         }
     }

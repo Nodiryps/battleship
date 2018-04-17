@@ -64,9 +64,9 @@ public class VuePartie extends BorderPane implements Observer {
 
         public void nouvGridPane() {
             getChildren().clear();
-                for (int c = 0; c < np.getGb().getTAILLE(); ++c) {
-                    for (int l = 0; l < np.getGb().getTAILLE(); ++l) {
-                        if (np.getGb().getMer()[c][l].getBat() != null) {
+                for (int c = 0; c < np.getTailleGb(); ++c) {
+                    for (int l = 0; l < np.getTailleGb(); ++l) {
+                        if (np.getMerGb()[c][l].getBat() != null) {
                             add(new BoatView(c, l), c, l);
                         } 
                         else {

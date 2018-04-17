@@ -16,7 +16,11 @@ import static view.VueConsole.print;
  */
 public class Controleur {
 
-   public NouvPartie np = NouvPartie.getNP();
+   private NouvPartie np = NouvPartie.getNP();
+   
+   public NouvPartie getNpVue(){
+       return this.np;
+   }
     
     public static void main(String[] args) {
         Controleur ctrl = new Controleur();

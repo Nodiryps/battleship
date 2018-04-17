@@ -56,6 +56,22 @@ public class NouvPartie extends Observable {
     public Gameboard getGb() {
         return gb;
     }
+    
+    public int getTailleGb(){
+        return this.gb.getTAILLE();
+    }
+    
+    public char[] getAxeXGb(){
+        return this.gb.getAXE_X();
+    }
+    
+    public int[] getAxeYGb(){
+        return this.gb.getAXE_Y();
+    }
+    
+    public Case[][] getMerGb(){
+        return this.gb.getMer();
+    }
 
     public int getNbJ() {
         return nbJ;
@@ -130,18 +146,15 @@ public class NouvPartie extends Observable {
                     zoneTir = b.porteeTir();
                     for(Position p2 : zoneTir) {
 ////////////////////////////////////////////////////////////////////////////////p2 -> circulaire
-                        for(Armee ar : this.listArmee){
-                            if(!ar.getNom().equals(a.getNom())){
+                        for(Armee ar : this.listArmee)
+                            if(!ar.getNom().equals(a.getNom()))
                                 for(Bateau bat : ar.getListBat()){
                                     bat.touché();
                                     if(bat.getPv() <= 0){
                                         coulé(bat);
                                     }
                                 }
-                            }
-                       }
                     }
-
                 }
             }
         }
