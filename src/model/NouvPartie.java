@@ -81,6 +81,18 @@ public class NouvPartie extends Observable {
         return this.listArmee;
     }
     
+    public int getListArmeesSize(){
+        return this.getListArmees().size();
+    }
+    
+    public int strToPosX(String s){
+        return stringToPos(s).getPosX();
+    }
+    
+    public int strToPosY(String s){
+        return stringToPos(s).getPosY();
+    }
+    
     //    récupéation pos inséré par le user ("B5" -> pos)
     public Position convertStrToPos(String s) {
         return stringToPos(s);
@@ -110,14 +122,11 @@ public class NouvPartie extends Observable {
     }
 
     private String posToString(int x, int y) {
-        Position p = new Position(0,0);
-
-        x = p.getPosX(); y = p.getPosY();
         String res = "";
         for (int i = 0; i < gb.getTAILLE(); ++i) 
             for (int j = 0; j < gb.getTAILLE(); ++j) 
-                if (gb.getAXE_X()[i] == x && gb.getAXE_Y()[j] == y) 
-                    res += x + "" + y;
+                if (i == x && j == y) 
+                    res += gb.getAXE_X()[i] + "" + gb.getAXE_Y()[j];
         return res;
     }
 
@@ -136,23 +145,21 @@ public class NouvPartie extends Observable {
     public void tir(Armee a, String pos) {
         
         Position batChoisi = convertStrToPos(pos);
-        List<Position> zoneTir = new LinkedList<>();
 
         for (Bateau b : a.getListBat()) {
             Position p = new Position(b.getX(), b.getY());//choppe la pos des bat de la liste
             if (batChoisi.equals(p)) {                    //choppe la pos du bateau choisi
                 b.randomPortee();                         //set la portée
                 if (b.getPortee() != 0) {
-                    zoneTir = b.porteeTir();
+                    List<Position> zoneTir = b.porteeTir();
                     for(Position p2 : zoneTir) {
 ////////////////////////////////////////////////////////////////////////////////p2 -> circulaire
                         for(Armee ar : this.listArmee)
                             if(!ar.getNom().equals(a.getNom()))
                                 for(Bateau bat : ar.getListBat()){
                                     bat.touché();
-                                    if(bat.getPv() <= 0){
+                                    if(bat.getPv() <= 0)
                                         coulé(bat);
-                                    }
                                 }
                     }
                 }

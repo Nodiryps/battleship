@@ -17,8 +17,6 @@ public class BateauGrand extends Bateau {
         this.pv = 2;
         this.maxPV=2;
         this.type= TypeB.GRAND;
-        
-        
     }
     
     @Override

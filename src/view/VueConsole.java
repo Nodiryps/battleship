@@ -29,25 +29,25 @@ public class VueConsole implements Observer {
 
     private final Scanner insert = new Scanner(System.in);
     private final Controleur ctrl;
-    private final NouvPartie np;
+    private final NouvPartie ctrlNouvP;
     
     public VueConsole(Controleur ctrl){
         this.ctrl = ctrl;
-        this.np = ctrl.getNpVue();
+        this.ctrlNouvP = ctrl.getNpVue();
     }
     
     public void affMer() {
 
         print("   ");
-        for (int i = 0; i < np.getTailleGb(); i++) {
-            print(np.getAxeXGb()[i] + " ");
+        for (int i = 0; i < ctrlNouvP.getTailleGb(); i++) {
+            print(ctrlNouvP.getAxeXGb()[i] + " ");
         }
         printLN("");
-        for (int i = 0; i < np.getTailleGb(); i++) {
-            print(np.getAxeYGb()[i] + " ");
-            for (int j = 0; j < np.getTailleGb(); j++) {
+        for (int i = 0; i < ctrlNouvP.getTailleGb(); i++) {
+            print(ctrlNouvP.getAxeYGb()[i] + " ");
+            for (int j = 0; j < ctrlNouvP.getTailleGb(); j++) {
                 
-                print("|" + toString(np.getMerGb()[i][j]));
+                print("|" + toString(ctrlNouvP.getMerGb()[i][j]));
             }
             printLN("|");
         }
@@ -60,42 +60,38 @@ public class VueConsole implements Observer {
     }
     
     
-    private String etatArmee (Armee a, int i){
-       char pstr[] = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+    private String etatArmee (){
        String out = "";
-       for (int nbl = 0; nbl < a.getSizeListBat(); ++nbl){
-            out = out + (pstr[a.getBatFromList(nbl).getX()])+(a.getBatFromList(nbl).getY());
-            out = out + "\t\t\t" + a.getNom();
-            out = out + "\t\t" + a.getBatFromList(nbl).getTypeB();
-            out = out + "\t\t" + (a.getBatFromList(nbl).getPv()/a.getBatFromList(nbl).getMaxPv())*100+'%';
+           for(Armee a : ctrlNouvP.getListArmees() ){
+               for(Bateau bat : a.getListBat()){
+                    out += ctrlNouvP.convertPosToStr(bat.getX(), bat.getY());/*(pstr[a.getBatFromList(nbl).getX()]) + (a.getBatFromList(nbl).getY())*/  
+                    out += "\t\t\t" + a.getNom();
+                    out += "\t\t" + bat.getTypeB();
+                    out += "\t\t" + (bat.getPv()/bat.getMaxPv())*100+'%';
+                    out += "\n";
+               }
+           }
             
-            out = out + "\n";
-       }
-       
-               return out;
+       return out;
     }
 
     public void affEtatArmees() {
-        List<Armee> list = np.getListArmees();
+        List<Armee> list = ctrlNouvP.getListArmees();
         printLN("Etat des Armées");
         printLN("Armée"); 
-        int i = 1;
         printLN("Position\t\t" + "Armée\t\t" + "Type\t\t"+"Intégrité (%)\n");
-        for(Armee a : list){
-            afficheArmee(a,i);
-            i++;
-        }
+        afficheArmee();
     }
 
 //    affiche noms, listBat, Pv et pos
-    private void afficheArmee(Armee a, int i) {
-            printLN(etatArmee(a,i));
+    private void afficheArmee() {
+            printLN(etatArmee());
     }
    
 //    destinations possibles
     private List listDestPoss(){
         List<Position> dest = new LinkedList<>();
-        List<Armee> armee = np.getListArmees();
+        List<Armee> armee = ctrlNouvP.getListArmees();
         for(Armee a : armee){
             for(Bateau b : a.getListBat()){
                 for(int i = 1; i <= b.getX() + b.getPm() ;++i){      //les cases à gauche du bateau
@@ -116,23 +112,23 @@ public class VueConsole implements Observer {
     }
     
     //    vérifie si un bateau fait partie de l'armée courante
-    public boolean batAppartientArmee(Armee armeeCou, Position p){//remplacer la fin de tir() par cette méthode
-        for(Armee e : np.getListArmees())
+    public boolean batAppartientArmee(Armee armeeCou, Position posBatChoisi){//remplacer la fin de tir() par cette méthode
+        for(Armee e : ctrlNouvP.getListArmees())
             for(Bateau bat : e.getListBat())
-                if(!e.getNom().equals(armeeCou.getNom()))
-                    return bat.getXY() == p;
+                if(e.getNom().equals(armeeCou.getNom()))
+                    return bat.getXY() == posBatChoisi;
         return false;
     }
     
     public boolean partieFinie() {
-        for(Armee a : np.getListArmees())
+        for(Armee a : ctrlNouvP.getListArmees())
             return a.getSizeListBat() == 0;
         return false;
     }
     
     public void affTir() {
         if(!partieFinie()){
-            List<Armee> joueurList = np.getListArmees();
+            List<Armee> joueurList = ctrlNouvP.getListArmees();
             for(int i = 1; i <= joueurList.size(); ++i){
                 Armee joueur = joueurList.get(i);
                 String batChoisi = "";
@@ -140,16 +136,12 @@ public class VueConsole implements Observer {
                             print("Avec quel bateau voulez-vous tirer, " + joueur.getNom() + "? (ex: B5): ");
                             batChoisi = toUpperCase(insert.nextLine());
                                 
-//                            tests
-//                            System.out.println(batChoisi.length());
-//                            System.out.println(np.posValide(batChoisi));
-//                            System.out.println(batAppartientArmee(joueur,np.convertStrToPos(batChoisi)));
-                        }while(batChoisi.length() != 2 || !np.posValide(batChoisi) || !batAppartientArmee(joueur,np.convertStrToPos(batChoisi)));
+                        }while(batChoisi.length() != 2 || !ctrlNouvP.posValide(batChoisi) || !batAppartientArmee(joueur,ctrlNouvP.convertStrToPos(batChoisi)));
 
-                        if(batChoisi.length() == 2 && np.posValide(batChoisi) && batAppartientArmee(joueur,np.convertStrToPos(batChoisi))){
-                            np.tir(joueur, batChoisi);
+                        if(batChoisi.length() == 2 && ctrlNouvP.posValide(batChoisi) && batAppartientArmee(joueur,ctrlNouvP.convertStrToPos(batChoisi))){
+                            ctrlNouvP.tir(joueur, batChoisi);
                         }
-                        np.setChangedAndNotify();
+                        ctrlNouvP.setChangedAndNotify();
             }
         }
         else
@@ -157,7 +149,7 @@ public class VueConsole implements Observer {
     }
 
     public void affMouvBat() {
-        List<Armee> joueurList = np.getListArmees();
+        List<Armee> joueurList = ctrlNouvP.getListArmees();
         for(int cpt = 1; cpt <= joueurList.size(); ++cpt){
             Armee joueur = joueurList.get(cpt);
             do
@@ -175,26 +167,26 @@ public class VueConsole implements Observer {
                         print("Quel bateau déplacer? (ex: B5): ");
                         batChoisi = toUpperCase(insert.nextLine());
 
-                    }while(batChoisi.length() != 1 || !np.posValide(batChoisi) || !batAppartientArmee(joueur, np.convertStrToPos(batChoisi)));
+                    }while(batChoisi.length() != 1 || !ctrlNouvP.posValide(batChoisi) || !batAppartientArmee(joueur, ctrlNouvP.convertStrToPos(batChoisi)));
 
-                    if(np.posValide(batChoisi) && batAppartientArmee(joueur, np.convertStrToPos(batChoisi))){
-                        Position courante = new Position(np.convertStrToPos(batChoisi).getPosX(),np.convertStrToPos(batChoisi).getPosY());
+                    if(ctrlNouvP.posValide(batChoisi) && batAppartientArmee(joueur, ctrlNouvP.convertStrToPos(batChoisi))){
+                        Position courante = new Position(ctrlNouvP.strToPosX(batChoisi),ctrlNouvP.strToPosY(batChoisi));
                         String destChoisi = "";
                         do{
                             printLN("Sélectionner une des destinations possibles: ");
                             affDestPoss();
                             destChoisi = toUpperCase(insert.nextLine());
 
-                        }while(destChoisi.length() != 1 || !listDestPoss().contains(np.convertStrToPos(destChoisi)));
+                        }while(destChoisi.length() != 1 || !listDestPoss().contains(ctrlNouvP.convertStrToPos(destChoisi)));
 
-                        if(listDestPoss().contains(np.convertStrToPos(destChoisi)))
-                            np.mouvBat(joueur, courante, destChoisi);
+                        if(listDestPoss().contains(ctrlNouvP.convertStrToPos(destChoisi)))
+                            ctrlNouvP.mouvBat(joueur, courante, destChoisi);
                     }
                 }
-                if(cpt == np.getNbJ())
+                if(cpt == ctrlNouvP.getNbJ())
                     cpt = 1;
 
-            }while(cpt <= np.getNbJ() && !partieFinie());
+            }while(cpt <= ctrlNouvP.getNbJ() && !partieFinie());
         }
     }
     

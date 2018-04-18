@@ -15,18 +15,12 @@ import static view.VueConsole.print;
  * @author 2208sptheodorou
  */
 public class Controleur {
-
    private NouvPartie np = NouvPartie.getNP();
    
    public NouvPartie getNpVue(){
        return this.np;
    }
-    
-    public static void main(String[] args) {
-        Controleur ctrl = new Controleur();
-        ctrl.lancer();
-    }
-
+   
     public void lancer(){
         VueConsole v = new VueConsole(this);
         
@@ -38,4 +32,9 @@ public class Controleur {
         }while(!v.partieFinie());
     }
     
+    
+    public static void main(String[] args) {
+        Controleur ctrl = new Controleur();
+        ctrl.lancer();
+    }
 }

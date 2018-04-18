@@ -93,7 +93,7 @@ public class Gameboard extends Observable {
             Position p = randPosFree();
             int x = p.getPosX(), y = p.getPosY();
             this.mer[x][y] = new Case(a.getBatFromList(i));
-            a.getBatFromList(i).setPos(x,y);
+            a.getBatFromList(i).setPos(y,x);////////////////////////////mer à l'envers
             setPosOccupados.add(p);
         }
     }
