@@ -108,15 +108,15 @@ public class NouvPartie extends Observable {
         
         char[] toCharArray = s.toCharArray();//découpe le String "B5" en tab de chars
         char x = toCharArray[0];
-        char y = toCharArray[1];
+        int y = (int)toCharArray[1];
         //x = 'B' et y = '5'
-        int i = getNumericValue(y);//converti '5' en 5
+//        int i = getNumericValue(y);//converti '5' en 5
 
         for (int j = 0; j < gb.getTAILLE(); ++j) 
             for (int k = 0; k < gb.getTAILLE(); ++k) 
-                if (gb.getAXE_X()[j] == x && gb.getAXE_Y()[k] == i) {
-                    p.setPosX(j);
-                    p.setPosY(k);
+                if (gb.getAXE_X()[j] == x && gb.getAXE_Y()[k] == y-1) {
+                    p.setPosX(k);
+                    p.setPosY(j);
                 }
         return p;
     }
