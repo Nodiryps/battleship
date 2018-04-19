@@ -59,40 +59,35 @@ public class VueConsole implements Observer {
         affEtatArmees();
     }
     
-    
-    private String etatArmee (){
-       String out = "";
-           for(Armee a : ctrlNouvP.getListArmees() ){
-               for(Bateau bat : a.getListBat()){
-                    out += ctrlNouvP.convertPosToStr(bat.getX(), bat.getY());/*(pstr[a.getBatFromList(nbl).getX()]) + (a.getBatFromList(nbl).getY())*/  
-                    out += "\t\t\t" + a.getNom();
-                    out += "\t\t" + bat.getTypeB();
-                    out += "\t\t" + (bat.getPv()/bat.getMaxPv())*100+'%';
-                    out += "\n";
-               }
-           }
-            
-       return out;
-    }
-
     public void affEtatArmees() {
-        List<Armee> list = ctrlNouvP.getListArmees();
         printLN("Etat des Armées");
         printLN("Armée"); 
-        printLN("Position\t\t" + "Armée\t\t" + "Type\t\t"+"Intégrité (%)\n");
+        printLN("Position\t\t" + "Armée\t\t" + "Type\t\t" + "Intégrité (%)\n");
         afficheArmee();
     }
 
 //    affiche noms, listBat, Pv et pos
     private void afficheArmee() {
-            printLN(etatArmee());
+        printLN(etatArmee());
     }
-   
+    
+    private String etatArmee (){
+        String out = "";
+            for(Armee a : ctrlNouvP.getListArmees() )
+                for(Bateau bat : a.getListBat()){
+                    out += ctrlNouvP.convertPosToStr(bat.getX(), bat.getY());  
+                    out += "\t\t\t" + a.getNom();
+                    out += "\t\t" + bat.getTypeB();
+                    out += "\t\t" + (bat.getPv() / bat.getMaxPv()) * 100 + '%';
+                    out += "\n";
+               }
+            return out;
+    }
+    
 //    destinations possibles
     private List listDestPoss(){
         List<Position> dest = new LinkedList<>();
-        List<Armee> armee = ctrlNouvP.getListArmees();
-        for(Armee a : armee){
+        for(Armee a : ctrlNouvP.getListArmees()){
             for(Bateau b : a.getListBat()){
                 for(int i = 1; i <= b.getX() + b.getPm() ;++i){      //les cases à gauche du bateau
                     for(int j = 1; j <= b.getY( )- b.getPm(); ++j){  //les cases à droite
@@ -129,7 +124,7 @@ public class VueConsole implements Observer {
     public void affTir() {
         if(!partieFinie()){
             List<Armee> joueurList = ctrlNouvP.getListArmees();
-            for(int i = 1; i <= joueurList.size(); ++i){
+            for(int i = 0; i < joueurList.size(); ++i){
                 Armee joueur = joueurList.get(i);
                 String batChoisi = "";
                         do{
@@ -145,58 +140,65 @@ public class VueConsole implements Observer {
             }
         }
         else
-            print("GAME OVER!");
+            print("GAME OVER... ¯\\_(ツ)_/¯");
     }
 
     public void affMouvBat() {
-        List<Armee> joueurList = ctrlNouvP.getListArmees();
-        for(int cpt = 1; cpt <= joueurList.size(); ++cpt){
-            Armee joueur = joueurList.get(cpt);
-            do
-            {
-                String ouiNon = "";
-                do{
-                    print("Déplacer un bateau de votre armée? (y/n): ");
-                    ouiNon = insert.nextLine();
-
-                }while(!ouiNon.equals("y") || !ouiNon.equals("n"));
-
-                if(ouiNon.equals('y')){
-                    String batChoisi = "";
+        if(!partieFinie()){
+            List<Armee> joueurList = ctrlNouvP.getListArmees();
+            for(int cpt = 1; cpt <= joueurList.size(); ++cpt){
+                Armee joueur = joueurList.get(cpt);
+                do
+                {
+                    String ouiNon = "";
                     do{
-                        print("Quel bateau déplacer? (ex: B5): ");
-                        batChoisi = toUpperCase(insert.nextLine());
+                        print("Déplacer un bateau de votre armée? (y/n): ");
+                        ouiNon = insert.nextLine();
 
-                    }while(batChoisi.length() != 1 || !ctrlNouvP.posValide(batChoisi) || !batAppartientArmee(joueur, ctrlNouvP.convertStrToPos(batChoisi)));
+                    }while(!ouiNon.equals("y") || !ouiNon.equals("n"));
 
-                    if(ctrlNouvP.posValide(batChoisi) && batAppartientArmee(joueur, ctrlNouvP.convertStrToPos(batChoisi))){
-                        Position courante = new Position(ctrlNouvP.strToPosX(batChoisi),ctrlNouvP.strToPosY(batChoisi));
-                        String destChoisi = "";
+                    if(ouiNon.equals('y')){
+                        String batChoisi = "";
                         do{
-                            printLN("Sélectionner une des destinations possibles: ");
-                            affDestPoss();
-                            destChoisi = toUpperCase(insert.nextLine());
+                            print("Quel bateau déplacer? (ex: B5): ");
+                            batChoisi = toUpperCase(insert.nextLine());
 
-                        }while(destChoisi.length() != 1 || !listDestPoss().contains(ctrlNouvP.convertStrToPos(destChoisi)));
+                        }while(batChoisi.length() != 1 || !ctrlNouvP.posValide(batChoisi) || !batAppartientArmee(joueur, ctrlNouvP.convertStrToPos(batChoisi)));
 
-                        if(listDestPoss().contains(ctrlNouvP.convertStrToPos(destChoisi)))
-                            ctrlNouvP.mouvBat(joueur, courante, destChoisi);
+                        if(ctrlNouvP.posValide(batChoisi) && batAppartientArmee(joueur, ctrlNouvP.convertStrToPos(batChoisi))){
+                            Position courante = new Position(ctrlNouvP.strToPosX(batChoisi),ctrlNouvP.strToPosY(batChoisi));
+                            String destChoisi = "";
+                            do{
+                                printLN("Sélectionner une des destinations possibles: ");
+                                affDestPoss();
+                                destChoisi = toUpperCase(insert.nextLine());
+
+                            }while(destChoisi.length() != 1 || !listDestPoss().contains(ctrlNouvP.convertStrToPos(destChoisi)));
+
+                            if(listDestPoss().contains(ctrlNouvP.convertStrToPos(destChoisi)))
+                                ctrlNouvP.mouvBat(joueur, courante, destChoisi);
+                        }
                     }
-                }
-                if(cpt == ctrlNouvP.getNbJ())
-                    cpt = 1;
+                    if(cpt == ctrlNouvP.getNbJ())
+                        cpt = 1;
 
-            }while(cpt <= ctrlNouvP.getNbJ() && !partieFinie());
-        }
+                }while(cpt <= ctrlNouvP.getNbJ() && !partieFinie());
+
+            }
+        }else
+            print("GAME OVER... ¯\\_(ツ)_/¯");
     }
     
     private String toString(Case c){
         if(c.getBat() != null){
-            if(c.getTypeBat() == TypeB.PETIT) return "b";
-            else if(c.getTypeBat() == TypeB.GRAND) return "B";
-            else return " ";
-        }
-        else return " ";
+            if(c.getTypeBat() == TypeB.PETIT) 
+                return "b";
+            else if(c.getTypeBat() == TypeB.GRAND) 
+                return "B";
+            else 
+                return " ";
+        }else 
+            return " ";
     }
 
     public static void printLN(Object msg) {

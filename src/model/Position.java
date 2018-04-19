@@ -11,35 +11,35 @@ package model;
  */
 public class Position {
     
-    private int posX;
     private int posY;
+    private int posX;
 
     public Position(int ligne, int col) {
-        this.posX = ligne;
-        this.posY = col;
+        this.posY = ligne;
+        this.posX = col;
     }
 
     public int getPosX() {
-        return posX;
-    }
-
-    public int getPosY() {
         return posY;
     }
 
+    public int getPosY() {
+        return posX;
+    }
+
     public void setPosX(int ligne) {
-        this.posX = ligne;
+        this.posY = ligne;
     }
 
     public void setPosY(int col) {
-        this.posY = col;
+        this.posX = col;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + this.posX;
         hash = 79 * hash + this.posY;
+        hash = 79 * hash + this.posX;
         return hash;
     }
 
@@ -55,10 +55,10 @@ public class Position {
             return false;
         }
         final Position other = (Position) obj;
-        if (this.posX != other.posX) {
+        if (this.posY != other.posY) {
             return false;
         }
-        if (this.posY != other.posY) {
+        if (this.posX != other.posX) {
             return false;
         }
         return true;

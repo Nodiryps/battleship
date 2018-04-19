@@ -37,12 +37,12 @@ public abstract class Bateau implements Positionnable{
     
     @Override
     public int getX() {
-        return this.posBat.getPosX();
+        return this.posBat.getPosY();
     }
 
     @Override
     public int getY() {
-        return this.posBat.getPosY();
+        return this.posBat.getPosX();
     }
 
     public int getPortee() {
@@ -70,20 +70,20 @@ public abstract class Bateau implements Positionnable{
     public void setPv(int pv) {
         this.pv = pv;
     }
-
+    
     public void setPos(int x, int y) {
-        this.posBat.setPosX(x);
-        this.posBat.setPosY(y);
+        this.posBat.setPosX(y);
+        this.posBat.setPosY(x);
     }
 
     @Override
     public void setX(int x) {
-        this.posBat.setPosX(x);
+        this.posBat.setPosY(x);
     }
 
     @Override
     public void setY(int y) {
-        this.posBat.setPosY(y);
+        this.posBat.setPosX(y);
     }
     
     public void randomPortee(){

@@ -56,6 +56,10 @@ public class Armee  {
     public Bateau getBatFromList(int i){
         return ListBat.get(i);
     }
+    
+    public void setPosBatFromList(int x, int y, int i){
+        getBatFromList(i).setPos(x, y);
+    }
 
     public void setScore(int score) {
         this.score = score;

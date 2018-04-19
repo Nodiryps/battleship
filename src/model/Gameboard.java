@@ -68,32 +68,13 @@ public class Gameboard extends Observable {
         randPosMine();
     }
     
-//    rand de 1 à taille du tab
-    private int randomPos(){
-        return ThreadLocalRandom.current().nextInt(1,TAILLE);
-    }
-    
-//    rand de deux nb pour pos
-    private Position randomPos2(){
-        return new Position(randomPos(), randomPos());
-    }
-    
-//    retourne une pos libre par rapport au setPosOccupados
-    private Position randPosFree(){
-        Position pos = randomPos2();
-        while(setPosOccupados.contains(pos)){
-            pos = randomPos2();//on rejette les "dés" en somme... 
-        }
-        return pos;
-    }
-    
 //    disposition random de la flotte
     private void randPosBat(Armee a){
         for(int i = 0; i < a.getSizeListBat(); ++i){
             Position p = randPosFree();
             int x = p.getPosX(), y = p.getPosY();
             this.mer[x][y] = new Case(a.getBatFromList(i));
-            a.getBatFromList(i).setPos(y,x);////////////////////////////mer à l'envers
+            a.setPosBatFromList(x, y, i);
             setPosOccupados.add(p);
         }
     }
@@ -118,6 +99,25 @@ public class Gameboard extends Observable {
                 }
             }
         }
+    }
+    
+    //    rand de 1 à taille du tab
+    private int randomPos(){
+        return ThreadLocalRandom.current().nextInt(1,TAILLE);
+    }
+    
+//    rand de deux nb pour pos
+    private Position randomPos2(){
+        return new Position(randomPos(), randomPos());
+    }
+    
+//    retourne une pos libre par rapport au setPosOccupados
+    private Position randPosFree(){
+        Position pos = randomPos2();
+        while(setPosOccupados.contains(pos)){
+            pos = randomPos2();//on rejette les "dés" en somme... 
+        }
+        return pos;
     }
 
     public void setChangedAndNotify() {

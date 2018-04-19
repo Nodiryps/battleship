@@ -97,11 +97,16 @@ public class NouvPartie extends Observable {
     public Position convertStrToPos(String s) {
         return stringToPos(s);
     }
+    
+    //    convert pos en string pour pouvoir afficher la position (pos -> "B5")
+    public String convertPosToStr(int x, int y) {
+        return posToString(x, y);
+    }
 
     private Position stringToPos(String s) {
         Position p = new Position(0, 0);
         
-        char[] toCharArray = s.toCharArray();//découpe le String "B5" en tab de char
+        char[] toCharArray = s.toCharArray();//découpe le String "B5" en tab de chars
         char x = toCharArray[0];
         char y = toCharArray[1];
         //x = 'B' et y = '5'
@@ -116,11 +121,6 @@ public class NouvPartie extends Observable {
         return p;
     }
 
-    //    convert pos en string pour pouvoir afficher la position (pos -> "B5")
-    public String convertPosToStr(int x, int y) {
-        return posToString(x, y);
-    }
-
     private String posToString(int x, int y) {
         String res = "";
         for (int i = 0; i < gb.getTAILLE(); ++i) 
@@ -132,8 +132,8 @@ public class NouvPartie extends Observable {
 
     public boolean posValide(String s) {
         Position p = stringToPos(s);
-        return p.getPosX() >= 0 && p.getPosX() < gb.getTAILLE() &&
-               p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE();
+        return (p.getPosX() >= 0 && p.getPosX() < gb.getTAILLE()) &&
+               (p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE());
     }
     
     public void mouvBat(Armee joueur, Position courante, String destChoisi){
