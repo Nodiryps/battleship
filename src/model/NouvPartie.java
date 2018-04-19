@@ -36,7 +36,6 @@ public class NouvPartie extends Observable {
         for(int i = 0; i < nbJ; ++i){ 
             print("J" + (i+1) + ": ");
             String s = insert.next();
-//            printLN("");
             noms.add(s);
         }
         return new NouvPartie(size, noms);
@@ -136,35 +135,64 @@ public class NouvPartie extends Observable {
                (p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE());
     }
     
-    public void mouvBat(Armee joueur, Position courante, String destChoisi){
-        for(Bateau b : joueur.getListBat())
-            if(b.getX() == courante.getPosX() && b.getY() == courante.getPosY())
-                b.setPos(convertStrToPos(destChoisi).getPosX(), convertStrToPos(destChoisi).getPosY());
+    public void mouvBat(Position posCour, String destChoisi){
+        posCour.setPosX(convertStrToPos(destChoisi).getPosX());
+        posCour.setPosY(convertStrToPos(destChoisi).getPosX());
+    }
+    
+    public Position permCircul(Position p, int pm){
+        for(int i = 0; i < pm; ++i){
+            if(p.getPosX() == 0)
+                p.setPosX(gb.getTAILLE() - 1);
+            else
+                p.setPosX(p.getPosX() - 1);
+            if(p.getPosX() == gb.getTAILLE() - 1)
+                p.setPosX(0);
+            else
+                p.setPosX(p.getPosX() + 1);
+            
+            if(p.getPosY() == 0)
+                p.setPosY(gb.getTAILLE() - 1);
+            else
+                p.setPosY(p.getPosY() - 1);
+            if(p.getPosY() == gb.getTAILLE() - 1)
+                p.setPosY(0);
+            else
+                p.setPosY(p.getPosY() + 1);
+        }
+        return p;
     }
     
     public void tir(Armee a, String pos) {
-        
         Position batChoisi = convertStrToPos(pos);
-
         for (Bateau b : a.getListBat()) {
             Position p = new Position(b.getX(), b.getY());//choppe la pos des bat de la liste
             if (batChoisi.equals(p)) {                    //choppe la pos du bateau choisi
                 b.randomPortee();                         //set la portée
                 if (b.getPortee() != 0) {
-                    List<Position> zoneTir = b.porteeTir();
-                    for(Position p2 : zoneTir) {
-////////////////////////////////////////////////////////////////////////////////p2 -> circulaire
+                    List<Position> zoneTir = porteeTir(b);
+                    for(Position p2 : zoneTir) 
                         for(Armee ar : this.listArmee)
                             if(!ar.getNom().equals(a.getNom()))
-                                for(Bateau bat : ar.getListBat()){
+                                for(Bateau bat : ar.getListBat()) {
                                     bat.touché();
                                     if(bat.getPv() <= 0)
                                         coulé(bat);
                                 }
-                    }
                 }
             }
         }
+    }
+    
+    public List porteeTir(Bateau b){
+        List<Position> zoneTir = new LinkedList<>();
+        for(int i = b.getX() - b.getPortee(); i <= b.getX() + b.getPortee() ;++i){      //les cases à gauche du bateau
+            for(int j = b.getY() - b.getPortee(); j <= b.getY() - b.getPortee(); ++j){  //les cases à droite
+                Position pos = new Position(i,j);
+                permCircul(pos, b.getPm());
+                zoneTir.add(pos);
+            }
+        } return zoneTir;
     }
 
     public void coulé(Bateau b) {
@@ -179,8 +207,4 @@ public class NouvPartie extends Observable {
         setChanged();
         notifyObservers();
     }
-
-    
-
-    
 }

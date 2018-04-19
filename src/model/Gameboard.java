@@ -56,15 +56,12 @@ public class Gameboard extends Observable {
     
 //    création tableau de cases
     public void nouvMer(List<Armee> list){
-        
-        for(int i = 0; i < TAILLE; ++i){
-            for(int j = 0; j < TAILLE; ++j){
+        for(int i = 0; i < TAILLE; ++i)
+            for(int j = 0; j < TAILLE; ++j)
                 mer[i][j] = new Case();
-            }
-        }
-        for(Armee armee : list){
+
+        for(Armee armee : list)
             randPosBat(armee);
-        }
         randPosMine();
     }
     
@@ -81,24 +78,20 @@ public class Gameboard extends Observable {
     
 //    disposition random des mines
     private void randPosMine(){
-        for(int i = 0; i < TAILLE; ++i){
+        for(int i = 0; i < TAILLE; ++i)
             for(int j = 0; j < TAILLE; ++j){
                 int uneSurDix = ThreadLocalRandom.current().nextInt(1,100);
                 int uneSurDeux = ThreadLocalRandom.current().nextInt(1,100);
                 if(this.mer[i][j].getBat()== null && 
                    this.mer[i][j].getMineA() == null && 
                    this.mer[i][j].getMineN() == null){//bool caseVide à faire
-                    if(uneSurDix <= 10){
-                        if(uneSurDeux <= 50){
+                    if(uneSurDix <= 10)
+                        if(uneSurDeux <= 50)
                             this.mer[i][j] = new Case(new MineNormale());
-                        }
-                        else{
+                        else
                             this.mer[i][j] = new Case(new MineAtomique());
-                        }
-                    }
                 }
             }
-        }
     }
     
     //    rand de 1 à taille du tab
@@ -114,9 +107,8 @@ public class Gameboard extends Observable {
 //    retourne une pos libre par rapport au setPosOccupados
     private Position randPosFree(){
         Position pos = randomPos2();
-        while(setPosOccupados.contains(pos)){
+        while(setPosOccupados.contains(pos))
             pos = randomPos2();//on rejette les "dés" en somme... 
-        }
         return pos;
     }
 

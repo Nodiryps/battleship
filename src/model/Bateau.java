@@ -100,16 +100,6 @@ public abstract class Bateau implements Positionnable{
         }
     }
     
-    public List porteeTir(){
-        List<Position> zoneTir = new LinkedList<>();
-        for(int i = getX()-getPortee(); i <= getX()+getPortee() ;++i){      //les cases à gauche du bateau
-            for(int j = getY()-getPortee(); j <= getY()-getPortee(); ++j){  //les cases à droite
-                Position pos = new Position(i,j);
-                zoneTir.add(pos);
-            }
-        } return zoneTir;
-    }
-    
     public void touché() {};
 
     @Override

@@ -6,6 +6,7 @@
 package control;
 
 import java.util.Scanner;
+import model.Armee;
 import model.NouvPartie;
 import view.VueConsole;
 import static view.VueConsole.print;
@@ -15,24 +16,37 @@ import static view.VueConsole.print;
  * @author 2208sptheodorou
  */
 public class Controleur {
-   private NouvPartie np = NouvPartie.getNP();
-   
-   public NouvPartie getNpVue(){
-       return this.np;
-   }
-   
-    public void lancer(){
-        VueConsole v = new VueConsole(this);
-        
-        v.affMer();
-        v.affEtatArmees();
-        do{
-            v.affTir();
-            v.affMouvBat();
-        }while(!v.partieFinie());
+
+    private NouvPartie np = NouvPartie.getNP();
+
+    public NouvPartie getNpVue() {
+        return this.np;
     }
-    
-    
+
+    public void lancer() {
+        for (Armee a : np.getListArmees()) {
+            VueConsole v = new VueConsole(this);
+
+            v.affMer();
+            v.affEtatArmees();
+            
+            do {
+                v.affTir(a);
+                
+                v.affMer();
+                v.affEtatArmees();
+                
+                v.affMouvBat(a);
+                
+                v.affMer();
+                v.affEtatArmees();
+            } while (!v.partieFinie());
+            
+            if(v.partieFinie())
+                print("Game Over");
+        }
+    }
+
     public static void main(String[] args) {
         Controleur ctrl = new Controleur();
         ctrl.lancer();
