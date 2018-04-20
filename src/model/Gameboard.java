@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author 2208sptheodorou
  */
-public class Gameboard extends Observable {
+public class Gameboard {
     
     private static final char[] AXE_X = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
     private static final int[] AXE_Y = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26};
@@ -112,10 +112,6 @@ public class Gameboard extends Observable {
         return pos;
     }
 
-    public void setChangedAndNotify() {
-        setChanged();
-        notifyObservers();
-    }
     
 
     

@@ -5,8 +5,6 @@
  */
 package model;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -100,7 +98,9 @@ public abstract class Bateau implements Positionnable{
         }
     }
     
-    public void touché() {};
+    public void touché() {
+        --this.pv;
+    };
 
     @Override
     public int hashCode() {

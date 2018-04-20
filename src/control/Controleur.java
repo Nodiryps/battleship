@@ -32,14 +32,10 @@ public class Controleur {
             
             do {
                 v.affTir(a);
-                
-                v.affMer();
-                v.affEtatArmees();
+                v.update(np, v);
                 
                 v.affMouvBat(a);
-                
-                v.affMer();
-                v.affEtatArmees();
+                v.update(np, v);
             } while (!v.partieFinie());
             
             if(v.partieFinie())

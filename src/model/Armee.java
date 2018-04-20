@@ -57,6 +57,14 @@ public class Armee  {
         return ListBat.get(i);
     }
     
+    public Bateau getBatFromPos(Position p) {
+        for (Bateau b : getListBat()) {
+            if (b.getX() == p.getPosX() && b.getY() == p.getPosY()) 
+                return b;
+        }
+        return null;
+    }
+    
     public void setPosBatFromList(int x, int y, int i){
         getBatFromList(i).setPos(x, y);
     }

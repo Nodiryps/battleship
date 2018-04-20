@@ -41,9 +41,4 @@ public class BateauPetit extends Bateau {
         this.posBat.setPosY(y);
     }
     
-    @Override
-    public void touché() {
-        --this.pv;
-    }
-    
 }

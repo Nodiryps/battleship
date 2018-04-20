@@ -60,12 +60,14 @@ public class VueConsole implements Observer {
     }
 
     public void affEtatArmees() {
-        for(int i = 0; i < 69; ++i)
+        for (int i = 0; i < 69; ++i) {
             print("-");
+        }
         printLN("");
         printLN("Position\t\t" + "Armée\t\t" + "Type\t\t" + "Intégrité (%)");
-        for(int i = 0; i < 69; ++i)
+        for (int i = 0; i < 69; ++i) {
             print("-");
+        }
         printLN("");
         afficheArmee();
         ctrlNouvP.setChangedAndNotify();
@@ -83,8 +85,8 @@ public class VueConsole implements Observer {
                 out += ctrlNouvP.convertPosToStr(bat.getX(), bat.getY());
                 out += "\t\t\t" + a.getNom();
                 out += "\t\t" + bat.getTypeB();
-                out += "\t\t" + (bat.getPv() / bat.getMaxPv()) * 100 + '%' 
-                       + "\t     |";
+                out += "\t\t" + (bat.getPv() / bat.getMaxPv()) * 100 + '%'
+                        + "\t     |";
                 out += "\n";
             }
         }
@@ -92,16 +94,22 @@ public class VueConsole implements Observer {
     }
 
 //    destinations possibles
-    private List listDestPoss(Bateau b) {
+    private List<Position> listDestPoss(Bateau b) {
         List<Position> dest = new LinkedList<>();
-        for (int i = 1; i <= b.getX() + b.getPm(); ++i) //les cases à gauche du bateau
-        {
-            for (int j = 1; j <= b.getY() - b.getPm(); ++j) {  //les cases à droite
-                Position pos = new Position(i, j);
-                ctrlNouvP.permCircul(pos, b.getPm());
-                dest.add(pos);
-            }
-        }
+        Position p = new Position(b.getX(),b.getY());
+        Position top = ctrlNouvP.permCircul(p, b.getPm(), "haut");
+        Position bot = ctrlNouvP.permCircul(p, b.getPm(), "bas");
+        Position left = ctrlNouvP.permCircul(p, b.getPm(), "gauche");
+        Position right = ctrlNouvP.permCircul(p, b.getPm(), "droite");
+        
+        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(top.getPosX(), top.getPosY())))
+            dest.add(top);
+        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(bot.getPosX(), bot.getPosY())))
+            dest.add(bot);
+        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(left.getPosX(), left.getPosY())))
+            dest.add(left);
+        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(right.getPosX(), right.getPosY())))
+            dest.add(right);
         return dest;
     }
 
@@ -110,18 +118,6 @@ public class VueConsole implements Observer {
         for (Position p : list) {
             print(p);
         }
-    }
-
-    //    vérifie si un bateau fait partie de l'armée courante
-    private boolean batAppartientArmee(Armee armeeCou, Position posBatChoisi) {//remplacer la fin de tir() par cette méthode
-        for (Armee e : ctrlNouvP.getListArmees()) {
-            for (Bateau bat : e.getListBat()) {
-                if (e.getNom().equals(armeeCou.getNom())) {
-                    return bat.getXY() == posBatChoisi;
-                }
-            }
-        }
-        return false;
     }
 
     public boolean partieFinie() {
@@ -133,57 +129,36 @@ public class VueConsole implements Observer {
 
     public void affTir(Armee joueur) {
         String batChoisi = "";
-        do {
-            print("Avec quel bateau voulez-vous tirer, " + joueur.getNom() + "? (ex: B5): ");
-            batChoisi = toUpperCase(insert.nextLine());
+        print("Avec quel bateau voulez-vous tirer, " + joueur.getNom() + "? (ex: B5): ");
+        batChoisi = toUpperCase(insert.nextLine());
 
-        } while (!(ctrlNouvP.posValide(batChoisi) || batAppartientArmee(joueur, ctrlNouvP.convertStrToPos(batChoisi))));
-
-        if (ctrlNouvP.posValide(batChoisi) && batAppartientArmee(joueur, ctrlNouvP.convertStrToPos(batChoisi))) {
-            ctrlNouvP.tir(joueur, batChoisi);
-        }
+//        if (ctrlNouvP.checkPosEtArmeeBat(joueur, batChoisi)) 
+        ctrlNouvP.tir(joueur, batChoisi);
         ctrlNouvP.setChangedAndNotify();
     }
 
     public void affMouvBat(Armee joueur) {
         String ouiNon = "";
-//                    do{
         print("Déplacer un bateau de votre armée? (y/n): ");
         ouiNon = insert.nextLine();
 
-//                    }while(!(ouiNon.equals("y") || ouiNon.equals("n")));
         if (ouiNon.equals("y")) {
             String batChoisi = "";
-//                        do{
             print("Quel bateau déplacer? (ex: B5): ");
             batChoisi = toUpperCase(insert.nextLine());
 
-//                        }while(!(ctrlNouvP.posValide(batChoisi) && batAppartientArmee(joueur, ctrlNouvP.convertStrToPos(batChoisi))));
-            if (ctrlNouvP.posValide(batChoisi) && batAppartientArmee(joueur, ctrlNouvP.convertStrToPos(batChoisi))) {
-                Position courante = new Position(ctrlNouvP.strToPosX(batChoisi), ctrlNouvP.strToPosY(batChoisi));
-                String destChoisi = "";
-                Bateau b = getBatFromPos(joueur, courante);
+            Position courante = new Position(ctrlNouvP.strToPosX(batChoisi), ctrlNouvP.strToPosY(batChoisi));
+            String destChoisi = "";
+            Bateau b = joueur.getBatFromPos(courante);
 
-//                            do{
-                printLN("Sélectionner une des destinations possibles: ");
-                affDestPoss(b);
-                destChoisi = toUpperCase(insert.nextLine());
+            printLN("Sélectionner une des destinations possibles: ");
+            affDestPoss(b);
+            destChoisi = toUpperCase(insert.nextLine());
 
-//                            }while(!(listDestPoss(b).contains(ctrlNouvP.convertStrToPos(destChoisi))));
-                if (listDestPoss(b).contains(ctrlNouvP.convertStrToPos(destChoisi))) {
-                    ctrlNouvP.mouvBat(courante, destChoisi);
-                }
+            if (listDestPoss(b).contains(ctrlNouvP.convertStrToPos(destChoisi))) {
+                ctrlNouvP.mouvBat(courante, destChoisi);
             }
         }
-    }
-
-    private Bateau getBatFromPos(Armee a, Position p) {
-        for (Bateau b : a.getListBat()) {
-            if (b.getX() == p.getPosX() && b.getY() == p.getPosY()) {
-                return b;
-            }
-        }
-        return null;
     }
 
     private String toString(Case c) {

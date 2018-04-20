@@ -128,6 +128,14 @@ public class NouvPartie extends Observable {
                     res += gb.getAXE_X()[i] + "" + gb.getAXE_Y()[j];
         return res;
     }
+    
+    //    vérifie si la pos est valide qu'un bateau fait partie de l'armée courante
+    public boolean checkPosEtArmeeBat(Armee armeeCou, String posBatChoisi) {
+//        if(posValide(posBatChoisi))
+                if (armeeCou.getBatFromPos(convertStrToPos(posBatChoisi))!= null)
+                    return true;
+        return false;
+    }
 
     public boolean posValide(String s) {
         Position p = stringToPos(s);
@@ -135,61 +143,59 @@ public class NouvPartie extends Observable {
                (p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE());
     }
     
+   
+    
     public void mouvBat(Position posCour, String destChoisi){
         posCour.setPosX(convertStrToPos(destChoisi).getPosX());
         posCour.setPosY(convertStrToPos(destChoisi).getPosX());
     }
     
-    public Position permCircul(Position p, int pm){
+    public Position permCircul(Position p, int pm, String direction){
         for(int i = 0; i < pm; ++i){
-            if(p.getPosX() == 0)
+            if(direction.equals("gauche") && p.getPosX() == 0)
                 p.setPosX(gb.getTAILLE() - 1);
-            else
+            else if(direction.equals("gauche") && p.getPosX()!=0)
                 p.setPosX(p.getPosX() - 1);
-            if(p.getPosX() == gb.getTAILLE() - 1)
+            else if(direction.equals("droite") && p.getPosX() == gb.getTAILLE() - 1)
                 p.setPosX(0);
-            else
+            else if(direction.equals("droite") && p.getPosX() != gb.getTAILLE() - 1)
                 p.setPosX(p.getPosX() + 1);
             
-            if(p.getPosY() == 0)
+            else if(direction.equals("haut") && p.getPosY() == 0)
                 p.setPosY(gb.getTAILLE() - 1);
-            else
+            else if(direction.equals("haut") && p.getPosY() != 0)
                 p.setPosY(p.getPosY() - 1);
-            if(p.getPosY() == gb.getTAILLE() - 1)
+            else if(direction.equals("bas") && p.getPosY() == gb.getTAILLE() - 1)
                 p.setPosY(0);
-            else
+            else if(direction.equals("bas") && p.getPosY() != gb.getTAILLE() - 1)
                 p.setPosY(p.getPosY() + 1);
         }
         return p;
     }
     
     public void tir(Armee a, String pos) {
-        Position batChoisi = convertStrToPos(pos);
-        for (Bateau b : a.getListBat()) {
-            Position p = new Position(b.getX(), b.getY());//choppe la pos des bat de la liste
-            if (batChoisi.equals(p)) {                    //choppe la pos du bateau choisi
-                b.randomPortee();                         //set la portée
-                if (b.getPortee() != 0) {
-                    List<Position> zoneTir = porteeTir(b);
-                    for(Position p2 : zoneTir) 
-                        for(Armee ar : this.listArmee)
-                            if(!ar.getNom().equals(a.getNom()))
-                                for(Bateau bat : ar.getListBat()) {
-                                    bat.touché();
-                                    if(bat.getPv() <= 0)
-                                        coulé(bat);
-                                }
-                }
-            }
+        if(checkPosEtArmeeBat(a, pos)){
+            Position posBatChoisi = convertStrToPos(pos);
+            Bateau b = a.getBatFromPos(posBatChoisi);
+            b.randomPortee();                         
+            if (!(b.getPortee() == 0)) 
+                for(Position p : porteeTir(b)) 
+                    for(Armee ar : this.listArmee)
+                        if(!ar.getNom().equals(a.getNom()))//si bat est ennemi pewpew!
+                            for(Bateau bat : ar.getListBat()) {
+                                bat.touché();
+                                if(bat.getPv() <= 0)
+                                    coulé(bat);
+                            }
+            setChangedAndNotify();
         }
     }
     
-    public List porteeTir(Bateau b){
+    public List<Position> porteeTir(Bateau b){
         List<Position> zoneTir = new LinkedList<>();
         for(int i = b.getX() - b.getPortee(); i <= b.getX() + b.getPortee() ;++i){      //les cases à gauche du bateau
-            for(int j = b.getY() - b.getPortee(); j <= b.getY() - b.getPortee(); ++j){  //les cases à droite
+            for(int j = b.getY() - b.getPortee(); j <= b.getY() + b.getPortee(); ++j){  //les cases à droite
                 Position pos = new Position(i,j);
-                permCircul(pos, b.getPm());
                 zoneTir.add(pos);
             }
         } return zoneTir;
@@ -201,6 +207,7 @@ public class NouvPartie extends Observable {
             for(Bateau bat : a.getListBat())
                 if(bat.equals(b))
                     a.getListBat().remove(b);
+        setChangedAndNotify();
     }
     
     public void setChangedAndNotify() {
