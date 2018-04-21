@@ -5,7 +5,6 @@
  */
 package control;
 
-import java.util.Scanner;
 import model.Armee;
 import model.NouvPartie;
 import view.VueConsole;

@@ -18,7 +18,7 @@ public class Case {
 
     public Case() {
     }
-
+    
     public Case(Bateau b){
         this.bat = b;
     }

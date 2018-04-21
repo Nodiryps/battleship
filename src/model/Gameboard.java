@@ -5,9 +5,10 @@
  */
 package model;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Observable;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -23,6 +24,7 @@ public class Gameboard {
     private static final int[] AXE_Y = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26};
     private final int TAILLE;
     private Case[][] mer;
+    private Map<String, Position> mapPositions = new HashMap<>();
     private Set<Position> setPosOccupados = new HashSet<>(); //enregistre les pos occupées
     
     public Gameboard(int size) {
@@ -46,6 +48,10 @@ public class Gameboard {
         return mer;
     }
 
+    public Position getElemtMapPositions(String s) {
+        return mapPositions.get(s);
+    }
+
     public Set<Position> getPosOccupados() {
         return setPosOccupados;
     }
@@ -57,9 +63,11 @@ public class Gameboard {
 //    création tableau de cases
     public void nouvMer(List<Armee> list){
         for(int i = 0; i < TAILLE; ++i)
-            for(int j = 0; j < TAILLE; ++j)
+            for(int j = 0; j < TAILLE; ++j){
+                String s = AXE_X[j] + "" + AXE_Y[i];
+                mapPositions.put(s, new Position(i, j));
                 mer[i][j] = new Case();
-
+            }
         for(Armee armee : list)
             randPosBat(armee);
         randPosMine();

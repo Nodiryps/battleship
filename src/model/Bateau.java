@@ -25,9 +25,7 @@ public abstract class Bateau implements Positionnable{
     protected TypeB type;
     protected Direction dir;
    
-    
-    public Bateau() {
-    }
+    public Bateau(){}
     
     public Position getXY(){
         return this.posBat;
