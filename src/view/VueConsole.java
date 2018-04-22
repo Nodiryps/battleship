@@ -96,36 +96,38 @@ public class VueConsole implements Observer {
 //    destinations possibles
     private List<Position> listDestPoss(Bateau b) {
         List<Position> dest = new LinkedList<>();
-        int pm;
-        if(b.getTypeB()==TypeB.GRAND)
-            pm = 1;
-        else
-            pm = 2;
-            
-        for(int i = 0; i < pm; ++i){
-            for(int j = 0; j < pm; ++j)
-                if(i >= pm && i < pm * 2){
-                    Position p = new Position(b.getX(), b.getY());
-                    dest.add(p);
-                }
-            printLN("");
-        }
+//        int pm;
+//        if(b.getTypeB() == TypeB.GRAND)
+//            pm = 1;
+//        else
+//            pm = 2;
+//            
+//        for(int i = 0; i < pm; ++i){
+//            for(int j = 0; j < pm; ++j)
+//                if(i >= pm && i < pm * 2){
+//                    Position p = new Position(b.getX(), b.getY());
+//                    dest.add(p);
+//                }
+//            printLN("");
+//        }
+//        return dest;
+//    }
+        Position p = new Position(b.getX(),b.getY());
+        Position top = ctrlNouvP.permCircul(p, b.getPm(), "haut");
+        Position bot = ctrlNouvP.permCircul(p, b.getPm(), "bas");
+        Position left = ctrlNouvP.permCircul(p, b.getPm(), "gauche");
+        Position right = ctrlNouvP.permCircul(p, b.getPm(), "droite");
+        
+        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(top)))
+            dest.add(top);
+        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(bot)))
+            dest.add(bot);
+        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(left)))
+            dest.add(left);
+        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(right)))
+            dest.add(right);
         return dest;
     }
-//        Position p = new Position(b.getX(),b.getY());
-//        Position top = ctrlNouvP.permCircul(p, b.getPm(), "haut"*/);
-//        Position bot = ctrlNouvP.permCircul(p, b.getPm(), "bas");
-//        Position left = ctrlNouvP.permCircul(p, b.getPm(), "gauche");
-//        Position right = ctrlNouvP.permCircul(p, b.getPm(), "droite");
-//        
-//        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(top)))
-//            dest.add(top);
-//        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(bot)))
-//            dest.add(bot);
-//        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(left)))
-//            dest.add(left);
-//        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(right)))
-//            dest.add(right);
     
 
     private void affDestPoss(Bateau b) {
@@ -161,11 +163,10 @@ public class VueConsole implements Observer {
             String batChoisi = "";
             print("Quel bateau déplacer? (ex: B5): ");
             batChoisi = toUpperCase(insert.nextLine());
-            //Position courante = new Position(ctrlNouvP.strToPosX(batChoisi), ctrlNouvP.strToPosY(batChoisi));
             Position courante = ctrlNouvP.convertStrToPos(batChoisi);
             
-            print("x: " + courante.getPosX() + " ");
-            printLN("y: " + courante.getPosY());
+                                                                        print("x: " + courante.getPosX() + " ");
+                                                                        printLN("y: " + courante.getPosY());
                   
             String destChoisi = "";
             Bateau b = joueur.getBatFromPos(courante);

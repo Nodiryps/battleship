@@ -48,6 +48,14 @@ public class Gameboard {
         return mer;
     }
 
+    public boolean mapPositionsContains(Position p){
+        return mapPositions.containsValue(p);
+    }
+    
+    public Set<String> mapPositionsKeySet(){
+        return mapPositions.keySet();
+    }
+    
     public Position getElemtMapPositions(String s) {
         return mapPositions.get(s);
     }

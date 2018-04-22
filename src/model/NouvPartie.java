@@ -122,13 +122,18 @@ public class NouvPartie extends Observable {
     
 
     public String convertPosToStr(Position p) {
-        int x = p.getPosX(), y = p.getPosY();
-        String res = "";
-        for (int i = 0; i < gb.getTAILLE(); ++i) 
-            for (int j = 0; j < gb.getTAILLE(); ++j) 
-                if (i == x && j == y) 
-                    res += gb.getAXE_X()[i] + "" + gb.getAXE_Y()[j];
-        return res;
+        if (gb.mapPositionsContains(p)) 
+            for (String cle : gb.mapPositionsKeySet()) 
+                if (gb.getElemtMapPositions(cle).equals(p)) 
+                    return cle;
+        return null;
+//        int x = p.getPosX(), y = p.getPosY();
+//        String res = "";
+//        for (int i = 0; i < gb.getTAILLE(); ++i) 
+//            for (int j = 0; j < gb.getTAILLE(); ++j) 
+//                if (i == x && j == y) 
+//                    res += gb.getAXE_X()[i] + "" + gb.getAXE_Y()[j];
+//        return res;
     }
     
     //    vérifie si la pos est valide qu'un bateau fait partie de l'armée courante
@@ -150,36 +155,36 @@ public class NouvPartie extends Observable {
         posCour.setPosY(convertStrToPos(destChoisi).getPosX());
     }
     
-    public void permCircul(Position p/*, int pm, String direction*/){
-        if(p.getPosX() > gb.getTAILLE())
-            p.setPosX(p.getPosX() - gb.getTAILLE());
-        if(p.getPosX() < 0)
-            p.setPosX(p.getPosX() + gb.getTAILLE());
-        
-        if(p.getPosY() > gb.getTAILLE())
-            p.setPosY(p.getPosY() - gb.getTAILLE());
-        if(p.getPosY() < 0)
-            p.setPosY(p.getPosY() + gb.getTAILLE());
-//        for(int i = 0; i < pm; ++i){
-//            if(direction.equals("gauche") && p.getPosX() == 0)
-//                p.setPosX(gb.getTAILLE() - 1);
-//            else if(direction.equals("gauche") && p.getPosX()!=0)
-//                p.setPosX(p.getPosX() - 1);
-//            else if(direction.equals("droite") && p.getPosX() == gb.getTAILLE() - 1)
-//                p.setPosX(0);
-//            else if(direction.equals("droite") && p.getPosX() != gb.getTAILLE() - 1)
-//                p.setPosX(p.getPosX() + 1);
-//            
-//            else if(direction.equals("haut") && p.getPosY() == 0)
-//                p.setPosY(gb.getTAILLE() - 1);
-//            else if(direction.equals("haut") && p.getPosY() != 0)
-//                p.setPosY(p.getPosY() - 1);
-//            else if(direction.equals("bas") && p.getPosY() == gb.getTAILLE() - 1)
-//                p.setPosY(0);
-//            else if(direction.equals("bas") && p.getPosY() != gb.getTAILLE() - 1)
-//                p.setPosY(p.getPosY() + 1);
-//        }
-//        return p;
+    public Position permCircul(Position p, int pm, String direction){
+//        if(p.getPosX() > gb.getTAILLE())
+//            p.setPosX(p.getPosX() - gb.getTAILLE());
+//        if(p.getPosX() < 0)
+//            p.setPosX(p.getPosX() + gb.getTAILLE());
+//        
+//        if(p.getPosY() > gb.getTAILLE())
+//            p.setPosY(p.getPosY() - gb.getTAILLE());
+//        if(p.getPosY() < 0)
+//            p.setPosY(p.getPosY() + gb.getTAILLE());
+        for(int i = 0; i < pm; ++i){
+            if(direction.equals("gauche") && p.getPosX() == 0)
+                p.setPosX(gb.getTAILLE() - 1);
+            else if(direction.equals("gauche") && p.getPosX()!=0)
+                p.setPosX(p.getPosX() - 1);
+            else if(direction.equals("droite") && p.getPosX() == gb.getTAILLE() - 1)
+                p.setPosX(0);
+            else if(direction.equals("droite") && p.getPosX() != gb.getTAILLE() - 1)
+                p.setPosX(p.getPosX() + 1);
+            
+            else if(direction.equals("haut") && p.getPosY() == 0)
+                p.setPosY(gb.getTAILLE() - 1);
+            else if(direction.equals("haut") && p.getPosY() != 0)
+                p.setPosY(p.getPosY() - 1);
+            else if(direction.equals("bas") && p.getPosY() == gb.getTAILLE() - 1)
+                p.setPosY(0);
+            else if(direction.equals("bas") && p.getPosY() != gb.getTAILLE() - 1)
+                p.setPosY(p.getPosY() + 1);
+        }
+        return p;
     }
     
     public void tir(Armee a, String pos) {

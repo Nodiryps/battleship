@@ -13,10 +13,7 @@ package model;
 public class BateauGrand extends Bateau {
 
     public BateauGrand() {
-        this.pm = 1;
-        this.pv = 2;
-        this.maxPV=2;
-        this.type= TypeB.GRAND;
+        super(TypeB.GRAND,2,2,1);
     }
     
     @Override
