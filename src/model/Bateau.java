@@ -87,39 +87,27 @@ public abstract class Bateau implements Positionnable{
         this.posBat.setPosY(y);
     }
     
-    public void randomPortee(){
-        Random rand = new Random();
-        double d = rand.nextDouble();
-        if(d <= 0.5){
-            setPortee(2);
-        }
-        else if(d <= 0.3){
-            setPortee(1);
-        }
-        else if(d <= 0.2){
-            setPortee(0);
-        }
-    }
+    public abstract void randomPortee();
     
     public void touché() {
         --this.pv;
     };
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 79 * hash + Objects.hashCode(this.posBat);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof Bateau){
-            Bateau b = (Bateau) obj;
-            return b.posBat == ((Bateau) obj).posBat;
-        }
-        return false;
-    }
+//    @Override
+//    public int hashCode() {
+//        int hash = 3;
+//        hash = 79 * hash + Objects.hashCode(this.posBat);
+//        return hash;
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        if(obj instanceof Bateau){
+//            Bateau b = (Bateau) obj;
+//            return b.posBat == ((Bateau) obj).posBat;
+//        }
+//        return false;
+//    }
 
     
 }

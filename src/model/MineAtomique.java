@@ -15,24 +15,24 @@ public class MineAtomique extends Mine {
         super(TypeM.ATOMIQUE);
     }
     
-     @Override
+    @Override
     public int getX() {
-        return this.getX();
+        return this.posM.getPosX();
     }
 
     @Override
     public int getY() {
-        return this.getY();
+        return this.posM.getPosY();
     }
 
     @Override
     public void setX(int x) {
-        this.setX(x);
+        this.posM.setPosX(x);
     }
 
     @Override
     public void setY(int y) {
-        this.setY(y);
+        this.posM.setPosY(y);
     }
 
 }

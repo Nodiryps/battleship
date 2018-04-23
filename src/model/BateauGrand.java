@@ -5,6 +5,8 @@
  */
 package model;
 
+import java.util.Random;
+
 
 /**
  *
@@ -36,4 +38,18 @@ public class BateauGrand extends Bateau {
         this.posBat.setPosY(y);
     }
     
+    @Override
+    public void randomPortee(){
+        Random rand = new Random();
+        double d = rand.nextDouble();
+        if(d <= 0.5){
+            setPortee(2);
+        }
+        else if(d <= 0.3){
+            setPortee(1);
+        }
+        else if(d <= 0.2){
+            setPortee(0);
+        }
+    }
 }

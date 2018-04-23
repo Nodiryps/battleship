@@ -37,12 +37,22 @@ public abstract class Mine implements Positionnable {
     
     @Override
     public int getX() {
-        return this.posM.getPosY();
+        return this.posM.getPosX();
     }
 
     @Override
     public int getY() {
-        return this.posM.getPosX();
+        return this.posM.getPosY();
+    }
+
+    @Override
+    public void setX(int x) {
+        this.posM.setPosX(x);
+    }
+
+    @Override
+    public void setY(int y) {
+        this.posM.setPosY(y);
     }
     
        

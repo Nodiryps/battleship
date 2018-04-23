@@ -148,7 +148,7 @@ public class Gameboard {
     
     //    rand de 1 à taille du tab
     private int randomPos(){
-        return ThreadLocalRandom.current().nextInt(1,TAILLE);
+        return ThreadLocalRandom.current().nextInt(0,TAILLE);
     }
     
 //    rand de deux nb pour pos

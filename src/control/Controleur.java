@@ -16,38 +16,36 @@ import static view.VueConsole.print;
  */
 public class Controleur {
 
-    private NouvPartie np = NouvPartie.getNP();
-
-    public NouvPartie getNpVue() {
-        return this.np;
-    }
-
-    public void lancer() {
-        for (Armee a : np.getListArmees()) {
-            VueConsole v = new VueConsole(this);
-
-            v.affMer();
-            v.affEtatArmees();
-            
-            do {
-                v.affTir(a);
-                if(!v.partieFinie()){
-                    v.update(np, v);
-
-                    v.affMouvBat(a);
-                    v.update(np, v);
-                }
-                else
-                    v.partieFinieMsg();
-            } while (!v.partieFinie());
-            
-            if(v.partieFinie())
-                v.partieFinieMsg();
-        }
-    }
-
     public static void main(String[] args) {
         Controleur ctrl = new Controleur();
         ctrl.lancer();
     }
+    
+    private NouvPartie npVue = VueConsole.getNpVue();
+    
+    public void lancer() {
+        for (Armee a : npVue.getListArmees()) {
+            VueConsole.affMer();
+            VueConsole.affEtatArmees();
+            
+            do {
+                VueConsole.affTir(a);
+                if(!VueConsole.partieFinie()){
+                    VueConsole.affMer();
+                    VueConsole.affEtatArmees();
+                    
+                    VueConsole.affMouvBat(a);
+                    
+                    VueConsole.affMer();
+                    VueConsole.affEtatArmees();
+                }
+                else
+                    VueConsole.partieFinieMsg();
+            } while (!VueConsole.partieFinie());
+            
+            if(VueConsole.partieFinie())
+                VueConsole.partieFinieMsg();
+        }
+    }
+
 }
