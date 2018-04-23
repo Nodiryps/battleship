@@ -15,31 +15,31 @@ public class Position {
     private int posX;
 
     public Position(int ligne, int col) {
-        this.posY = ligne;
-        this.posX = col;
+        this.posX = ligne;
+        this.posY = col;
     }
 
     public int getPosX() {
-        return posY;
-    }
-
-    public int getPosY() {
         return posX;
     }
 
+    public int getPosY() {
+        return posY;
+    }
+
     public void setPosX(int ligne) {
-        this.posY = ligne;
+        this.posX = ligne;
     }
 
     public void setPosY(int col) {
-        this.posX = col;
+        this.posY = col;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 79 * hash + this.posY;
         hash = 79 * hash + this.posX;
+        hash = 79 * hash + this.posY;
         return hash;
     }
 

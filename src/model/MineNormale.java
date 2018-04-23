@@ -11,6 +11,10 @@ package model;
  */
 public class MineNormale extends Mine {
 
+    public MineNormale(){
+        super(TypeM.NORMALE);
+    }
+    
      @Override
     public int getX() {
         return this.getX();
@@ -29,10 +33,5 @@ public class MineNormale extends Mine {
     @Override
     public void setY(int y) {
         this.setY(y);
-    }
-    
-    @Override
-    public String toString() {
-        return "x";
     }
 }

@@ -5,13 +5,8 @@
  */
 package model;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import static view.VueConsole.print;
-import static view.VueConsole.printLN;
 
 /**
  *
@@ -55,6 +50,18 @@ public class Armee  {
     
     public Bateau getBatFromList(int i){
         return ListBat.get(i);
+    }
+    
+    public int getBateauFromListPosX(int i){
+        return getBatFromList(i).getX();
+    }
+    
+    public int getBateauFromListPosY(int i){
+        return getBatFromList(i).getY();
+    }
+    
+    public Position getBateauFromListPos(int i){
+        return getBatFromList(i).getXY();
     }
     
     public Bateau getBatFromPos(Position p) {

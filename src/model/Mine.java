@@ -12,17 +12,39 @@ package model;
 public abstract class Mine implements Positionnable {
     
     protected TypeM type;
+    protected Position posM;
     protected boolean debugMode = false;
 
+    public Mine(TypeM type){
+        this.type = type;
+    }
+    
     public TypeM getTypeM() {
         return type;
     }
     
+    public TypeM getTypeMAtom() {
+        return TypeM.ATOMIQUE;
+    }
     
+    public TypeM getTypeMNormale(){
+        return TypeM.NORMALE;
+    }
     
+    public Position getXY() {
+        return this.posM;
+    }
     
+    @Override
+    public int getX() {
+        return this.posM.getPosY();
+    }
 
+    @Override
+    public int getY() {
+        return this.posM.getPosX();
+    }
     
-    
+       
     
 }

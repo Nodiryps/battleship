@@ -12,8 +12,7 @@ package model;
 public class Case {
     
     private Bateau bat;
-    private MineNormale mineN;
-    private MineAtomique mineA;
+    private Mine mine;
     boolean modeDebug = false;
 
     public Case() {
@@ -23,48 +22,47 @@ public class Case {
         this.bat = b;
     }
     
-    public Case(MineNormale m){
-        this.mineN =  m;
+    public Case(Mine m){
+        this.mine =  m;
     }
     
-    public Case(MineAtomique m){
-        this.mineA =  m;
-    }
 
     public Bateau getBat() {
         return bat;
     }
     
+    public Mine getMine() {
+        return mine;
+    }
+    
     public TypeB getTypeBat(){
         return bat.type;
     }
-
-    public MineNormale getMineN() {
-        return mineN;
+    
+    public TypeM getTypeMine(){
+        return mine.type;
     }
 
-    public MineAtomique getMineA() {
-        return mineA;
+    public void setBat(Bateau bat) {
+        this.bat = bat;
+    }
+
+    public void setMine(Mine mine) {
+        this.mine = mine;
     }
     
     public boolean explosionMineA(){
-        return bat != null && mineA != null;
+        return bat != null && mine.getTypeMAtom() != null;
     }
     
     public boolean explosionMineN(){
-        return bat != null && mineN != null;
+        return bat != null && mine.getTypeMAtom() != null;
     }
     
     public boolean caseAccessible() {
         return bat == null && !explosionMineA();
     }
     
-    public String toStringMine(){
-        if(!modeDebug){
-            return "";
-        }else
-            return "" + mineN;
-    }
     
     
 }

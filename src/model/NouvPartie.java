@@ -7,10 +7,8 @@ package model;
 
 
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Scanner;
 import static view.VueConsole.print;
@@ -50,10 +48,6 @@ public class NouvPartie extends Observable {
         return list;
     }
 
-    public NouvPartie(int size) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
     public Gameboard getGb() {
         return gb;
     }
@@ -127,13 +121,6 @@ public class NouvPartie extends Observable {
                 if (gb.getElemtMapPositions(cle).equals(p)) 
                     return cle;
         return null;
-//        int x = p.getPosX(), y = p.getPosY();
-//        String res = "";
-//        for (int i = 0; i < gb.getTAILLE(); ++i) 
-//            for (int j = 0; j < gb.getTAILLE(); ++j) 
-//                if (i == x && j == y) 
-//                    res += gb.getAXE_X()[i] + "" + gb.getAXE_Y()[j];
-//        return res;
     }
     
     //    vérifie si la pos est valide qu'un bateau fait partie de l'armée courante
@@ -150,58 +137,105 @@ public class NouvPartie extends Observable {
                (p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE());
     }
     
-    public void mouvBat(Position posCour, String destChoisi){
+    public void moveBat(Bateau b, Position posCour, String destChoisi){
         posCour.setPosX(convertStrToPos(destChoisi).getPosX());
-        posCour.setPosY(convertStrToPos(destChoisi).getPosX());
+        posCour.setPosY(convertStrToPos(destChoisi).getPosY());
+        b.setPos(posCour.getPosX(), posCour.getPosY());
     }
     
-    public Position permCircul(Position p, int pm, String direction){
-//        if(p.getPosX() > gb.getTAILLE())
-//            p.setPosX(p.getPosX() - gb.getTAILLE());
-//        if(p.getPosX() < 0)
-//            p.setPosX(p.getPosX() + gb.getTAILLE());
-//        
-//        if(p.getPosY() > gb.getTAILLE())
-//            p.setPosY(p.getPosY() - gb.getTAILLE());
-//        if(p.getPosY() < 0)
-//            p.setPosY(p.getPosY() + gb.getTAILLE());
-        for(int i = 0; i < pm; ++i){
-            if(direction.equals("gauche") && p.getPosX() == 0)
-                p.setPosX(gb.getTAILLE() - 1);
-            else if(direction.equals("gauche") && p.getPosX()!=0)
-                p.setPosX(p.getPosX() - 1);
-            else if(direction.equals("droite") && p.getPosX() == gb.getTAILLE() - 1)
-                p.setPosX(0);
-            else if(direction.equals("droite") && p.getPosX() != gb.getTAILLE() - 1)
-                p.setPosX(p.getPosX() + 1);
-            
-            else if(direction.equals("haut") && p.getPosY() == 0)
-                p.setPosY(gb.getTAILLE() - 1);
-            else if(direction.equals("haut") && p.getPosY() != 0)
-                p.setPosY(p.getPosY() - 1);
-            else if(direction.equals("bas") && p.getPosY() == gb.getTAILLE() - 1)
-                p.setPosY(0);
-            else if(direction.equals("bas") && p.getPosY() != gb.getTAILLE() - 1)
-                p.setPosY(p.getPosY() + 1);
-        }
-        return p;
+    private Position goLeft(Position p, int pm){
+        Position pos = new Position(p.getPosX(),p.getPosY());
+        
+        for(int i = 0; i < pm; ++i)
+            if(pos.getPosX() == 0)
+                pos.setPosX(gb.getTAILLE() - 1);
+        else
+                pos.setPosX(pos.getPosX() - 1);
+        return pos;
     }
     
-    public void tir(Armee a, String pos) {
+    private Position goRight(Position p, int pm){
+        Position pos = new Position(p.getPosX(),p.getPosY());
+        
+        for(int i = 0; i < pm; ++i)
+            if(pos.getPosX() == gb.getTAILLE() - 1)
+                pos.setPosX(0);
+        else
+                pos.setPosX(pos.getPosX() + 1);
+        return pos;
+    }
+    
+    private Position goUp(Position p, int pm){
+        Position pos = new Position(p.getPosX(),p.getPosY());
+        
+        for(int i = 0; i < pm; ++i)
+            if(pos.getPosY() == 0)
+                pos.setPosY(gb.getTAILLE() - 1);
+        else
+                pos.setPosY(pos.getPosY() - 1);
+        return pos;
+    }
+    
+    private Position goDown(Position p, int pm){
+        Position pos = new Position(p.getPosX(),p.getPosY());
+        
+        for(int i = 0; i < pm; ++i)
+            if(pos.getPosY() == gb.getTAILLE() - 1)
+                pos.setPosY(0);
+        else
+                pos.setPosY(pos.getPosY() + 1);
+        return pos;
+    }
+    
+    //    destinations possibles
+    public List<Position> listDestPoss(Bateau b) {
+        List<Position> dest = new LinkedList<>();
+        Position p = b.getXY();
+        Position top = goUp(p,b.getPm());
+        Position bot = goDown(p,b.getPm());
+        Position left = goLeft(p,b.getPm());
+        Position right = goRight(p,b.getPm());
+        
+        if(posValide(convertPosToStr(p)))
+            dest.add(top);
+        if(posValide(convertPosToStr(p)))
+            dest.add(bot);
+        if(posValide(convertPosToStr(p)))
+            dest.add(left);
+        if(posValide(convertPosToStr(p)))
+            dest.add(right);
+        return dest;
+    }
+    
+    public void permCircul(Position p){
+        if(p.getPosX() > gb.getTAILLE())
+            p.setPosX(p.getPosX() - gb.getTAILLE());
+        if(p.getPosX() < 0)
+            p.setPosX(p.getPosX() + gb.getTAILLE());
+        
+        if(p.getPosY() > gb.getTAILLE())
+            p.setPosY(p.getPosY() - gb.getTAILLE());
+        if(p.getPosY() < 0)
+            p.setPosY(p.getPosY() + gb.getTAILLE());
+    }
+    
+    public void tir(Armee a, String pos){
         if(checkPosEtArmeeBat(a, pos)){
             Position posBatChoisi = convertStrToPos(pos);
             Bateau b = a.getBatFromPos(posBatChoisi);
             b.randomPortee();                         
             if (!(b.getPortee() == 0)) 
-                for(Position p : porteeTir(b)) 
+                for(Position p : porteeTir(b)){ 
+                    permCircul(p);
                     for(Armee ar : this.listArmee)
-                        if(!ar.getNom().equals(a.getNom()))//si bat est ennemi pewpew!
+                        if(!ar.getNom().equals(a.getNom()))//si bat == ennemi => pewpew!
                             for(Bateau bat : ar.getListBat()) {
                                 bat.touché();
                                 if(bat.getPv() <= 0)
-                                    coulé(bat);
+                                    coulé(ar,bat);
                             }
-            setChangedAndNotify();
+                }
+            setChangedAndNotify(this);
         }
     }
     
@@ -215,17 +249,23 @@ public class NouvPartie extends Observable {
         } return zoneTir;
     }
 
-    public void coulé(Bateau b) {
-        List<Armee> list = this.listArmee;
-        for(Armee a : list)
+    public void coulé(Armee a, Bateau b) {
+        List<Bateau> listBat = new LinkedList<>();
             for(Bateau bat : a.getListBat())
+                listBat.add(bat);
+            for(Bateau bat : listBat)
                 if(bat.equals(b))
                     a.getListBat().remove(b);
-        setChangedAndNotify();
+        setChangedAndNotify(this);
     }
     
     public void setChangedAndNotify() {
         setChanged();
         notifyObservers();
+    }
+
+    private void setChangedAndNotify(Object o) {
+        setChanged();
+        notifyObservers(o);
     }
 }

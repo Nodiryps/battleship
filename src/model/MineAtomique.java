@@ -11,6 +11,10 @@ package model;
  */
 public class MineAtomique extends Mine {
 
+    public MineAtomique(){
+        super(TypeM.ATOMIQUE);
+    }
+    
      @Override
     public int getX() {
         return this.getX();
@@ -31,9 +35,4 @@ public class MineAtomique extends Mine {
         this.setY(y);
     }
 
-    @Override
-    public String toString() {
-        return "X";
-    }
-    
 }

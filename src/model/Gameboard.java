@@ -7,6 +7,7 @@ package model;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +27,7 @@ public class Gameboard {
     private Case[][] mer;
     private Map<String, Position> mapPositions = new HashMap<>();
     private Set<Position> setPosOccupados = new HashSet<>(); //enregistre les pos occupées
+    private List<Mine> listeMines = new LinkedList<>();
     
     public Gameboard(int size) {
         this.TAILLE = size;
@@ -81,6 +83,18 @@ public class Gameboard {
         randPosMine();
     }
     
+    public void updateMer(List<Armee> list){
+        for(int i = 0; i < TAILLE; ++i)
+            for(int j = 0; j < TAILLE; ++j){
+                String s = AXE_X[j] + "" + AXE_Y[i];
+                mapPositions.put(s, new Position(i, j));
+                mer[i][j] = new Case();
+            }
+        for(Armee armee : list)
+            updatePosBat(armee);
+        updatePosMine();
+    }
+    
 //    disposition random de la flotte
     private void randPosBat(Armee a){
         for(int i = 0; i < a.getSizeListBat(); ++i){
@@ -91,6 +105,17 @@ public class Gameboard {
             setPosOccupados.add(p);
         }
     }
+    private void updatePosBat(Armee a){
+        Set<Position> leSet = new HashSet<>();
+        for(int i = 0; i < a.getSizeListBat(); ++i){
+            int x = a.getBateauFromListPosX(i);
+            int y = a.getBateauFromListPosY(i);
+            mer[x][y] = new Case();
+            mer[x][y].setBat(a.getBatFromList(i));
+            a.setPosBatFromList(a.getBateauFromListPosX(i), a.getBateauFromListPosY(i), i);
+            leSet.add(a.getBateauFromListPos(i));
+        }
+    }
     
 //    disposition random des mines
     private void randPosMine(){
@@ -98,16 +123,27 @@ public class Gameboard {
             for(int j = 0; j < TAILLE; ++j){
                 int uneSurDix = ThreadLocalRandom.current().nextInt(1,100);
                 int uneSurDeux = ThreadLocalRandom.current().nextInt(1,100);
-                if(this.mer[i][j].getBat()== null && 
-                   this.mer[i][j].getMineA() == null && 
-                   this.mer[i][j].getMineN() == null){//bool caseVide à faire
+                if(this.mer[i][j].getBat() == null && this.mer[i][j].getMine() == null) 
                     if(uneSurDix <= 10)
-                        if(uneSurDeux <= 50)
-                            this.mer[i][j] = new Case(new MineNormale());
-                        else
-                            this.mer[i][j] = new Case(new MineAtomique());
-                }
+                        if(uneSurDeux <= 50){
+                            Mine MineA = new MineAtomique();
+                            this.mer[i][j] = new Case(MineA);
+                            listeMines.add(MineA);
+                        }else{
+                            Mine MineN = new MineNormale();
+                            this.mer[i][j] = new Case(MineN);
+                            listeMines.add(MineN);
+                        }
             }
+    }
+    
+    
+    private void updatePosMine(){
+        for(Mine m : listeMines){
+            int x = m.getX();
+            int y = m.getY();
+            mer[x][y] = new Case(m);
+        }
     }
     
     //    rand de 1 à taille du tab

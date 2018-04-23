@@ -93,47 +93,11 @@ public class VueConsole implements Observer {
         return out;
     }
 
-//    destinations possibles
-    private List<Position> listDestPoss(Bateau b) {
-        List<Position> dest = new LinkedList<>();
-//        int pm;
-//        if(b.getTypeB() == TypeB.GRAND)
-//            pm = 1;
-//        else
-//            pm = 2;
-//            
-//        for(int i = 0; i < pm; ++i){
-//            for(int j = 0; j < pm; ++j)
-//                if(i >= pm && i < pm * 2){
-//                    Position p = new Position(b.getX(), b.getY());
-//                    dest.add(p);
-//                }
-//            printLN("");
-//        }
-//        return dest;
-//    }
-        Position p = new Position(b.getX(),b.getY());
-        Position top = ctrlNouvP.permCircul(p, b.getPm(), "haut");
-        Position bot = ctrlNouvP.permCircul(p, b.getPm(), "bas");
-        Position left = ctrlNouvP.permCircul(p, b.getPm(), "gauche");
-        Position right = ctrlNouvP.permCircul(p, b.getPm(), "droite");
-        
-        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(top)))
-            dest.add(top);
-        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(bot)))
-            dest.add(bot);
-        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(left)))
-            dest.add(left);
-        if(ctrlNouvP.posValide(ctrlNouvP.convertPosToStr(right)))
-            dest.add(right);
-        return dest;
-    }
-    
-
     private void affDestPoss(Bateau b) {
-        List<Position> list = listDestPoss(b);
+        List<Position> list = ctrlNouvP.listDestPoss(b);
         for (Position p : list) {
-            print(ctrlNouvP.convertPosToStr(p));
+            if(ctrlNouvP.getMerGb()[p.getPosX()][p.getPosY()].caseAccessible())
+                print(ctrlNouvP.convertPosToStr(p));
         }
     }
 
@@ -142,6 +106,12 @@ public class VueConsole implements Observer {
             return a.getSizeListBat() == 0;
         }
         return false;
+    }
+    
+    public void partieFinieMsg(){
+        for(Armee a : ctrlNouvP.getListArmees())
+            if(a.getSizeListBat()>0)
+                print("GAME OVER\n" + a.getNom() + "a gagné! ^^");
     }
 
     public void affTir(Armee joueur) {
@@ -163,20 +133,20 @@ public class VueConsole implements Observer {
             String batChoisi = "";
             print("Quel bateau déplacer? (ex: B5): ");
             batChoisi = toUpperCase(insert.nextLine());
-            Position courante = ctrlNouvP.convertStrToPos(batChoisi);
+            Position posCour = ctrlNouvP.convertStrToPos(batChoisi);
             
-                                                                        print("x: " + courante.getPosX() + " ");
-                                                                        printLN("y: " + courante.getPosY());
+                                                                        print("x: " + posCour.getPosX() + " ");
+                                                                        printLN("y: " + posCour.getPosY());
                   
             String destChoisi = "";
-            Bateau b = joueur.getBatFromPos(courante);
+            Bateau b = joueur.getBatFromPos(posCour);
 
             printLN("Sélectionner une des destinations possibles: ");
             affDestPoss(b);
             destChoisi = toUpperCase(insert.nextLine());
 
-            if (listDestPoss(b).contains(ctrlNouvP.convertStrToPos(destChoisi))) {
-                ctrlNouvP.mouvBat(courante, destChoisi);
+            if (ctrlNouvP.listDestPoss(b).contains(ctrlNouvP.convertStrToPos(destChoisi))) {
+                ctrlNouvP.moveBat(b, posCour, destChoisi);
             }
         }
     }

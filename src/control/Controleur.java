@@ -31,14 +31,18 @@ public class Controleur {
             
             do {
                 v.affTir(a);
-                v.update(np, v);
-                
-                v.affMouvBat(a);
-                v.update(np, v);
+                if(!v.partieFinie()){
+                    v.update(np, v);
+
+                    v.affMouvBat(a);
+                    v.update(np, v);
+                }
+                else
+                    v.partieFinieMsg();
             } while (!v.partieFinie());
             
             if(v.partieFinie())
-                print("Game Over");
+                v.partieFinieMsg();
         }
     }
 
