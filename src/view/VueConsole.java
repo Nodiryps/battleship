@@ -90,8 +90,9 @@ public class VueConsole implements Observer {
                 out += npVue.convertPosToStr(bat.getXY());
                 out += "\t\t\t" + a.getNom();
                 out += "\t\t" + bat.getTypeB();
-                out += "\t\t" + (bat.getPv() / bat.getMaxPv()) * 100 + "%\t";
+                out += "\t\t" + (bat.getPv()*1.0 / bat.getMaxPv()) * 100 + "%\t";
                 out += "\n";
+                
             }
         }
         return out;
