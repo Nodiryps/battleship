@@ -25,23 +25,23 @@ public class Controleur {
     
     public void lancer() {
         for (Armee a : npVue.getListArmees()) {
-            VueConsole.affMer();
-            VueConsole.affEtatArmees();
-            
-            do {
-                VueConsole.affTir(a);
-                if(!VueConsole.partieFinie()){
-                    VueConsole.affMer();
-                    VueConsole.affEtatArmees();
-                    
-                    VueConsole.affMouvBat(a);
-                    
-                    VueConsole.affMer();
-                    VueConsole.affEtatArmees();
-                }
-                else
-                    VueConsole.partieFinieMsg();
-            } while (!VueConsole.partieFinie());
+            while (!VueConsole.partieFinie()){
+                VueConsole.affMer();
+                VueConsole.affEtatArmees();
+
+                    VueConsole.affTir(a);
+                    if(!VueConsole.partieFinie()){
+                        VueConsole.affMer();
+                        VueConsole.affEtatArmees();
+
+                        VueConsole.affMouvBat(a);
+
+                        VueConsole.affMer();
+                        VueConsole.affEtatArmees();
+                    }
+                    else
+                        VueConsole.partieFinieMsg();
+            } 
             
             if(VueConsole.partieFinie())
                 VueConsole.partieFinieMsg();

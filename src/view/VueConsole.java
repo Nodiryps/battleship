@@ -5,7 +5,7 @@
  */
 package view;
 
-import control.Controleur;
+
 import model.Armee;
 import model.Bateau;
 import model.NouvPartie;
@@ -17,6 +17,22 @@ import java.util.Scanner;
 import static jdk.nashorn.internal.objects.NativeString.toUpperCase;
 import model.Case;
 import model.TypeB;
+
+enum Couleur {
+    RESET("\u001B[0m"),
+    BLACK("\u001B[30m"),
+    RED("\u001B[31m"),
+    GREEN("\u001B[32m"),
+    YELLOW("\u001B[33m"),
+    BLUE("\u001B[34m"),
+    PURPLE("\u001B[35m"),
+    CYAN("\u001B[36m"),
+    WHITE("\u001B[37m");
+
+    private final String code;
+    private Couleur(String code) { this.code = code; }
+    @Override public String toString() { return code; }
+}
 
 /**
  *
@@ -46,11 +62,6 @@ public class VueConsole implements Observer {
             }
             printLN("|");
         }
-    }
-
-    @Override
-    public void update(Observable obs, Object o) {
-        NouvPartie np = (NouvPartie) obs;
     }
 
     public static void affEtatArmees() {
@@ -128,8 +139,8 @@ public class VueConsole implements Observer {
             batChoisi = toUpperCase(INSERT.nextLine());
             Position posCour = npVue.convertStrToPos(batChoisi);
             
-                                                                        print("x: " + posCour.getPosX() + " ");
-                                                                        printLN("y: " + posCour.getPosY());
+//          print("x: " + posCour.getPosX() + " ");
+//          printLN("y: " + posCour.getPosY());
                   
             String destChoisi = "";
             Bateau b = joueur.getBatFromPos(posCour);
@@ -157,6 +168,11 @@ public class VueConsole implements Observer {
         } else {
             return " ";
         }
+    }
+    
+    @Override
+    public void update(Observable obs, Object o) {
+        NouvPartie np = (NouvPartie) obs;
     }
 
     public static void printLN(Object msg) {

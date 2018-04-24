@@ -119,7 +119,7 @@ public class NouvPartie extends Observable {
     }
     
     public void moveBat(Bateau b, Position posCour, String destChoisi){
-        if(caseAccessible(posCour.getPosX(), posCour.getPosY())){
+        if(posValide(convertPosToStr(posCour))){
             posCour.setPosX(convertStrToPos(destChoisi).getPosX());
             posCour.setPosY(convertStrToPos(destChoisi).getPosY());
             b.setPos(posCour.getPosX(), posCour.getPosY());
@@ -133,7 +133,7 @@ public class NouvPartie extends Observable {
             if(pos.getPosX() == 0)
                 pos.setPosX(gb.getTAILLE() - 1);
         else
-                pos.setPosX(pos.getPosX() - 1);
+            pos.setPosX(pos.getPosX() - 1);
         return pos;
     }
     
@@ -144,7 +144,7 @@ public class NouvPartie extends Observable {
             if(pos.getPosX() == gb.getTAILLE() - 1)
                 pos.setPosX(0);
         else
-                pos.setPosX(pos.getPosX() + 1);
+            pos.setPosX(pos.getPosX() + 1);
         return pos;
     }
     
@@ -155,7 +155,7 @@ public class NouvPartie extends Observable {
             if(pos.getPosY() == 0)
                 pos.setPosY(gb.getTAILLE() - 1);
         else
-                pos.setPosY(pos.getPosY() - 1);
+            pos.setPosY(pos.getPosY() - 1);
         return pos;
     }
     
@@ -166,7 +166,7 @@ public class NouvPartie extends Observable {
             if(pos.getPosY() == gb.getTAILLE() - 1)
                 pos.setPosY(0);
         else
-                pos.setPosY(pos.getPosY() + 1);
+            pos.setPosY(pos.getPosY() + 1);
         return pos;
     }
     
@@ -174,19 +174,21 @@ public class NouvPartie extends Observable {
     public List<Position> listDestPoss(Bateau b) {
         List<Position> dest = new LinkedList<>();
         Position p = b.getXY();
-        Position top = goUp(p,b.getPm());
-        Position bot = goDown(p,b.getPm());
-        Position left = goLeft(p,b.getPm());
-        Position right = goRight(p,b.getPm());
-        
-        if(posValide(convertPosToStr(p)))
-            dest.add(top);
-        if(posValide(convertPosToStr(p)))
-            dest.add(bot);
-        if(posValide(convertPosToStr(p)))
-            dest.add(left);
-        if(posValide(convertPosToStr(p)))
-            dest.add(right);
+        for(int i = 0; i < b.getPm(); ++i){
+            Position top = goUp(p,b.getPm());
+            Position bot = goDown(p,b.getPm());
+            Position left = goLeft(p,b.getPm());
+            Position right = goRight(p,b.getPm());
+
+            if(posValide(convertPosToStr(p)))
+                dest.add(top);
+            if(posValide(convertPosToStr(p)))
+                dest.add(bot);
+            if(posValide(convertPosToStr(p)))
+                dest.add(left);
+            if(posValide(convertPosToStr(p)))
+                dest.add(right);
+        }
         return dest;
     }
     
@@ -200,6 +202,7 @@ public class NouvPartie extends Observable {
             p.setPosY(p.getPosY() - gb.getTAILLE());
         if(p.getPosY() < 0)
             p.setPosY(p.getPosY() + gb.getTAILLE());
+        setChangedAndNotify();
     }
     
     public void tir(Armee a, String pos){
