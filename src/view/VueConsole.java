@@ -75,7 +75,6 @@ public class VueConsole implements Observer {
         }
         printLN("");
         afficheArmee();
-        npVue.setChangedAndNotify();
     }
 
 //    affiche noms, listBat, Pv et pos
@@ -126,7 +125,6 @@ public class VueConsole implements Observer {
 
 //        if (ctrlNouvP.checkPosEtArmeeBat(joueur, batChoisi)) 
         npVue.tir(joueur, batChoisi);
-        npVue.setChangedAndNotify();
     }
 
     public static void affMouvBat(Armee joueur) {
@@ -152,7 +150,6 @@ public class VueConsole implements Observer {
 
             if (npVue.listDestPoss(b).contains(npVue.convertStrToPos(destChoisi))) {
                 npVue.moveBat(b, posCour, destChoisi);
-                npVue.setChangedAndNotify();
             }
         }
     }
@@ -173,7 +170,9 @@ public class VueConsole implements Observer {
     
     @Override
     public void update(Observable obs, Object o) {
-        NouvPartie np = (NouvPartie) obs;
+        affMer();
+        affEtatArmees();
+//        NouvPartie np = (NouvPartie) obs;
     }
 
     public static void printLN(Object msg) {

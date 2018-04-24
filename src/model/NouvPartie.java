@@ -127,6 +127,8 @@ public class NouvPartie extends Observable {
             posCour.setPosX(convertStrToPos(destChoisi).getPosX());
             posCour.setPosY(convertStrToPos(destChoisi).getPosY());
             b.setPos(posCour.getPosX(), posCour.getPosY());
+            setChangedAndNotify();
+
         }
     }
 
@@ -222,7 +224,6 @@ public class NouvPartie extends Observable {
         if (p.getPosY() < 0) {
             p.setPosY(p.getPosY() + gb.getTAILLE());
         }
-        setChangedAndNotify();
     }
 
     public void tir(Armee a, String pos) {
@@ -231,15 +232,15 @@ public class NouvPartie extends Observable {
             Bateau b = a.getBatFromPos(posBatChoisi);
 
             b.randomPortee();
-           
+
             if (!(b.getPortee() == 0)) {
 
                 for (Armee ar : this.listArmee) {
                     if (!ar.getNom().equals(a.getNom()))//si bat == ennemi => pewpew!
                     {
                         for (Position p : porteeTir(b)) {
-                        for (Bateau bat : ar.getListBat()) {
-                            
+                            for (Bateau bat : ar.getListBat()) {
+
                                 permCircul(p);
                                 if (p.equals(bat.getXY())) {
                                     bat.touché();
@@ -278,7 +279,6 @@ public class NouvPartie extends Observable {
                 a.getListBat().remove(b);
             }
         }
-        setChangedAndNotify();
     }
 
     public void setChangedAndNotify() {

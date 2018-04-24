@@ -24,20 +24,22 @@ public class Controleur {
     private NouvPartie npVue = VueConsole.getNpVue();
     
     public void lancer() {
+        npVue.addObserver(new VueConsole());
+        npVue.setChangedAndNotify();
         for (Armee a : npVue.getListArmees()) {
             while (!VueConsole.partieFinie()){
-                VueConsole.affMer();
-                VueConsole.affEtatArmees();
+//                VueConsole.affMer();
+//                VueConsole.affEtatArmees();
 
                     VueConsole.affTir(a);
                     if(!VueConsole.partieFinie()){
-                        VueConsole.affMer();
-                        VueConsole.affEtatArmees();
+//                        VueConsole.affMer();
+//                        VueConsole.affEtatArmees();
 
                         VueConsole.affMouvBat(a);
 
-                        VueConsole.affMer();
-                        VueConsole.affEtatArmees();
+//                        VueConsole.affMer();
+//                        VueConsole.affEtatArmees();
                     }
                     else
                         VueConsole.partieFinieMsg();
