@@ -37,7 +37,7 @@ public class Controleur {
             for (Armee a : np.getListArmees()) {
                 String posBatChoisi = v.affTir(a);
                 np.tir(a, posBatChoisi);
-                if()
+                v.tirMsg(a,posBatChoisi);
 
                 if(!v.partieFinie()){
                     String destChoisi = v.affMoveBat(a);

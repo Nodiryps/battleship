@@ -128,6 +128,16 @@ public class VueConsole implements Observer {
 
         return batChoisi;
     }
+    
+    public void tirMsg(Armee a, String p){
+        Position pos = ctrlNP.convertStrToPos(p);
+        Bateau b = a.getBatFromPos(pos);
+        if(ctrlNP.tir(a, ctrlNP.convertPosToStr(b.getXY())))
+            printLN("PEW! PEW!");
+        else
+            printLN("Vous avez fait "+ b.getPortee() +" de portée... -____-\"");
+            
+    }
 
     public String affMoveBat(Armee joueur) {
         String ouiNon = "";

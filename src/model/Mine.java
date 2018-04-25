@@ -12,7 +12,7 @@ package model;
 public abstract class Mine implements Positionnable {
     
     protected TypeM type;
-    protected Position posM;
+    protected Position posM = new Position(0, 0);
     protected boolean debugMode = false;
 
     public Mine(TypeM type){
