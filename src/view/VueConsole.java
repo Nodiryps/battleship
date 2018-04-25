@@ -101,8 +101,9 @@ public class VueConsole implements Observer {
         List<Position> list = npVue.listDestPoss(b);
         for (Position p : list) {
             if(npVue.caseAccessible(p.getPosX(), p.getPosY()))
-                print(npVue.convertPosToStr(p));
+                print("["+npVue.convertPosToStr(p)+"] ");
         }
+        
     }
 
     public static boolean partieFinie() {
@@ -146,6 +147,8 @@ public class VueConsole implements Observer {
 
             printLN("Sélectionner une des destinations possibles: ");
             affDestPoss(b);
+            System.out.print("\n");
+            System.out.println("Entrez votre choix");
             destChoisi = toUpperCase(INSERT.nextLine());
 
             if (npVue.listDestPoss(b).contains(npVue.convertStrToPos(destChoisi))) {
