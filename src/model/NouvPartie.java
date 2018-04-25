@@ -47,7 +47,7 @@ public class NouvPartie extends Observable {
         }
         return new NouvPartie(size, noms);
     }
-
+   
     public Gameboard getGb() {
         return gb;
     }

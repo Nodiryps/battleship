@@ -7,9 +7,7 @@ package control;
 
 import model.Armee;
 import model.NouvPartie;
-import model.Position;
 import view.VueConsole;
-import static view.VueConsole.print;
 
 /**
  *
@@ -45,7 +43,6 @@ public class Controleur {
                 }else
                     v.partieFinieMsg();
             } 
-            
             if(v.partieFinie())
                 v.partieFinieMsg();
         }

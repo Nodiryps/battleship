@@ -164,7 +164,9 @@ public class Gameboard {
         return pos;
     }
 
-    
+    public String test () {
+        return "Test";
+    }
 
     
     
