@@ -26,8 +26,9 @@ public class Controleur {
     public void lancer() {
         npVue.addObserver(new VueConsole());
         npVue.setChangedAndNotify();
+        while (!VueConsole.partieFinie()){
         for (Armee a : npVue.getListArmees()) {
-            while (!VueConsole.partieFinie()){
+            //while (!VueConsole.partieFinie()){
 //                VueConsole.affMer();
 //                VueConsole.affEtatArmees();
 
