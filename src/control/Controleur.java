@@ -9,6 +9,7 @@ import model.Armee;
 import model.NouvPartie;
 import view.VueConsole;
 import static view.VueConsole.print;
+import model.Gameboard;
 
 /**
  *
@@ -22,16 +23,19 @@ public class Controleur {
     }
     
     private NouvPartie npVue = VueConsole.getNpVue();
+    private Gameboard gb=npVue.getGb() ;
     
     public void lancer() {
         npVue.addObserver(new VueConsole());
         npVue.setChangedAndNotify();
         while (!VueConsole.partieFinie()){
+           
         for (Armee a : npVue.getListArmees()) {
             //while (!VueConsole.partieFinie()){
 //                VueConsole.affMer();
 //                VueConsole.affEtatArmees();
-
+                   
+                   gb.updateMer(npVue.getListArmees());
                     VueConsole.affTir(a);
                     if(!VueConsole.partieFinie()){
 //                        VueConsole.affMer();

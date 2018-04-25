@@ -18,6 +18,7 @@ import static jdk.nashorn.internal.objects.NativeString.toUpperCase;
 import model.Case;
 import model.TypeB;
 
+
 enum Couleur {
     RESET("\u001B[0m"),
     BLACK("\u001B[30m"),
@@ -42,6 +43,7 @@ public class VueConsole implements Observer {
 
     private static final Scanner INSERT = new Scanner(System.in);
     private static final NouvPartie npVue = NouvPartie.getNP();
+        
 
     public static NouvPartie getNpVue() {
         return npVue;
@@ -170,9 +172,10 @@ public class VueConsole implements Observer {
             return " ";
         }
     }
-    
+ 
     @Override
     public void update(Observable obs, Object o) {
+       
         affMer();
         affEtatArmees();
 //        NouvPartie np = (NouvPartie) obs;
