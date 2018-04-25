@@ -7,6 +7,7 @@ package control;
 
 import model.Armee;
 import model.NouvPartie;
+import model.Position;
 import view.VueConsole;
 import static view.VueConsole.print;
 
@@ -21,33 +22,34 @@ public class Controleur {
         ctrl.lancer();
     }
     
-    private NouvPartie npVue = VueConsole.getNpVue();
+    private NouvPartie np = NouvPartie.getNP();
+    VueConsole v = new VueConsole(this);
+    
+    public NouvPartie getNpCtrl() {
+         return this.np;
+     }
     
     public void lancer() {
-        npVue.addObserver(new VueConsole());
-        npVue.setChangedAndNotify();
-        for (Armee a : npVue.getListArmees()) {
-            while (!VueConsole.partieFinie()){
-//                VueConsole.affMer();
-//                VueConsole.affEtatArmees();
+        np.addObserver(v);
+        np.setChangedAndNotify();
+        
+        while (!v.partieFinie()){
+            for (Armee a : np.getListArmees()) {
+                String posBatChoisi = v.affTir(a);
+                np.tir(a, posBatChoisi);
+                if()
 
-                    VueConsole.affTir(a);
-                    if(!VueConsole.partieFinie()){
-//                        VueConsole.affMer();
-//                        VueConsole.affEtatArmees();
-
-                        VueConsole.affMouvBat(a);
-
-//                        VueConsole.affMer();
-//                        VueConsole.affEtatArmees();
-                    }
-                    else
-                        VueConsole.partieFinieMsg();
+                if(!v.partieFinie()){
+                    String destChoisi = v.affMoveBat(a);
+                    np.moveBat(destChoisi);
+                }else
+                    v.partieFinieMsg();
             } 
             
-            if(VueConsole.partieFinie())
-                VueConsole.partieFinieMsg();
+            if(v.partieFinie())
+                v.partieFinieMsg();
         }
     }
+    
 
 }

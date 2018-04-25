@@ -122,14 +122,16 @@ public class NouvPartie extends Observable {
                 && (p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE());
     }
 
-    public void moveBat(Bateau b, Position posCour, String destChoisi) {
-        if (posValide(convertPosToStr(posCour))) {
-            posCour.setPosX(convertStrToPos(destChoisi).getPosX());
-            posCour.setPosY(convertStrToPos(destChoisi).getPosY());
-            b.setPos(posCour.getPosX(), posCour.getPosY());
-            setChangedAndNotify();
-
-        }
+    public void moveBat(String destChoisi) {
+        for(Armee a : getListArmees())
+            for(Bateau b : a.getListBat())
+            if (listDestPoss(b).contains(convertStrToPos(destChoisi))) 
+                if (posValide(convertPosToStr(b.getXY()))) {
+                b.getXY().setPosX(convertStrToPos(destChoisi).getPosX());
+                b.getXY().setPosY(convertStrToPos(destChoisi).getPosY());
+                b.setPos(b.getXY().getPosX(), b.getXY().getPosY());
+                setChangedAndNotify();
+            }
     }
 
     private Position goLeft(Position p, int pm) {
@@ -230,28 +232,19 @@ public class NouvPartie extends Observable {
         if (checkPosEtArmeeBat(a, pos)) {
             Position posBatChoisi = convertStrToPos(pos);
             Bateau b = a.getBatFromPos(posBatChoisi);
-
             b.randomPortee();
-
             if (!(b.getPortee() == 0)) {
-
-                for (Armee ar : this.listArmee) {
+                for (Armee ar : this.listArmee) 
                     if (!ar.getNom().equals(a.getNom()))//si bat == ennemi => pewpew!
-                    {
-                        for (Position p : porteeTir(b)) {
+                        for (Position p : porteeTir(b)) 
                             for (Bateau bat : ar.getListBat()) {
-
                                 permCircul(p);
                                 if (p.equals(bat.getXY())) {
                                     bat.touché();
-                                    if (bat.getPv() <= 0) {
+                                    if (bat.getPv() <= 0) 
                                         coulé(ar, bat);
-                                    }
                                 }
                             }
-                        }
-                    }
-                }
                 setChangedAndNotify();
                 System.out.println(b.getPortee());
             }
@@ -286,8 +279,8 @@ public class NouvPartie extends Observable {
         notifyObservers();
     }
 
-    private void setChangedAndNotify(Object o) {
-        setChanged();
-        notifyObservers(o);
-    }
+//    private void setChangedAndNotify(Object o) {
+//        setChanged();
+//        notifyObservers(o);
+//    }
 }

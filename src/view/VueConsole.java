@@ -6,6 +6,7 @@
 package view;
 
 
+import control.Controleur;
 import model.Armee;
 import model.Bateau;
 import model.NouvPartie;
@@ -40,31 +41,33 @@ enum Couleur {
  */
 public class VueConsole implements Observer {
 
-    private static final Scanner INSERT = new Scanner(System.in);
-    private static final NouvPartie npVue = NouvPartie.getNP();
-
-    public static NouvPartie getNpVue() {
-        return npVue;
+    private static final Scanner insert = new Scanner(System.in);
+    private final Controleur ctrl;
+    private NouvPartie ctrlNP;
+    
+    public VueConsole(Controleur c){
+        this.ctrl = c;
+        this.ctrlNP = ctrl.getNpCtrl(); 
     }
     
-    public static void affMer() {
+    public void affMer() {
         printLN("");
         print("   ");
-        for (int i = 0; i < npVue.getTailleGb(); i++) {
-            print(npVue.getAxeXGb()[i] + " ");
+        for (int i = 0; i < ctrlNP.getTailleGb(); i++) {
+            print(ctrlNP.getAxeXGb()[i] + " ");
         }
         printLN("");
-        for (int i = 0; i < npVue.getTailleGb(); i++) {
-            print(npVue.getAxeYGb()[i] + " ");
-            for (int j = 0; j < npVue.getTailleGb(); j++) {
+        for (int i = 0; i < ctrlNP.getTailleGb(); i++) {
+            print(ctrlNP.getAxeYGb()[i] + " ");
+            for (int j = 0; j < ctrlNP.getTailleGb(); j++) {
 
-                print("|" + toString(npVue.getMerGb()[i][j]));
+                print("|" + toString(ctrlNP.getMerGb()[i][j]));
             }
             printLN("|");
         }
     }
 
-    public static void affEtatArmees() {
+    public void affEtatArmees() {
         for (int i = 0; i < 69; ++i) {
             print("-");
         }
@@ -78,15 +81,15 @@ public class VueConsole implements Observer {
     }
 
 //    affiche noms, listBat, Pv et pos
-    private static void afficheArmee() {
+    private void afficheArmee() {
         printLN(etatArmee());
     }
 
-    private static String etatArmee() {
+    private String etatArmee() {
         String out = "";
-        for (Armee a : npVue.getListArmees()) {
+        for (Armee a : ctrlNP.getListArmees()) {
             for (Bateau bat : a.getListBat()) {
-                out += npVue.convertPosToStr(bat.getXY());
+                out += ctrlNP.convertPosToStr(bat.getXY());
                 out += "\t\t\t" + a.getNom();
                 out += "\t\t" + bat.getTypeB();
                 out += "\t\t" + (bat.getPv()*1.0 / bat.getMaxPv()) * 100 + "%\t";
@@ -97,64 +100,59 @@ public class VueConsole implements Observer {
         return out;
     }
 
-    private static void affDestPoss(Bateau b) {
-        List<Position> list = npVue.listDestPoss(b);
+    private void affDestPoss(Bateau b) {
+        List<Position> list = ctrlNP.listDestPoss(b);
         for (Position p : list) {
-            if(npVue.caseAccessible(p.getPosX(), p.getPosY()))
-                print(npVue.convertPosToStr(p));
+            if(ctrlNP.caseAccessible(p.getPosX(), p.getPosY()))
+                print(ctrlNP.convertPosToStr(p) + " | ");
         }
     }
 
-    public static boolean partieFinie() {
-        for (Armee a : npVue.getListArmees()) {
+    public boolean partieFinie() {
+        for (Armee a : ctrlNP.getListArmees()) {
             return a.getSizeListBat() == 0;
         }
         return false;
     }
     
-    public static void partieFinieMsg(){
-        for(Armee a : npVue.getListArmees())
+    public void partieFinieMsg(){
+        for(Armee a : ctrlNP.getListArmees())
             if(a.getSizeListBat()>0)
-                print("GAME OVER\n" + a.getNom() + "a gagné! ^^");
+                print("GAME OVER\n" + a.getNom() + " a gagné! ^^");
     }
 
-    public static void affTir(Armee joueur) {
+    public String affTir(Armee joueur) {
         String batChoisi = "";
         print("Avec quel bateau voulez-vous tirer, " + joueur.getNom() + "? (ex: B5): ");
-        batChoisi = toUpperCase(INSERT.nextLine());
+        batChoisi = toUpperCase(insert.nextLine());
 
-//        if (ctrlNouvP.checkPosEtArmeeBat(joueur, batChoisi)) 
-        npVue.tir(joueur, batChoisi);
+        return batChoisi;
     }
 
-    public static void affMouvBat(Armee joueur) {
+    public String affMoveBat(Armee joueur) {
         String ouiNon = "";
         print("Déplacer un bateau de votre armée? (y/n): ");
-        ouiNon = INSERT.nextLine();
-
+        ouiNon = insert.nextLine();
+        
+        String destChoisi = "";
+        
         if (ouiNon.equals("y")) {
             String batChoisi = "";
             print("Quel bateau déplacer? (ex: B5): ");
-            batChoisi = toUpperCase(INSERT.nextLine());
-            Position posCour = npVue.convertStrToPos(batChoisi);
+            batChoisi = toUpperCase(insert.nextLine());
+            Position posCour = ctrlNP.convertStrToPos(batChoisi);
             
-//          print("x: " + posCour.getPosX() + " ");
-//          printLN("y: " + posCour.getPosY());
-                  
-            String destChoisi = "";
             Bateau b = joueur.getBatFromPos(posCour);
 
-            printLN("Sélectionner une des destinations possibles: ");
+            print("Sélectionner une des destinations suivantes: ");
             affDestPoss(b);
-            destChoisi = toUpperCase(INSERT.nextLine());
-
-            if (npVue.listDestPoss(b).contains(npVue.convertStrToPos(destChoisi))) {
-                npVue.moveBat(b, posCour, destChoisi);
-            }
+            printLN("");
+            destChoisi = toUpperCase(insert.nextLine());
         }
+        return destChoisi;
     }
 
-    private static String toString(Case c) {
+    private String toString(Case c) {
         if (c.getBat() != null) {
             if (c.getTypeBat() == TypeB.PETIT) {
                 return "b";
@@ -172,7 +170,6 @@ public class VueConsole implements Observer {
     public void update(Observable obs, Object o) {
         affMer();
         affEtatArmees();
-//        NouvPartie np = (NouvPartie) obs;
     }
 
     public static void printLN(Object msg) {
