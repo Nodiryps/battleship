@@ -91,6 +91,10 @@ public class NouvPartie extends Observable {
     public int getListArmeesSize() {
         return this.getListArmees().size();
     }
+    
+    public Armee getElmtFromListArmees(int i){
+        return getListArmees().get(i);
+    }
 
     public int strToPosX(String s) {
         return convertStrToPos(s).getPosX();

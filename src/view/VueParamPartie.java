@@ -26,7 +26,7 @@ public class VueParamPartie extends VBox {
         stage.show();
     }
 
-    public static NouvPartie getNouvPartie() {
+    public static NouvPartie getNpVueParam() {
         return npVue;
     }
 

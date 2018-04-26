@@ -30,7 +30,7 @@ public class ControleurFx extends Application {
 
     // fait apparaître la fenêtre principale de l'application
     public void switchToMainWindow(NouvPartie np) {
-        VuePartie mainWindow = new VuePartie(stage, np.getGb().getTAILLE(), this);
+        VuePartie mainWindow = new VuePartie(stage, np.getTailleGb(), this);
         np.addObserver(mainWindow);
         np.setChangedAndNotify(); // Provoque un 1er affichage
     }
