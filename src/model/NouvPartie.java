@@ -92,7 +92,7 @@ public class NouvPartie extends Observable {
         return this.getListArmees().size();
     }
     
-    public Armee getElmtFromListArmees(int i){
+    public Armee getArmeeFromList(int i){
         return getListArmees().get(i);
     }
 
@@ -105,13 +105,13 @@ public class NouvPartie extends Observable {
     }
 
     public Position convertStrToPos(String s) {
-        return gb.getElemtMapPositions(s);
+        return gb.getPosFromMapPositions(s);
     }
 
     public String convertPosToStr(Position p) {
         if (gb.mapPositionsContains(p)) {
             for (String cle : gb.mapPositionsKeySet()) {
-                if (gb.getElemtMapPositions(cle).equals(p)) {
+                if (gb.getPosFromMapPositions(cle).equals(p)) {
                     return cle;
                 }
             }

@@ -60,7 +60,7 @@ public class VuePartie extends BorderPane implements Observer {
         
         addEtatArmee();
         
-        stage.setScene(new Scene(this, 920, 600));
+        stage.setScene(new Scene(this, 1000, 600));
         stage.setTitle("Bataille Navale leFilmAvecRihanna (déplacer avec souris)");
         stage.show();
         
@@ -77,19 +77,19 @@ public class VuePartie extends BorderPane implements Observer {
     public void addEtatArmee(){
             vbox1.getChildren().clear();
             vbox2.getChildren().clear();
-            etatArmee(npVueParam.getElmtFromListArmees(0), vbox1, npVueParam);
-            etatArmee(npVueParam.getElmtFromListArmees(1), vbox2, npVueParam);
+            etatArmee(npVueParam.getArmeeFromList(0), vbox1, npVueParam);
+            etatArmee(npVueParam.getArmeeFromList(1), vbox2, npVueParam);
         }
     
     public void etatArmee(Armee a, VBox vb, NouvPartie np) {
             Text nomA = new Text(a.getNom() + "\n");
             nomA.setTextAlignment(TextAlignment.CENTER);
-            nomA.setFont(Font.font("Impact", 25));
+            nomA.setFont(Font.font("Arial",FontWeight.BLACK,25));
             vb.getChildren().add(nomA);
             
-            Text headTab = new Text("Position\t\t" + "Type\t\t" + "Intégrité (%)");
+            Text headTab = new Text("Pos\t\t" + "Type\t\t" + "Pv(%)");
             headTab.setTextAlignment(TextAlignment.CENTER);
-            headTab.setFont(Font.font("Impact",11));
+            headTab.setFont(Font.font("Arial",FontWeight.BLACK,15));
             vb.getChildren().add(headTab);
             
             printLN("");
@@ -102,7 +102,7 @@ public class VuePartie extends BorderPane implements Observer {
 
     private Text etatArmeeContent(Armee a, VBox vb, NouvPartie np){
         Text contentTab = new Text();
-        contentTab.setFont(Font.font("Impact",FontWeight.EXTRA_LIGHT,11));
+        contentTab.setFont(Font.font("Arial",FontWeight.LIGHT,11));
         contentTab.setTextAlignment(TextAlignment.CENTER);
         for(Bateau b : a.getListBat()){
             contentTab = new Text
@@ -149,6 +149,7 @@ public class VuePartie extends BorderPane implements Observer {
 
             public BoxView() {
                 getStylesheets().add("view/BoxView.css");
+                setOnMouseClicked(e -> ctrl.);
             }
         }
 
