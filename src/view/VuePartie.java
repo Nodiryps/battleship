@@ -15,7 +15,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import model.Armee;
 import model.Bateau;
@@ -40,29 +39,33 @@ public class VuePartie extends BorderPane implements Observer {
         grille = new GrilleView();
         grille.setSizeConstraints();
         grille.setMinSize(500, 500);
-        grille.setMaxSize(800, 800);
-        grille.scaleShapeProperty();
+        grille.setMaxSize(500, 500);
+        grille.scaleXProperty();
+        grille.scaleYProperty();
         this.setCenter(grille);
         
         vbox1 = new VBox();
         vbox1.setAlignment(Pos.TOP_CENTER);
         vbox1.setMinSize(200, 250);
         vbox1.setMaxSize(400, 500);
-        vbox1.setPadding(new Insets(15));
+        vbox1.setPadding(new Insets(20));
         this.setLeft(vbox1);
         
         vbox2 = new VBox();
         vbox2.setAlignment(Pos.TOP_CENTER);
         vbox2.setMinSize(200, 250);
         vbox2.setMaxSize(400, 500);
-        vbox2.setPadding(new Insets(15));
+        vbox2.setPadding(new Insets(20));
         this.setRight(vbox2);
         
         addEtatArmee();
         
-        stage.setScene(new Scene(this, 1000, 800));
+        stage.setScene(new Scene(this, 920, 600));
         stage.setTitle("Bataille Navale leFilmAvecRihanna (déplacer avec souris)");
         stage.show();
+        
+        getStylesheets().add("view/BoxView.css");
+        getStyleClass().add("bckgrnd");
         
     }
     
@@ -79,7 +82,7 @@ public class VuePartie extends BorderPane implements Observer {
         }
     
     public void etatArmee(Armee a, VBox vb, NouvPartie np) {
-            Text nomA = new Text("\t\t" + a.getNom() + "\t\t\n");
+            Text nomA = new Text(a.getNom() + "\n");
             nomA.setTextAlignment(TextAlignment.CENTER);
             nomA.setFont(Font.font("Impact", 25));
             vb.getChildren().add(nomA);
@@ -104,9 +107,9 @@ public class VuePartie extends BorderPane implements Observer {
         for(Bateau b : a.getListBat()){
             contentTab = new Text
                                 ( 
-                                np.convertPosToStr(b.getXY())
-                                + "\t\t" + b.getTypeB()
-                                + "\t\t" + (b.getPv()*1.0 / b.getMaxPv()) * 100 + "%\t"
+                                np.convertPosToStr(b.getXY()) + "\t\t"
+                                + b.getTypeB() + "\t\t"
+                                + (b.getPv()*1.0 / b.getMaxPv()) * 100 + "%"
                                 + "\n"
                                 );
             vb.getChildren().add(contentTab);
