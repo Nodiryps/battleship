@@ -88,7 +88,7 @@ public class VueParamPartie extends VBox {
     
     private class InputJoueur extends TextField {
         InputJoueur() {
-            super("Armée de: ");
+            super("Nom Armée");
             setAlignment(Pos.CENTER_LEFT);
             setMaxWidth(150);
             installListeners();

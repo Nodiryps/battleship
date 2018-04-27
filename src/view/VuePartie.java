@@ -3,6 +3,7 @@ package view;
 import control.ControleurFx;
 import java.util.Observable;
 import java.util.Observer;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -12,13 +13,17 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import model.Armee;
 import model.Bateau;
 import model.NouvPartie;
+import javafx.scene.text.TextAlignment;
 import static view.VueConsole.print;
 import static view.VueConsole.printLN;
+
 
 public class VuePartie extends BorderPane implements Observer {
 
@@ -34,19 +39,28 @@ public class VuePartie extends BorderPane implements Observer {
         SIZE = size;
         grille = new GrilleView();
         grille.setSizeConstraints();
+        grille.setMinSize(500, 500);
+        grille.setMaxSize(800, 800);
+        grille.scaleShapeProperty();
         this.setCenter(grille);
         
         vbox1 = new VBox();
-        vbox1.setAlignment(Pos.TOP_LEFT);
-        vbox1.setMaxSize(250, 200);
+        vbox1.setAlignment(Pos.TOP_CENTER);
+        vbox1.setMinSize(200, 250);
+        vbox1.setMaxSize(400, 500);
+        vbox1.setPadding(new Insets(15));
         this.setLeft(vbox1);
         
         vbox2 = new VBox();
-        vbox2.setAlignment(Pos.BOTTOM_LEFT);
-        vbox2.setMaxSize(250, 200);
-        this.setLeft(vbox2);
+        vbox2.setAlignment(Pos.TOP_CENTER);
+        vbox2.setMinSize(200, 250);
+        vbox2.setMaxSize(400, 500);
+        vbox2.setPadding(new Insets(15));
+        this.setRight(vbox2);
         
-        stage.setScene(new Scene(this, 500, 500));
+        addEtatArmee();
+        
+        stage.setScene(new Scene(this, 1000, 800));
         stage.setTitle("Bataille Navale leFilmAvecRihanna (déplacer avec souris)");
         stage.show();
         
@@ -57,7 +71,49 @@ public class VuePartie extends BorderPane implements Observer {
             grille.nouvMer();
         }
     
-    private class GrilleView extends GridPane {
+    public void addEtatArmee(){
+            vbox1.getChildren().clear();
+            vbox2.getChildren().clear();
+            etatArmee(npVueParam.getElmtFromListArmees(0), vbox1, npVueParam);
+            etatArmee(npVueParam.getElmtFromListArmees(1), vbox2, npVueParam);
+        }
+    
+    public void etatArmee(Armee a, VBox vb, NouvPartie np) {
+            Text nomA = new Text("\t\t" + a.getNom() + "\t\t\n");
+            nomA.setTextAlignment(TextAlignment.CENTER);
+            nomA.setFont(Font.font("Impact", 25));
+            vb.getChildren().add(nomA);
+            
+            Text headTab = new Text("Position\t\t" + "Type\t\t" + "Intégrité (%)");
+            headTab.setTextAlignment(TextAlignment.CENTER);
+            headTab.setFont(Font.font("Impact",11));
+            vb.getChildren().add(headTab);
+            
+            printLN("");
+            afficheEtatArmeeContent(a, vb, np);
+    }       
+        
+    private void afficheEtatArmeeContent(Armee a, VBox vb, NouvPartie np){
+        printLN(etatArmeeContent(a, vb, np));
+    }
+
+    private Text etatArmeeContent(Armee a, VBox vb, NouvPartie np){
+        Text contentTab = new Text();
+        contentTab.setFont(Font.font("Impact",FontWeight.EXTRA_LIGHT,11));
+        contentTab.setTextAlignment(TextAlignment.CENTER);
+        for(Bateau b : a.getListBat()){
+            contentTab = new Text
+                                ( 
+                                np.convertPosToStr(b.getXY())
+                                + "\t\t" + b.getTypeB()
+                                + "\t\t" + (b.getPv()*1.0 / b.getMaxPv()) * 100 + "%\t"
+                                + "\n"
+                                );
+            vb.getChildren().add(contentTab);
+        }return contentTab;
+    }
+    
+    protected class GrilleView extends GridPane {
     
         // Pour que chaque ligne et chaque colonne soit dimensionnée
         public void setSizeConstraints() {
@@ -85,38 +141,6 @@ public class VuePartie extends BorderPane implements Observer {
                 }
         }
         
-        public void etatArmee(Armee a, VBox vb, NouvPartie np) {
-            Text nomA = new Text("\t" + a.getNom() + "\t\n");
-            nomA.setFont(Font.font("Impact", 25));
-            vb.getChildren().add(nomA);
-            
-            Text headTab = new Text("Position\t\t" + "Armée\t\t" + "Type\t\t" + "Intégrité (%)");
-            headTab.setFont(Font.font("Impact",11));
-            vb.getChildren().add(headTab);
-            
-            printLN("");
-            afficheArmee(a, vb, np);
-        }       
-        
-        private void afficheArmee(Armee a, VBox vb, NouvPartie np){
-            printLN(etatArmeeContent(a, vb, np));
-        }
-        
-        private Text etatArmeeContent(Armee a, VBox vb, NouvPartie np){
-            Text contentTab = new Text();
-            for(Bateau b : a.getListBat()){
-                contentTab = new Text
-                                    ( 
-                                    np.convertPosToStr(b.getXY())
-                                    + "\t\t\t" + a.getNom()
-                                    + "\t\t" + b.getTypeB()
-                                    + "\t\t" + (b.getPv()*1.0 / b.getMaxPv()) * 100 + "%\t"
-                                    + "\n"
-                                    );
-                vb.getChildren().add(contentTab);
-            }return contentTab;
-        }
-
         // La vue d'une "case"
         public abstract class BoxView extends Pane {
 
