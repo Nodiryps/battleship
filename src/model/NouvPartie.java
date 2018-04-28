@@ -5,10 +5,14 @@
  */
 package model;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Scanner;
+import java.util.Set;
 import static view.VueConsole.print;
 
 /**
@@ -16,42 +20,41 @@ import static view.VueConsole.print;
  * @author Spy
  */
 public class NouvPartie extends Observable {
-
+    private Builder bldr;
     private Gameboard gb;
-    private final static int nbJ = 2;
+    private int NBJ;
     private final List<Armee> listArmee;
 
-    public NouvPartie(int size, List<String> noms) {
-        this.gb = new Gameboard(size);
-        this.listArmee = creationArmees(noms);
-        this.gb.nouvMer(listArmee);
+    public NouvPartie(Builder bldr) {
+        this.bldr = bldr;
+        this.gb = bldr.getGbBuilder();
+        this.NBJ = bldr.getNBJ();
+        this.listArmee = bldr.getListArmee();
+//        this.gb.nouvMer(listArmee);
     }
 
-    private static List<Armee> creationArmees(List<String> noms) {
-        List<Armee> list = new LinkedList<>();
-        for (String nom : noms) {
-            list.add(new Armee(nom));
-        }
-        return list;
-    }
+//    private static List<Armee> creationArmees(List<String> noms) {
+//        List<Armee> list = new LinkedList<>();
+//        for (String nom : noms) {
+//            list.add(new Armee(nom));
+//        }
+//        return list;
+//    }
     
-    public static NouvPartie getNP() {
+    public  NouvPartie getNP() {
+        boolean auto = true;                    //pcq console
         Scanner insert = new Scanner(System.in);
         List<String> noms = new LinkedList<>();
         print("Taille de votre mer (5 à 26): ");
         int size = insert.nextInt();
-        for (int i = 0; i < nbJ; ++i) {
+        for (int i = 0; i < NBJ; ++i) {
             print("J" + (i + 1) + ": ");
             String s = insert.next();
             noms.add(s);
         }
-        return new NouvPartie(size, noms);
+        return new NouvPartie(new Builder(size, noms, auto));
     }
    
-    public Gameboard getGb() {
-        return gb;
-    }
-
     public int getTailleGb() {
         return this.gb.getTAILLE();
     }
@@ -81,7 +84,7 @@ public class NouvPartie extends Observable {
     }
     
     public int getNbJ() {
-        return nbJ;
+        return NBJ;
     }
 
     public List<Armee> getListArmees() {
@@ -146,7 +149,7 @@ public class NouvPartie extends Observable {
                         b.touché();
                     else if(caseMineeA(convertStrToPos(destChoisi)))
                         coulé(a,b); 
-                    gb.updateMer(listArmee);
+                    bldr.updateMer(listArmee);
                     setChangedAndNotify();
                     
                 }
@@ -262,7 +265,7 @@ public class NouvPartie extends Observable {
                                     bat.touché();
                                     if (bat.getPv() <= 0) 
                                         coulé(ar, bat);
-                                    gb.updateMer(listArmee);
+                                    bldr.updateMer(listArmee);
                                     setChangedAndNotify();
                                     return true;
                                 }

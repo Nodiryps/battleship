@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 
 
@@ -27,7 +26,7 @@ public class Gameboard {
     private Case[][] mer;
     private Map<String, Position> mapPositions = new HashMap<>();
     private Set<Position> setPosOccupados = new HashSet<>(); //enregistre les pos occupées
-    private List<Mine> listeMines = new LinkedList<>();
+    
     
     public Gameboard(int size) {
         this.TAILLE = size;
@@ -54,10 +53,6 @@ public class Gameboard {
         return setPosOccupados;
     }
 
-    public List<Mine> getListeMines() {
-        return listeMines;
-    }
-    
     public boolean setPosOccupadosContains(Position p){
         return setPosOccupados.contains(p);
     }

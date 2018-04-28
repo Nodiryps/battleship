@@ -18,19 +18,32 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Builder extends Observable {
     private Gameboard gb;
-//    private final static int nbJ = 2;
+    private final int NBJ = 2;
     private final List<Armee> listArmee;
+    private List<Mine> listeMines = new LinkedList<>();
             
     public Builder(int size, List<String> noms, boolean placementAuto) {
         this.gb = new Gameboard(size);
         this.listArmee = creationArmees(noms);
         
-        this.nouvMer(listArmee);
+        this.nouvMer();
         if(placementAuto){
             for(Armee armee : listArmee)
                 randPosBat(armee);
             randPosMine();
+        }
     }
+
+    public Gameboard getGbBuilder() {
+        return this.gb;
+    }
+
+    public int getNBJ() {
+        return NBJ;
+    }
+
+    public List<Armee> getListArmee() {
+        return listArmee;
     }
 
     private static List<Armee> creationArmees(List<String> noms) {
@@ -42,7 +55,7 @@ public class Builder extends Observable {
     }
     
     //    création tableau de cases
-    public void nouvMer(List<Armee> list){
+    public void nouvMer(){
         for(int i = 0; i < gb.getTAILLE(); ++i)
             for(int j = 0; j < gb.getTAILLE(); ++j){
                 String s = gb.getAXE_X()[j] + "" + gb.getAXE_Y()[i];
@@ -62,6 +75,27 @@ public class Builder extends Observable {
             gb.setPosOccupadosAdd(p);
         }
     }
+    
+//    disposition random des mines
+    private void randPosMine(){
+        for(int i = 0; i < gb.getTAILLE(); ++i)
+            for(int j = 0; j < gb.getTAILLE(); ++j){
+                int uneSurDix = ThreadLocalRandom.current().nextInt(1,100);
+                int uneSurDeux = ThreadLocalRandom.current().nextInt(1,100);
+                if(gb.getMer()[i][j].getBat() == null && gb.getMer()[i][j].getMine() == null) 
+                    if(uneSurDix <= 10)
+                        if(uneSurDeux <= 50){
+                            Mine MineA = new MineAtomique();
+                            gb.getMer()[i][j] = new Case(MineA);
+                            listeMines.add(MineA);
+                        }else{
+                            Mine MineN = new MineNormale();
+                            gb.getMer()[i][j] = new Case(MineN);
+                            listeMines.add(MineN);
+                        }
+            }
+    }
+    
     public void updateMer(List<Armee> list){
         for(int i = 0; i < gb.getTAILLE(); ++i)
             for(int j = 0; j < gb.getTAILLE(); ++j){
@@ -86,29 +120,8 @@ public class Builder extends Observable {
         }
     }
     
-//    disposition random des mines
-    private void randPosMine(){
-        for(int i = 0; i < gb.getTAILLE(); ++i)
-            for(int j = 0; j < gb.getTAILLE(); ++j){
-                int uneSurDix = ThreadLocalRandom.current().nextInt(1,100);
-                int uneSurDeux = ThreadLocalRandom.current().nextInt(1,100);
-                if(gb.getMer()[i][j].getBat() == null && gb.getMer()[i][j].getMine() == null) 
-                    if(uneSurDix <= 10)
-                        if(uneSurDeux <= 50){
-                            Mine MineA = new MineAtomique();
-                            gb.getMer()[i][j] = new Case(MineA);
-                            gb.getListeMines().add(MineA);
-                        }else{
-                            Mine MineN = new MineNormale();
-                            gb.getMer()[i][j] = new Case(MineN);
-                            gb.getListeMines().add(MineN);
-                        }
-            }
-    }
-    
-    
     private void updatePosMine(){
-        for(Mine m : gb.getListeMines()){
+        for(Mine m : listeMines){
             int x = m.getX();
             int y = m.getY();
             gb.getMer()[x][y] = new Case(m);

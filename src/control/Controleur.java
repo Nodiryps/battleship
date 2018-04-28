@@ -14,14 +14,12 @@ import view.VueConsole;
  * @author 2208sptheodorou
  */
 public class Controleur {
-
-    public static void main(String[] args) {
-        Controleur ctrl = new Controleur();
-        ctrl.lancer();
-    }
+    private NouvPartie np;
+    private VueConsole v = new VueConsole(this);
     
-    private NouvPartie np = NouvPartie.getNP();
-    VueConsole v = new VueConsole(this);
+    public Controleur(){
+        this.np = np.getNP();
+    }
     
     public NouvPartie getNpCtrl() {
          return this.np;
@@ -46,6 +44,11 @@ public class Controleur {
             if(v.partieFinie())
                 v.partieFinieMsg();
         }
+    }
+    
+    public static void main(String[] args) {
+        Controleur ctrl = new Controleur();
+        ctrl.lancer();
     }
     
 
