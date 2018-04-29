@@ -22,32 +22,21 @@ import static view.VueConsole.print;
 public class NouvPartie extends Observable {
     private Builder bldr;
     private Gameboard gb;
-    private int NBJ;
     private final List<Armee> listArmee;
 
     public NouvPartie(Builder bldr) {
         this.bldr = bldr;
         this.gb = bldr.getGbBuilder();
-        this.NBJ = bldr.getNBJ();
         this.listArmee = bldr.getListArmee();
-//        this.gb.nouvMer(listArmee);
     }
 
-//    private static List<Armee> creationArmees(List<String> noms) {
-//        List<Armee> list = new LinkedList<>();
-//        for (String nom : noms) {
-//            list.add(new Armee(nom));
-//        }
-//        return list;
-//    }
-    
-    public  NouvPartie getNP() {
+    public static NouvPartie getNP(int nbj) {
         boolean auto = true;                    //pcq console
         Scanner insert = new Scanner(System.in);
         List<String> noms = new LinkedList<>();
         print("Taille de votre mer (5 à 26): ");
         int size = insert.nextInt();
-        for (int i = 0; i < NBJ; ++i) {
+        for (int i = 0; i < nbj; ++i) {
             print("J" + (i + 1) + ": ");
             String s = insert.next();
             noms.add(s);
@@ -83,10 +72,6 @@ public class NouvPartie extends Observable {
         return gb.getMer()[p.getPosX()][p.getPosY()].explosionMineA();
     }
     
-    public int getNbJ() {
-        return NBJ;
-    }
-
     public List<Armee> getListArmees() {
         return this.listArmee;
     }
@@ -124,10 +109,11 @@ public class NouvPartie extends Observable {
 
     //    vérifie si la pos est valide et qu'un bateau fait partie de l'armée courante
     public boolean checkPosEtArmeeBat(Armee armeeCou, String posBatChoisi) {
-        if(posValide(posBatChoisi))
-            if (armeeCou.getBatFromPos(convertStrToPos(posBatChoisi)) != null) 
-                return true;
-        return false;
+//        if(posValide(posBatChoisi))    
+            for(Bateau b : armeeCou.getListBat())
+                if(b.getXY().equals((convertStrToPos(posBatChoisi))))
+                    return true;
+            return false;
     }
 
     public boolean posValide(String s) {
@@ -139,21 +125,20 @@ public class NouvPartie extends Observable {
     public void moveBat(String destChoisi) {
         for(Armee a : getListArmees())
             for(Bateau b : a.getListBat())
-            if (listDestPoss(b).contains(convertStrToPos(destChoisi))) 
-                if (posValide(convertPosToStr(b.getXY())) && 
-                        caseAccessible(convertStrToPos(destChoisi).getPosX(), convertStrToPos(destChoisi).getPosY())) {
-                    b.getXY().setPosX(convertStrToPos(destChoisi).getPosX());
-                    b.getXY().setPosY(convertStrToPos(destChoisi).getPosY());
-                    b.setPos(b.getXY().getPosX(), b.getXY().getPosY());
-                    if(caseMineeN(convertStrToPos(destChoisi)))
-                        b.touché();
-                    else if(caseMineeA(convertStrToPos(destChoisi)))
-                        coulé(a,b); 
-                    bldr.updateMer(listArmee);
-                    setChangedAndNotify();
-                    
-                }
-        
+                if (listDestPoss(b).contains(convertStrToPos(destChoisi))) 
+                    if (posValide(convertPosToStr(b.getXY())) && 
+                            caseAccessible(convertStrToPos(destChoisi).getPosX(), convertStrToPos(destChoisi).getPosY())) {
+                        b.getXY().setPosX(convertStrToPos(destChoisi).getPosX());
+                        b.getXY().setPosY(convertStrToPos(destChoisi).getPosY());
+                        b.setPos(b.getXY().getPosX(), b.getXY().getPosY());
+                        if(caseMineeN(convertStrToPos(destChoisi)))
+                            b.touché();
+                        else if(caseMineeA(convertStrToPos(destChoisi)))
+                            coulé(a,b); 
+                        
+                        bldr.updateMer(listArmee);
+                        setChangedAndNotify(this);
+                    }
     }
 
     private Position goLeft(Position p, int pm) {
@@ -265,11 +250,11 @@ public class NouvPartie extends Observable {
                                     bat.touché();
                                     if (bat.getPv() <= 0) 
                                         coulé(ar, bat);
-                                    bldr.updateMer(listArmee);
-                                    setChangedAndNotify();
-                                    return true;
                                 }
                             }
+                bldr.updateMer(listArmee);
+                setChangedAndNotify(this);
+                return true;
             }
         }return false;
     }
@@ -302,8 +287,8 @@ public class NouvPartie extends Observable {
         notifyObservers();
     }
 
-//    private void setChangedAndNotify(Object o) {
-//        setChanged();
-//        notifyObservers(o);
-//    }
+    private void setChangedAndNotify(Object o) {
+        setChanged();
+        notifyObservers(o);
+    }
 }

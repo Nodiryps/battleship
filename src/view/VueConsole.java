@@ -111,9 +111,9 @@ public class VueConsole implements Observer {
     }
 
     public boolean partieFinie() {
-        for (Armee a : ctrlNP.getListArmees()) {
-            return a.getSizeListBat() == 0;
-        }
+        for (Armee a : ctrlNP.getListArmees()) 
+            if(a.getSizeListBat() == 0)
+                return true;
         return false;
     }
     
@@ -127,7 +127,11 @@ public class VueConsole implements Observer {
         String batChoisi = "";
         print("Avec quel bateau voulez-vous tirer, " + joueur.getNom() + "? (ex: B5): ");
         batChoisi = toUpperCase(insert.nextLine());
-
+        
+        while(!ctrlNP.checkPosEtArmeeBat(joueur, batChoisi)){
+            printLN("Veuillez entrer une position valide ou un bateau vous appartenant, s.v.p.");
+            batChoisi = toUpperCase(insert.nextLine());
+        }
         return batChoisi;
     }
     
@@ -141,17 +145,24 @@ public class VueConsole implements Observer {
             
     }
 
-    public String affMoveBat(Armee joueur) {
+    public boolean affMoveBat(Armee joueur, String destChoisi) {
         String ouiNon = "";
         print("Déplacer un bateau de votre armée? (y/n): ");
         ouiNon = insert.nextLine();
         
-        String destChoisi = "";
+        while(!ouiNon.equals("y")){
+            print("Yes ou No?: ");
+            ouiNon = insert.nextLine();
+        }
+        
         
         if (ouiNon.equals("y")) {
             String batChoisi = "";
             print("Quel bateau déplacer? (ex: B5): ");
             batChoisi = toUpperCase(insert.nextLine());
+            while(!ctrlNP.checkPosEtArmeeBat(joueur, batChoisi)){
+                
+            }
             Position posCour = ctrlNP.convertStrToPos(batChoisi);
             
             Bateau b = joueur.getBatFromPos(posCour);
@@ -160,8 +171,11 @@ public class VueConsole implements Observer {
             affDestPoss(b);
             printLN("");
             destChoisi = toUpperCase(insert.nextLine());
+            return true;
         }
-        return destChoisi;
+        else if(ouiNon.equals("n"))
+            return false;
+        return false;
     }
 
     private String toString(Case c) {
