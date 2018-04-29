@@ -36,7 +36,7 @@ public class Case {
     }
     
     public TypeB getTypeBat(){
-        return bat.type;
+        return bat.TYPE;
     }
     
     public TypeM getTypeMine(){

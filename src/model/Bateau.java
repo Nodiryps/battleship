@@ -22,14 +22,13 @@ public abstract class Bateau implements Positionnable{
     protected int pv;    //points de vie
     protected int maxPV; //Maximum de point de vie
     protected int pm;    //points de mouvement
-    protected TypeB type;
-    protected Direction dir;
+    protected final TypeB TYPE;
    
     public Bateau(TypeB type,int ptVie,int ptVieMax,int ptMouvmt){
         this.pm = ptMouvmt;
         this.pv = ptVie;
         this.maxPV = ptVieMax;
-        this.type = type;
+        this.TYPE = type;
     }
     
     public Position getXY() {
@@ -61,7 +60,15 @@ public abstract class Bateau implements Positionnable{
     }
     
     public TypeB getTypeB() {
-        return type;
+        return TYPE;
+    }
+    
+    public TypeB getTypeGrandBat(){
+        return TypeB.GRAND;
+    }
+    
+    public TypeB getTypePetitBat(){
+        return TypeB.PETIT;
     }
 
     public void setPortee(int portee) {

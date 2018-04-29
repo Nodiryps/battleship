@@ -107,8 +107,7 @@ public class NouvPartie extends Observable {
     }
 
     //    vérifie si la pos est valide et qu'un bateau fait partie de l'armée courante
-    public boolean checkPosEtArmeeBat(Armee armeeCou, String posBatChoisi) {
-//        if(posValide(posBatChoisi))    
+    public boolean checkBatBonneArmee(Armee armeeCou, String posBatChoisi) {
             for(Bateau b : armeeCou.getListBat())
                 if(b.getXY().equals((convertStrToPos(posBatChoisi))))
                     return true;
@@ -234,7 +233,7 @@ public class NouvPartie extends Observable {
     }
 
     public boolean tir(Armee a, String pos) {
-        if (checkPosEtArmeeBat(a, pos)) {
+        if (checkBatBonneArmee(a, pos)) {
             Position posBatChoisi = convertStrToPos(pos);
             Bateau b = a.getBatFromPos(posBatChoisi);
             b.randomPortee();

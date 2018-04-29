@@ -128,7 +128,7 @@ public class VueConsole implements Observer {
         print("Avec quel bateau voulez-vous tirer, " + joueur.getNom() + "? (ex: B5): ");
         batChoisi = toUpperCase(insert.nextLine());
         
-        while(!ctrlNP.checkPosEtArmeeBat(joueur, batChoisi)){
+        while(!ctrlNP.checkBatBonneArmee(joueur, batChoisi)){
             printLN("Veuillez entrer une position valide ou un bateau vous appartenant, s.v.p.");
             batChoisi = toUpperCase(insert.nextLine());
         }
@@ -160,7 +160,7 @@ public class VueConsole implements Observer {
             String batChoisi = "";
             print("Quel bateau déplacer? (ex: B5): ");
             batChoisi = toUpperCase(insert.nextLine());
-            while(!ctrlNP.checkPosEtArmeeBat(joueur, batChoisi)){
+            while(!ctrlNP.checkBatBonneArmee(joueur, batChoisi)){
                 
             }
             Position posCour = ctrlNP.convertStrToPos(batChoisi);
