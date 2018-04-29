@@ -25,8 +25,7 @@ public class NouvPartie extends Observable {
     private final List<Armee> listArmee;
 
     public NouvPartie(Builder bldr) {
-        this.bldr = bldr;
-        this.gb = bldr.getGbBuilder();
+        this.gb = bldr.getGb();
         this.listArmee = bldr.getListArmee();
     }
 
@@ -135,7 +134,6 @@ public class NouvPartie extends Observable {
                             b.touché();
                         else if(caseMineeA(convertStrToPos(destChoisi)))
                             coulé(a,b); 
-                        
                         bldr.updateMer(listArmee);
                         setChangedAndNotify(this);
                     }

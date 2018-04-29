@@ -10,7 +10,10 @@ import view.VueParamPartie;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.stage.Stage;
+import model.Builder;
 import model.NouvPartie;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -18,6 +21,8 @@ import model.NouvPartie;
  */
 public class ControleurFx extends Application {
     private Stage stage;
+    private NouvPartie np;
+    private final boolean placementAuto = true;
     private boolean tourTirJ1 = true;
     private boolean tourTirJ2 = false;
     private boolean tourMoveJ1 = false;
@@ -25,7 +30,15 @@ public class ControleurFx extends Application {
     
     // Vrai si on a cliqué sur un bateau pour le déplacer
     private boolean etatDeplacementBateau = false; 
+    
+    public NouvPartie getNp() {
+        return np;
+    }
 
+    public boolean isPlacementAuto(){
+        return placementAuto;
+    }
+    
     public boolean isTourTirJ1() {
         return tourTirJ1;
     }
@@ -65,7 +78,12 @@ public class ControleurFx extends Application {
     }
 
     // fait apparaître la fenêtre principale de l'application
-    public void switchToMainWindow(NouvPartie np) {
+    public void switchToMainWindow(String j1, String j2, int size) {
+        List<String> noms = new LinkedList();
+        noms.add(j1);
+        noms.add(j2);
+        Builder bldr = new Builder(size, noms, placementAuto);
+        np = bldr.build();
         VuePartie mainWindow = new VuePartie(stage, np.getTailleGb(), this);
         np.addObserver(mainWindow);
         np.setChangedAndNotify(); // Provoque un 1er affichage

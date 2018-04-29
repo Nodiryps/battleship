@@ -11,12 +11,13 @@ import control.ControleurFx;
 import java.util.LinkedList;
 import java.util.List;
 import javafx.scene.input.KeyCode;
+import model.Builder;
 import model.NouvPartie;
 
 public class VueParamPartie extends VBox {
 
     private final ControleurFx control;
-    private static NouvPartie npVue;
+//    private static NouvPartie np;
 
     public VueParamPartie(Stage stage, ControleurFx ctrl) {
         control = ctrl;
@@ -26,9 +27,9 @@ public class VueParamPartie extends VBox {
         stage.show();
     }
 
-    public static NouvPartie getNpVueParam() {
-        return npVue;
-    }
+//    public static NouvPartie getNp() {
+//        return np;
+//    }
 
     // Mise en place de la (racine de la) scene
     private void setup() {
@@ -50,14 +51,14 @@ public class VueParamPartie extends VBox {
     }
 
     private void switchToMainWindow(String j1, String j2, int size) {
-        List<String> noms = new LinkedList();
-        noms.add(j1);
-        noms.add(j2);
-        npVue = new NouvPartie(size, noms);
-        for(int i = 0; i < npVue.getListArmees().size(); ++i){
-            npVue.getListArmees().get(i);
-        }
-        control.switchToMainWindow(npVue);
+//        List<String> noms = new LinkedList();
+//        noms.add(j1);
+//        noms.add(j2);
+//        npVue = new NouvPartie(new Builder(size, noms, control.isPlacementAuto()));
+//        for(int i = 0; i < npVue.getListArmees().size(); ++i){
+//            npVue.getListArmees().get(i);
+//        }
+        control.switchToMainWindow(j1, j2, size);
     }
     
     // Un TextField qui n'accepte que des saisies de nombre entiers naturels
@@ -88,7 +89,7 @@ public class VueParamPartie extends VBox {
     
     private class InputJoueur extends TextField {
         InputJoueur() {
-            super("Nom Armée");
+            super("Armée de: ");
             setAlignment(Pos.CENTER_LEFT);
             setMaxWidth(150);
             installListeners();

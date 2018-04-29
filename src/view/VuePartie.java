@@ -28,13 +28,15 @@ public class VuePartie extends BorderPane implements Observer {
 
     private final int SIZE;
     private final ControleurFx control;
-    private static NouvPartie npVueParam = VueParamPartie.getNpVueParam();
+    private static NouvPartie npVueParam;
     private final GrilleView grille;
     private final VBox vbox1;
     private final VBox vbox2;
 
     public VuePartie(Stage stage, int size, ControleurFx ctrl) {
         control = ctrl;
+        npVueParam = control.getNp();
+        // = VueParamPartie.getNp();
         SIZE = size;
         grille = new GrilleView();
         grille.setSizeConstraints();
@@ -149,7 +151,6 @@ public class VuePartie extends BorderPane implements Observer {
 
             public BoxView() {
                 getStylesheets().add("view/BoxView.css");
-                setOnMouseClicked(e -> ctrl.);
             }
         }
 

@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Builder extends Observable {
     private Gameboard gb;
     private final int NBJ = 2;
-    private final List<Armee> listArmee;
+    private List<Armee> listArmee = new LinkedList<>();
     private List<Mine> listeMines = new LinkedList<>();
             
     public Builder(int size, List<String> noms, boolean placementAuto) {
@@ -27,14 +27,18 @@ public class Builder extends Observable {
         this.listArmee = creationArmees(noms);
         
         this.nouvMer();
-        if(placementAuto){
+        if(true){
             for(Armee armee : listArmee)
                 randPosBat(armee);
             randPosMine();
         }
     }
+    
+    public NouvPartie build(){
+        return new NouvPartie(this);
+    }
 
-    public Gameboard getGbBuilder() {
+    public Gameboard getGb() {
         return this.gb;
     }
 
@@ -55,7 +59,7 @@ public class Builder extends Observable {
     }
     
     //    création tableau de cases
-    public void nouvMer(){
+    private void nouvMer(){
         for(int i = 0; i < gb.getTAILLE(); ++i)
             for(int j = 0; j < gb.getTAILLE(); ++j){
                 String s = gb.getAXE_X()[j] + "" + gb.getAXE_Y()[i];
