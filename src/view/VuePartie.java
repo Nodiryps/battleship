@@ -1,6 +1,9 @@
 package view;
 
 import control.ControleurFx;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javafx.geometry.Insets;
@@ -8,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
@@ -20,7 +24,9 @@ import model.Armee;
 import model.Bateau;
 import model.NouvPartie;
 import javafx.scene.text.TextAlignment;
+import model.BateauGrand;
 import model.Mine;
+import model.Position;
 import model.TypeB;
 import model.TypeM;
 import static view.VueConsole.print;
@@ -32,15 +38,17 @@ public class VuePartie extends BorderPane implements Observer {
     private final int SIZE;
     private final ControleurFx control;
     private static NouvPartie np;
-    private final GrilleView grille;
-    private final VBox vbox1;
-    private final VBox vbox2;
+    private SeaView grille;
+    private VBox vbox1;
+    private VBox vbox2;
+    private FlowPane flowp1;
+    private FlowPane flowp2;
 
     public VuePartie(Stage stage, int size, ControleurFx ctrl) {
         control = ctrl;
         np = control.getNp();
         SIZE = size;
-        grille = new GrilleView();
+        grille = new SeaView();
         grille.setSizeConstraints();
         grille.setMinSize(500, 500);
         grille.setMaxSize(500, 500);
@@ -54,7 +62,6 @@ public class VuePartie extends BorderPane implements Observer {
         vbox1.setMaxSize(400, 500);
         vbox1.setPadding(new Insets(20));
         this.setLeft(vbox1);
-        
         vbox2 = new VBox();
         vbox2.setAlignment(Pos.TOP_CENTER);
         vbox2.setMinSize(200, 250);
@@ -62,14 +69,30 @@ public class VuePartie extends BorderPane implements Observer {
         vbox2.setPadding(new Insets(20));
         this.setRight(vbox2);
         
+        if(!control.isPlacementAuto()){
+            flowp1 = new FlowPane();
+            flowp1.setAlignment(Pos.TOP_CENTER);
+            flowp1.setAlignment(Pos.TOP_CENTER);
+            flowp1.setMinSize(200, 250);
+            flowp1.setMaxSize(400, 500);
+            flowp1.setPadding(new Insets(20));
+            this.setLeft(flowp1);
+            flowp2 = new FlowPane();
+            flowp2.setAlignment(Pos.TOP_CENTER);
+            flowp2.setAlignment(Pos.TOP_CENTER);
+            flowp2.setMinSize(200, 250);
+            flowp2.setMaxSize(400, 500);
+            flowp2.setPadding(new Insets(20));
+            this.setRight(flowp2);
+            
+            affListBatAPlacer();
+        }
+        
         affEtatArmee();
         
         stage.setScene(new Scene(this, 1000, 600));
         stage.setTitle("Bataille Navale leFilmAvecRihanna (déplacer avec souris)");
         stage.show();
-        
-        getStylesheets().add("view/BoxView.css");
-        getStyleClass().add("bckgrnd");
         
     }
     
@@ -78,6 +101,27 @@ public class VuePartie extends BorderPane implements Observer {
             grille.nouvMer();
         }
     
+    public void affListBatAPlacer(){
+        flowp1.getChildren().clear();
+        flowp2.getChildren().clear();
+        
+    }
+    
+    private void listBatAPlacer(Armee a, SeaView.BatGdView BatG, SeaView.BatPtView BatP){
+            for(Bateau b : a.getListBat())
+                if(b.getTypeB() == TypeB.GRAND)
+                    if(a == np.getArmeeFromList(0))
+                        flowp1.getChildren().add(BatG);
+                    else
+                        flowp2.getChildren().add(BatG);
+                
+                else if(a == np.getArmeeFromList(0))
+                        flowp1.getChildren().add(BatP);
+                    else
+                        flowp2.getChildren().add(BatP);
+                    
+    }
+    
     public void affEtatArmee(){
             vbox1.getChildren().clear();
             vbox2.getChildren().clear();
@@ -85,7 +129,7 @@ public class VuePartie extends BorderPane implements Observer {
             etatArmee(np.getArmeeFromList(1), vbox2, np);
         }
     
-    public void etatArmee(Armee a, VBox vb, NouvPartie np) {
+    private void etatArmee(Armee a, VBox vb, NouvPartie np) {
             Text nomA = new Text(a.getNom() + "\n");
             nomA.setTextAlignment(TextAlignment.CENTER);
             nomA.setFont(Font.font("Arial",FontWeight.BLACK,25));
@@ -119,8 +163,8 @@ public class VuePartie extends BorderPane implements Observer {
             vb.getChildren().add(contentTab);
         }return contentTab;
     }
-    
-    protected class GrilleView extends GridPane {
+
+    protected class SeaView extends GridPane {
     
         // Pour que chaque ligne et chaque colonne soit dimensionnée
         public void setSizeConstraints() {
@@ -139,7 +183,7 @@ public class VuePartie extends BorderPane implements Observer {
             for (int c = 0; c < np.getTailleGb(); ++c) 
                 for (int l = 0; l < np.getTailleGb(); ++l) 
                     if (np.getMerGb()[c][l].getBat() != null) 
-                        addBoatView(c, l);
+                        add(new BoatView(c,l),c,l);
                     else 
                         add(new EmptyBoxView(c, l), c, l);
         }
@@ -160,73 +204,64 @@ public class VuePartie extends BorderPane implements Observer {
                 setOnMouseClicked(e -> control.emptyBoxClicked(x, y));
             }
         }
-        
-        private class BatGdView extends BoxView{
-                private Bateau b;
-                private TypeB type;
+        public class BoatView extends BoxView{
+            
+            public BoatView(int x, int y){
+                Position p = new Position(x,y);
+                if(np.checkBatBonneArmee(np.getArmeeFromList(0), np.convertPosToStr(p))){
+                    if(np.getTypeBatFromMer(x,y) == TypeB.GRAND)
+                        add(new BatGdView(x, y), x,y);
+                    else 
+                        add(new BatPtView(x, y), x,y);
+                }else if(np.checkBatBonneArmee(np.getArmeeFromList(1), np.convertPosToStr(p))){
+                    if(np.getTypeBatFromMer(x,y) == TypeB.GRAND)
+                        add(new BatGdView(x, y), x,y);
+                    else 
+                        add(new BatPtView(x, y), x,y);
+                }
+            }
+        }
+        public class BatGdView extends BoxView{
                 
                 public BatGdView(int x, int y){
-                    type = b.getTypeGrandBat();
                     getStyleClass().add("batG");
                     setOnMouseClicked(e -> control.boatClicked(x, y));
                 }
-            }
+        }
         
-        private class BatPtView extends BoxView{
-            private Bateau b;
-            private TypeB type;
+        public class BatPtView extends BoxView{
 
             public BatPtView(int x, int y){
-                type = b.getTypePetitBat();
                 getStyleClass().add("batP");
                 setOnMouseClicked(e -> control.boatClicked(x, y));
             }
         }
             
-        private void addBoatView(int col, int ligne){
-            for(int i = 0; i < 1; ++i)
-                add(new BatGdView(col, ligne), col, ligne);
-            for(int j = 0; j < 2; ++j)
-                add(new BatPtView(col, ligne), col, ligne);
-        }
-
-        private class MineNormView extends BoxView{
-            private Mine m;
-            private TypeM type;
+        public class MineNormView extends BoxView{
             
             public MineNormView(int x, int y){
-                type = m.getTypeMNormale();
                 getStyleClass().add("empty");
                 setOnMouseClicked(e -> control.emptyBoxClicked(x, y));
             }
         }
         
-        private class MineAtomView extends BoxView{
-            private Mine m;
-            private TypeM type;
+        public class MineAtomView extends BoxView{
             
             public MineAtomView(int x, int y){
-                type = m.getTypeMAtom();
                 getStyleClass().add("empty");
                 setOnMouseClicked(e -> control.emptyBoxClicked(x, y));
             }
         }
-
-        // La vue d'un bateau
-//        public class BoatView extends BoxView {
-//            protected Bateau b;
-//            protected TypeB type;
+        
+        public class CaseRadioactiveView extends BoxView{
             
-            
-//            public BoatView(int x, int y) {
-//                getStyleClass().add("batG");
-//                setOnMouseClicked(e -> control.boatClicked(x, y));
-//            }
-//        }
+            public CaseRadioactiveView(int x, int y){
+                getStyleClass().add("caseRadio");
+                setOnMouseClicked(e -> control.emptyBoxClicked(x, y));
+            }
+        }
         
         
-        // La vue d'une mine
-    
     }
     
     

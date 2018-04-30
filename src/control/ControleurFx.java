@@ -92,7 +92,7 @@ public class ControleurFx extends Application {
     // Quand l'utilisateur clique sur une case vide
     public void emptyBoxClicked(int x, int y) {
         if(etatDeplacementBateau) {
-//            np.setXY(x, y); // Déplace le bateau
+//            np.(x, y); // Déplace le bateau
             etatDeplacementBateau = false;
         }
     }

@@ -58,6 +58,10 @@ public class NouvPartie extends Observable {
     public Case[][] getMerGb() {
         return this.gb.getMer();
     }
+    
+    public TypeB getTypeBatFromMer(int x, int y){
+        return getMerGb()[x][y].getTypeBat();
+    }
 
     public boolean caseAccessible(int x, int y) {
         return gb.getMer()[x][y].caseAccessible();
