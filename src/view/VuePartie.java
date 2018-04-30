@@ -240,7 +240,7 @@ public class VuePartie extends BorderPane implements Observer {
         public class MineNormView extends BoxView{
             
             public MineNormView(int x, int y){
-                getStyleClass().add("empty");
+                getStyleClass().add("mineN");
                 setOnMouseClicked(e -> control.emptyBoxClicked(x, y));
             }
         }
@@ -248,7 +248,7 @@ public class VuePartie extends BorderPane implements Observer {
         public class MineAtomView extends BoxView{
             
             public MineAtomView(int x, int y){
-                getStyleClass().add("empty");
+                getStyleClass().add("mineA");
                 setOnMouseClicked(e -> control.emptyBoxClicked(x, y));
             }
         }
