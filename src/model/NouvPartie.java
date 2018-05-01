@@ -21,6 +21,7 @@ public class NouvPartie extends Observable {
     private final List<Armee> listArmee;
 
     public NouvPartie(Builder bldr) {
+        this.bldr = bldr;
         this.gb = bldr.getGb();
         this.listArmee = bldr.getListArmee();
     }

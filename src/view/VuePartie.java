@@ -47,8 +47,8 @@ public class VuePartie extends BorderPane implements Observer {
     public VuePartie(Stage stage, int size, ControleurFx ctrl) {
         control = ctrl;
         np = control.getNp();
-        a1 = np.getArmeeFromList(0);
-        a2 = np.getArmeeFromList(1);
+        a1 = control.getArmee1();
+        a2 = control.getArmee2();
         SIZE = size;
         grille = new SeaView();
         grille.setSizeConstraints();
@@ -168,6 +168,7 @@ public class VuePartie extends BorderPane implements Observer {
 
     protected class SeaView extends GridPane {
     
+        
         // Pour que chaque ligne et chaque colonne soit dimensionnée
         public void setSizeConstraints() {
             for (int i = 0; i < SIZE; ++i) {
@@ -249,7 +250,7 @@ public class VuePartie extends BorderPane implements Observer {
         public class MoveBoatView extends BoxView{
             
             public MoveBoatView(int x, int y){
-                if(modeDebug){
+                if(!modeDebug){
                     Case c = np.getCaseGb(x, y);
                     if(c.getMine() != null)
                         if(c.getTypeMine() == TypeM.NORMALE)
@@ -267,7 +268,7 @@ public class VuePartie extends BorderPane implements Observer {
                 
                 public BatGdView(int x, int y){
                     getStyleClass().add("batG");
-                    setOnMouseClicked(e -> control.boatClicked(x, y));
+                    setOnMouseClicked(e -> control.boatClicked(np, x, y));
                 }
         }
         
@@ -275,7 +276,7 @@ public class VuePartie extends BorderPane implements Observer {
 
             public BatPtView(int x, int y){
                 getStyleClass().add("batP");
-                setOnMouseClicked(e -> control.boatClicked(x, y));
+                setOnMouseClicked(e -> control.boatClicked(np, x, y));
             }
         }
             

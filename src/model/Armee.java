@@ -15,7 +15,6 @@ import java.util.List;
 public class Armee  {
     
     private String nom;
-    private int score;
     private List<Bateau> ListBat = new LinkedList<>();
     private static int nbGBat = 1;
     private static int nbPBat = 2;
@@ -36,13 +35,21 @@ public class Armee  {
         return nom;
     }
 
-    public int getScore() {
-        return score;
-    }
 
     public List<Bateau> getListBat() {
         return ListBat;
     }
+
+    public static int getNbGBat() {
+        return nbGBat;
+    }
+
+    public static int getNbPBat() {
+        return nbPBat;
+    }
+    
+    
+    
     
     public int getSizeListBat(){
         return ListBat.size();
@@ -74,10 +81,6 @@ public class Armee  {
     
     public void setPosBatFromList(int x, int y, int i){
         getBatFromList(i).setPos(x, y);
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
     
 }

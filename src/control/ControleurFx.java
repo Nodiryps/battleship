@@ -18,7 +18,6 @@ import model.Armee;
 import model.Bateau;
 import model.Case;
 import model.Position;
-import static view.VueConsole.printLN;
 
 /**
  *
@@ -28,6 +27,9 @@ public class ControleurFx extends Application {
     private Stage stage;
     private NouvPartie np;
     private Position posBatChoisi;
+    private Armee a1;
+    private Armee a2;
+    private int totBatMer;
     private final boolean placementAuto = true;
     private boolean tourTirJ1 = true;
     private boolean tourTirJ2 = false;
@@ -39,6 +41,14 @@ public class ControleurFx extends Application {
     
     public NouvPartie getNp() {
         return np;
+    }
+    
+    public Armee getArmee1(){
+        return a1;
+    }
+    
+    public Armee getArmee2(){
+        return a2;
     }
 
     public boolean isPlacementAuto(){
@@ -94,6 +104,8 @@ public class ControleurFx extends Application {
         noms.add(j2);
         Builder bldr = new Builder(size, noms, placementAuto);
         np = bldr.build();
+        a1 = np.getArmeeFromList(0);
+        a2 = np.getArmeeFromList(1);
         VuePartie mainWindow = new VuePartie(stage, np.getTailleGb(), this);
         np.addObserver(mainWindow);
         np.setChangedAndNotify(); // Provoque un 1er affichage
@@ -101,20 +113,52 @@ public class ControleurFx extends Application {
     
     // Quand l'utilisateur clique sur une case vide
     public void emptyBoxClicked(int x, int y) {
-        if(etatDeplacementBateau) {
-//            np.(x, y); // Déplace le bateau
-            etatDeplacementBateau = false;
-        }
+        Bateau b;
+        boolean j1 = true, 
+                j2 = false;
+        int nbBatJ = 0,
+                nbPB = 0;
+        if(!placementAuto && totBatMer < 6)
+            for(int joueurs = 0; joueurs < 2; ++joueurs)
+                if(j1 && nbBatJ <3){
+                    List<Bateau> listJ1 = a1.getListBat();
+                    if(b != null && b.getTypeB() == b.getTypeGrandBat()){
+                        b = listJ1.get(0); 
+                        b.setPos(new Position(x, y));
+                        Case kaz = np.getCaseGb(x, y);
+                        kaz.setBat(b);
+                        ++totBatMer;
+                        ++nbBatJ;
+                    }else if(b != null && b.getTypeB() == b.getTypePetitBat()){
+                        if(nbPB == 1){
+                            b = listJ1.get(1); 
+                            b.setPos(new Position(x, y));
+                            Case kaz = np.getCaseGb(x, y);
+                            kaz.setBat(b);
+                            ++totBatMer;
+                        }else{
+                            b = listJ1.get(2); 
+                            b.setPos(new Position(x, y));
+                            Case kaz = np.getCaseGb(x, y);
+                            kaz.setBat(b);
+                            ++totBatMer;
+                        }
+                        ++nbBatJ;
+                        ++nbPB;
+                    }
+                    if(joueurs == 1){
+                        j1 = false;
+                        j2 = true;
+                    }
+                }
     }
     
     // Quand l'utilisateur clique sur un bateau
-    public void boatClicked(int x, int y) {
-        etatDeplacementBateau = true;
+    public void boatClicked(NouvPartie np,int x, int y) {
+        tirBoatClicked(np, x, y);
     }
     
     public void tirBoatClicked(NouvPartie np, int x, int y){
-        Armee a1 = np.getArmeeFromList(0);
-        Armee a2 = np.getArmeeFromList(1);
         Position p = new Position(x, y);
         if(isTourTirJ1())
             if(np.checkBatBonneArmee(a1, np.convertPosToStr(p))){
@@ -143,17 +187,12 @@ public class ControleurFx extends Application {
     
     public void moveBoatClicked(NouvPartie np, int x, int y){
         Bateau b;
-        Armee a1 = np.getArmeeFromList(0);
-        Armee a2 = np.getArmeeFromList(1);
         Position p = new Position(x, y);
         if(isTourMoveJ1())
             if(np.checkBatBonneArmee(a1, np.convertPosToStr(posBatChoisi))){
                 b = a1.getBatFromPos(posBatChoisi);
                 if(np.listDestPossContains(b,p)){
                     np.moveBat(a1, b, np.convertPosToStr(p));
-                   
-                    printLN("check: le bat a bougé");
-                    
                     this.tourMoveJ1 = false;
                     Case c = np.getCaseGb(x,y);
                     if(c.explosionMineN())
@@ -168,9 +207,6 @@ public class ControleurFx extends Application {
                 b = a2.getBatFromPos(posBatChoisi);
                 if(np.listDestPossContains(b,p)){
                     np.moveBat(a2, b, np.convertPosToStr(p));
-                    
-                    printLN("check: le bat a bougé");
-                    
                     this.tourMoveJ2 = false;
                     Case c = np.getCaseGb(x,y);
                     if(c.explosionMineN())
