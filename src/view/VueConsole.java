@@ -45,6 +45,7 @@ public class VueConsole implements Observer {
     private static final Scanner insert = new Scanner(System.in);
     private final Controleur ctrl;
     private NouvPartie ctrlNP;
+    private boolean modeDebug = true;
     
     public VueConsole(Controleur c){
         this.ctrl = c;
@@ -62,7 +63,7 @@ public class VueConsole implements Observer {
             print(ctrlNP.getAxeYGb()[i] + " ");
             for (int j = 0; j < ctrlNP.getTailleGb(); j++) {
 
-                print("|" + toString(ctrlNP.getMerGb()[i][j]));
+                print("|" + toString(ctrlNP.getCaseGb(i,j)));
             }
             printLN("|");
         }
@@ -102,7 +103,7 @@ public class VueConsole implements Observer {
     }
 
     private void affDestPoss(Bateau b) {
-        List<Position> list = ctrlNP.listDestPoss(b);
+        List<Position> list = ctrlNP.getListDestPoss(b);
         for (Position p : list) {
             if(ctrlNP.caseAccessible(p.getPosX(), p.getPosY()))
                 print(ctrlNP.convertPosToStr(p) + " | ");

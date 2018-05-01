@@ -100,21 +100,6 @@ public abstract class Bateau implements Positionnable{
         --this.pv;
     };
 
-//    @Override
-//    public int hashCode() {
-//        int hash = 3;
-//        hash = 79 * hash + Objects.hashCode(this.posBat);
-//        return hash;
-//    }
-//
-//    @Override
-//    public boolean equals(Object obj) {
-//        if(obj instanceof Bateau){
-//            Bateau b = (Bateau) obj;
-//            return b.posBat == ((Bateau) obj).posBat;
-//        }
-//        return false;
-//    }
 
     
 }

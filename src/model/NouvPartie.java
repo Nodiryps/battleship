@@ -5,14 +5,10 @@
  */
 package model;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Scanner;
-import java.util.Set;
 import static view.VueConsole.print;
 
 /**
@@ -55,16 +51,20 @@ public class NouvPartie extends Observable {
         return this.gb.getAXE_Y();
     }
 
-    public Case[][] getMerGb() {
-        return this.gb.getMer();
+    public Case getCaseGb(int x, int y) {
+        return this.gb.getMer()[x][y];
+    }
+    
+    public Bateau getBatFromCase(int x, int y){
+        return getCaseGb(x, y).getBat();
     }
     
     public TypeB getTypeBatFromMer(int x, int y){
-        return getMerGb()[x][y].getTypeBat();
+        return getCaseGb(x,y).getTypeBat();
     }
 
     public TypeM getTypeMineFromMer(int x, int y){
-        return getMerGb()[x][y].getTypeMine();
+        return getCaseGb(x,y).getTypeMine();
     }
     
     public boolean caseAccessible(int x, int y) {
@@ -90,12 +90,20 @@ public class NouvPartie extends Observable {
     public Armee getArmeeFromList(int i){
         return getListArmees().get(i);
     }
-
-    public int strToPosX(String s) {
+    
+    public Bateau getBatFromPos(Armee a, String pos) {
+        Position p = new Position(convertStrToPosX(pos), ocnvertStrToPosY(pos));
+        for(Bateau b : a.getListBat())
+            if(b.getXY() == p)
+            return b;
+        return null;
+    }
+    
+    public int convertStrToPosX(String s) {
         return convertStrToPos(s).getPosX();
     }
 
-    public int strToPosY(String s) {
+    public int ocnvertStrToPosY(String s) {
         return convertStrToPos(s).getPosY();
     }
 
@@ -128,22 +136,20 @@ public class NouvPartie extends Observable {
                (p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE());
     }
 
-    public void moveBat(String destChoisi) {
-        for(Armee a : getListArmees())
-            for(Bateau b : a.getListBat())
-                if (listDestPoss(b).contains(convertStrToPos(destChoisi))) 
-                    if (posValide(convertPosToStr(b.getXY())) && 
-                            caseAccessible(convertStrToPos(destChoisi).getPosX(), convertStrToPos(destChoisi).getPosY())) {
-                        b.getXY().setPosX(convertStrToPos(destChoisi).getPosX());
-                        b.getXY().setPosY(convertStrToPos(destChoisi).getPosY());
-                        b.setPos(b.getXY().getPosX(), b.getXY().getPosY());
-                        if(caseMineeN(convertStrToPos(destChoisi)))
-                            b.touché();
-                        else if(caseMineeA(convertStrToPos(destChoisi)))
-                            coulé(a,b); 
-                        bldr.updateMer(listArmee);
-                        setChangedAndNotify(this);
-                    }
+    public void moveBat(Armee a, Bateau b, String destChoisi) {
+        if (getListDestPoss(b).contains(convertStrToPos(destChoisi))) 
+            if (posValide(convertPosToStr(b.getXY())) && 
+                    caseAccessible(convertStrToPos(destChoisi).getPosX(), convertStrToPos(destChoisi).getPosY())) {
+                b.getXY().setPosX(convertStrToPos(destChoisi).getPosX());
+                b.getXY().setPosY(convertStrToPos(destChoisi).getPosY());
+                b.setPos(b.getXY().getPosX(), b.getXY().getPosY());
+                if(caseMineeN(convertStrToPos(destChoisi)))
+                    b.touché();
+                else if(caseMineeA(convertStrToPos(destChoisi)))
+                    coulé(a,b); 
+                bldr.updateMer(listArmee);
+                setChangedAndNotify(this);
+            }
     }
 
     private Position goLeft(Position p, int pm) {
@@ -197,9 +203,13 @@ public class NouvPartie extends Observable {
         }
         return pos;
     }
+    
+    public boolean listDestPossContains(Bateau b, Position p){
+        return getListDestPoss(b).contains(p);
+    }
 
     //    destinations possibles
-    public List<Position> listDestPoss(Bateau b) {
+    public List<Position> getListDestPoss(Bateau b) {
         List<Position> dest = new LinkedList<>();
         Position p = b.getXY();
         for (int i = 0; i < b.getPm(); ++i) {
@@ -296,4 +306,6 @@ public class NouvPartie extends Observable {
         setChanged();
         notifyObservers(o);
     }
+
+    
 }

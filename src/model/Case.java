@@ -13,7 +13,6 @@ public class Case {
     
     private Bateau bat;
     private Mine mine;
-    boolean modeDebug = false;
 
     public Case() {
     }

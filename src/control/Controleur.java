@@ -38,7 +38,7 @@ public class Controleur {
                 if(!v.partieFinie()){
                     String destChoisi = "";
                     v.affMoveBat(a,destChoisi);
-                    np.moveBat(destChoisi);
+                    np.moveBat(a, np.getBatFromPos(a, destChoisi), destChoisi);
                 }else
                     v.partieFinieMsg();
             } 

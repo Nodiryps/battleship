@@ -25,6 +25,7 @@ import model.Bateau;
 import model.NouvPartie;
 import javafx.scene.text.TextAlignment;
 import model.BateauGrand;
+import model.Case;
 import model.Mine;
 import model.Position;
 import model.TypeB;
@@ -43,7 +44,8 @@ public class VuePartie extends BorderPane implements Observer {
     private VBox vbox2;
     private FlowPane flowp1;
     private FlowPane flowp2;
-
+    private boolean modeDebug = true;
+    
     public VuePartie(Stage stage, int size, ControleurFx ctrl) {
         control = ctrl;
         np = control.getNp();
@@ -178,14 +180,15 @@ public class VuePartie extends BorderPane implements Observer {
             }        
         }
 
-        public void nouvMer() {
+        private void nouvMer() {
             getChildren().clear();
             for (int c = 0; c < np.getTailleGb(); ++c) 
                 for (int l = 0; l < np.getTailleGb(); ++l) 
-                    if (np.getMerGb()[c][l].getBat() != null) 
-                        add(new BoatView(c,l),c,l);
+                    if (np.getBatFromCase(c, l) != null) 
+                        add(new BoatView(c, l), c, l);
                     else 
                         add(new EmptyBoxView(c, l), c, l);
+            
         }
         
         // La vue d'une "case"
@@ -221,6 +224,27 @@ public class VuePartie extends BorderPane implements Observer {
                 }
             }
         }
+        
+        
+        
+        public class MoveBoatView extends BoxView{
+            
+            public MoveBoatView(int x, int y){
+                if(modeDebug){
+                    Case c = np.getCaseGb(x, y);
+                    if(c.getMine() != null)
+                        if(c.getTypeMine() == TypeM.NORMALE)
+                            getStyleClass().add("mineN");
+                        else 
+                            getStyleClass().add("mineA");
+                }else
+                    getStyleClass().add("destPoss");
+                
+                setOnMouseClicked(e -> control.moveBoatClicked(np, x, y));
+            }
+            
+        }
+        
         public class BatGdView extends BoxView{
                 
                 public BatGdView(int x, int y){
@@ -260,7 +284,6 @@ public class VuePartie extends BorderPane implements Observer {
                 setOnMouseClicked(e -> control.emptyBoxClicked(x, y));
             }
         }
-        
         
     }
     

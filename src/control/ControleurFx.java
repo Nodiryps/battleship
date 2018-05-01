@@ -14,6 +14,11 @@ import model.Builder;
 import model.NouvPartie;
 import java.util.LinkedList;
 import java.util.List;
+import model.Armee;
+import model.Bateau;
+import model.Case;
+import model.Position;
+import static view.VueConsole.printLN;
 
 /**
  *
@@ -22,6 +27,7 @@ import java.util.List;
 public class ControleurFx extends Application {
     private Stage stage;
     private NouvPartie np;
+    private Position posBatChoisi;
     private final boolean placementAuto = true;
     private boolean tourTirJ1 = true;
     private boolean tourTirJ2 = false;
@@ -71,6 +77,10 @@ public class ControleurFx extends Application {
         this.tourMoveJ2 = tourMoveJ2;
     }
     
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
     @Override
     public void start(Stage primaryStage) {
         stage = primaryStage;
@@ -102,8 +112,79 @@ public class ControleurFx extends Application {
         etatDeplacementBateau = true;
     }
     
-    public static void main(String[] args) {
-        launch(args);
-        
+    public void tirBoatClicked(NouvPartie np, int x, int y){
+        Armee a1 = np.getArmeeFromList(0);
+        Armee a2 = np.getArmeeFromList(1);
+        Position p = new Position(x, y);
+        if(isTourTirJ1())
+            if(np.checkBatBonneArmee(a1, np.convertPosToStr(p))){
+                np.tir(a1, np.convertPosToStr(p));
+                setTourTirJ1(false);
+                setTourMoveJ1(true);
+            }
+        if(isTourTirJ2())
+            if(np.checkBatBonneArmee(a2, np.convertPosToStr(p))){
+                np.tir(a2, np.convertPosToStr(p));
+                setTourTirJ2(false);
+                setTourMoveJ2(true);
+            }
+        np.setChangedAndNotify();
     }
+    
+    public void boatToMoveClicked(Armee a1, Armee a2, Position p){
+        if(np.checkBatBonneArmee(a1, np.convertPosToStr(p)))
+            posBatChoisi = p;
+        else
+            posBatChoisi = null;
+        
+        if(np.checkBatBonneArmee(a2, np.convertPosToStr(p)))
+            posBatChoisi = p;
+        else
+            posBatChoisi = null;
+    }
+    
+    public void moveBoatClicked(NouvPartie np, int x, int y){
+        Bateau b;
+        Armee a1 = np.getArmeeFromList(0);
+        Armee a2 = np.getArmeeFromList(1);
+        Position p = new Position(x, y);
+        if(isTourMoveJ1())
+            if(np.checkBatBonneArmee(a1, np.convertPosToStr(posBatChoisi))){
+                b = a1.getBatFromPos(posBatChoisi);
+                if(np.listDestPossContains(b,p)){
+                    np.moveBat(a1, b, np.convertPosToStr(p));
+                   
+                    printLN("check: le bat a bougé");
+                    
+                    this.tourMoveJ1 = false;
+                    Case c = np.getCaseGb(x,y);
+                    if(c.explosionMineN())
+                        if(b.getPv() <= 0)
+                            np.coulé(a1,b);
+                    posBatChoisi = null;
+                    setTourTirJ2(true);
+                }
+            }
+        if(isTourMoveJ2())
+            if(np.checkBatBonneArmee(a2, np.convertPosToStr(posBatChoisi))){
+                b = a2.getBatFromPos(posBatChoisi);
+                if(np.listDestPossContains(b,p)){
+                    np.moveBat(a2, b, np.convertPosToStr(p));
+                    
+                    printLN("check: le bat a bougé");
+                    
+                    this.tourMoveJ2 = false;
+                    Case c = np.getCaseGb(x,y);
+                    if(c.explosionMineN())
+                        if(b.getPv() <= 0)
+                            np.coulé(a2,b);
+                    posBatChoisi = null;
+                    setTourTirJ1(true);
+                }
+            }
+        np.setChangedAndNotify();
+    }
+    
+    
+    
 }
