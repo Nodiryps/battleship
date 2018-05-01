@@ -47,8 +47,8 @@ public class VuePartie extends BorderPane implements Observer {
     public VuePartie(Stage stage, int size, ControleurFx ctrl) {
         control = ctrl;
         np = control.getNp();
-        a1 = np.getArmeeFromList(0);
-        a2 = np.getArmeeFromList(1);
+        a1 = control.getArmee1();
+        a2 = control.getArmee2();
         SIZE = size;
         grille = new SeaView();
         grille.setSizeConstraints();

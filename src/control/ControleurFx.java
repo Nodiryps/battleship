@@ -28,6 +28,8 @@ public class ControleurFx extends Application {
     private Stage stage;
     private NouvPartie np;
     private Position posBatChoisi;
+    private Armee a1 = np.getArmeeFromList(0);
+    private Armee a2 = np.getArmeeFromList(1);
     private final boolean placementAuto = true;
     private boolean tourTirJ1 = true;
     private boolean tourTirJ2 = false;
@@ -39,6 +41,14 @@ public class ControleurFx extends Application {
     
     public NouvPartie getNp() {
         return np;
+    }
+    
+    public Armee getArmee1(){
+        return a1;
+    }
+    
+    public Armee getArmee2(){
+        return a2;
     }
 
     public boolean isPlacementAuto(){
@@ -113,8 +123,6 @@ public class ControleurFx extends Application {
     }
     
     public void tirBoatClicked(NouvPartie np, int x, int y){
-        Armee a1 = np.getArmeeFromList(0);
-        Armee a2 = np.getArmeeFromList(1);
         Position p = new Position(x, y);
         if(isTourTirJ1())
             if(np.checkBatBonneArmee(a1, np.convertPosToStr(p))){
@@ -128,16 +136,14 @@ public class ControleurFx extends Application {
                 setTourTirJ2(false);
                 setTourMoveJ2(true);
             }
-        np.setChangedAndNotify();
+        if(isTourMoveJ1())
+            boatToMoveClicked(a1, p);
+        if(isTourMoveJ2())
+            boatToMoveClicked(a2, p);
     }
     
-    public void boatToMoveClicked(Armee a1, Armee a2, Position p){
-        if(np.checkBatBonneArmee(a1, np.convertPosToStr(p)))
-            posBatChoisi = p;
-        else
-            posBatChoisi = null;
-        
-        if(np.checkBatBonneArmee(a2, np.convertPosToStr(p)))
+    public void boatToMoveClicked(Armee a, Position p){
+        if(np.checkBatBonneArmee(a, np.convertPosToStr(p)))
             posBatChoisi = p;
         else
             posBatChoisi = null;
@@ -145,8 +151,6 @@ public class ControleurFx extends Application {
     
     public void moveBoatClicked(NouvPartie np, int x, int y){
         Bateau b;
-        Armee a1 = np.getArmeeFromList(0);
-        Armee a2 = np.getArmeeFromList(1);
         Position p = new Position(x, y);
         if(isTourMoveJ1())
             if(np.checkBatBonneArmee(a1, np.convertPosToStr(posBatChoisi))){
@@ -182,7 +186,6 @@ public class ControleurFx extends Application {
                     setTourTirJ1(true);
                 }
             }
-        np.setChangedAndNotify();
     }
     
     
