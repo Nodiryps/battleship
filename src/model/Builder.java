@@ -49,6 +49,10 @@ public class Builder extends Observable {
     public List<Armee> getListArmee() {
         return listArmee;
     }
+    
+    public Armee getArmeeFromList(int i){
+        return listArmee.get(i);
+    }
 
     private static List<Armee> creationArmees(List<String> noms) {
         List<Armee> list = new LinkedList<>();

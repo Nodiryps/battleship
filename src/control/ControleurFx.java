@@ -28,8 +28,6 @@ public class ControleurFx extends Application {
     private Stage stage;
     private NouvPartie np;
     private Position posBatChoisi;
-    private Armee a1 = np.getArmeeFromList(0);
-    private Armee a2 = np.getArmeeFromList(1);
     private final boolean placementAuto = true;
     private boolean tourTirJ1 = true;
     private boolean tourTirJ2 = false;
@@ -41,14 +39,6 @@ public class ControleurFx extends Application {
     
     public NouvPartie getNp() {
         return np;
-    }
-    
-    public Armee getArmee1(){
-        return a1;
-    }
-    
-    public Armee getArmee2(){
-        return a2;
     }
 
     public boolean isPlacementAuto(){
@@ -123,6 +113,8 @@ public class ControleurFx extends Application {
     }
     
     public void tirBoatClicked(NouvPartie np, int x, int y){
+        Armee a1 = np.getArmeeFromList(0);
+        Armee a2 = np.getArmeeFromList(1);
         Position p = new Position(x, y);
         if(isTourTirJ1())
             if(np.checkBatBonneArmee(a1, np.convertPosToStr(p))){
@@ -151,6 +143,8 @@ public class ControleurFx extends Application {
     
     public void moveBoatClicked(NouvPartie np, int x, int y){
         Bateau b;
+        Armee a1 = np.getArmeeFromList(0);
+        Armee a2 = np.getArmeeFromList(1);
         Position p = new Position(x, y);
         if(isTourMoveJ1())
             if(np.checkBatBonneArmee(a1, np.convertPosToStr(posBatChoisi))){
