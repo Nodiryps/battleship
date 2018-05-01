@@ -45,7 +45,6 @@ public class VueConsole implements Observer {
     private static final Scanner insert = new Scanner(System.in);
     private final Controleur ctrl;
     private NouvPartie ctrlNP;
-    private boolean modeDebug = true;
     
     public VueConsole(Controleur c){
         this.ctrl = c;

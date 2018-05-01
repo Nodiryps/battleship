@@ -1,9 +1,6 @@
 package view;
 
 import control.ControleurFx;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javafx.geometry.Insets;
@@ -24,9 +21,7 @@ import model.Armee;
 import model.Bateau;
 import model.NouvPartie;
 import javafx.scene.text.TextAlignment;
-import model.BateauGrand;
 import model.Case;
-import model.Mine;
 import model.Position;
 import model.TypeB;
 import model.TypeM;
@@ -39,16 +34,21 @@ public class VuePartie extends BorderPane implements Observer {
     private final int SIZE;
     private final ControleurFx control;
     private static NouvPartie np;
+    private Armee a1;
+    private Armee a2;
     private SeaView grille;
     private VBox vbox1;
     private VBox vbox2;
     private FlowPane flowp1;
     private FlowPane flowp2;
     private boolean modeDebug = true;
+    private Position posB;
     
     public VuePartie(Stage stage, int size, ControleurFx ctrl) {
         control = ctrl;
         np = control.getNp();
+        a1 = np.getArmeeFromList(0);
+        a2 = np.getArmeeFromList(1);
         SIZE = size;
         grille = new SeaView();
         grille.setSizeConstraints();
@@ -179,6 +179,16 @@ public class VuePartie extends BorderPane implements Observer {
                 getRowConstraints().add(rc);
             }        
         }
+        
+        private void boatToMove(Armee a){
+            if(np.checkBatBonneArmee(a, np.convertPosToStr(posB))){
+                Bateau b = np.getBatFromPos(a, np.convertPosToStr(posB));
+                for(Position p : np.getListDestPoss(b))
+                    if(!p.equals(b.getXY()))
+                        this.add(new SeaView.MoveBoatView(p.getPosX(), p.getPosY()), p.getPosX(), p.getPosY());
+            }else
+                printLN("!! Attention, bateau ennemi !! \\°o°/ ");
+        }
 
         private void nouvMer() {
             getChildren().clear();
@@ -188,7 +198,10 @@ public class VuePartie extends BorderPane implements Observer {
                         add(new BoatView(c, l), c, l);
                     else 
                         add(new EmptyBoxView(c, l), c, l);
-            
+            if(control.isTourMoveJ1() && posB != null)
+                boatToMove(a1);
+            else if(control.isTourMoveJ2() && posB != null)
+                boatToMove(a2);
         }
         
         // La vue d'une "case"
@@ -203,7 +216,15 @@ public class VuePartie extends BorderPane implements Observer {
         public class EmptyBoxView extends BoxView {
 
             public EmptyBoxView(int x, int y) {
-                getStyleClass().add("empty");
+                if(!modeDebug){
+                    Case c = np.getCaseGb(x, y);
+                    if(c.getMine() != null)
+                        if(c.getTypeMine() == TypeM.NORMALE)
+                            getStyleClass().add("mineN");
+                        else 
+                            getStyleClass().add("mineA");
+                }else
+                    getStyleClass().add("empty");
                 setOnMouseClicked(e -> control.emptyBoxClicked(x, y));
             }
         }
@@ -211,21 +232,19 @@ public class VuePartie extends BorderPane implements Observer {
             
             public BoatView(int x, int y){
                 Position p = new Position(x,y);
-                if(np.checkBatBonneArmee(np.getArmeeFromList(0), np.convertPosToStr(p))){
-                    if(np.getTypeBatFromMer(x,y) == TypeB.GRAND)
-                        add(new BatGdView(x, y), x,y);
-                    else 
-                        add(new BatPtView(x, y), x,y);
-                }else if(np.checkBatBonneArmee(np.getArmeeFromList(1), np.convertPosToStr(p))){
-                    if(np.getTypeBatFromMer(x,y) == TypeB.GRAND)
-                        add(new BatGdView(x, y), x,y);
-                    else 
-                        add(new BatPtView(x, y), x,y);
+                boatType(a1,p);
+                boatType(a2,p);
                 }
             }
+            
+            private void boatType(Armee a, Position p){
+                if(np.checkBatBonneArmee(a, np.convertPosToStr(p))){
+                    if(np.getTypeBatFromMer(p.getPosX(),p.getPosY()) == TypeB.GRAND)
+                        add(new BatGdView(p.getPosX(),p.getPosY()), p.getPosX(),p.getPosY());
+                    else 
+                        add(new BatPtView(p.getPosX(),p.getPosY()), p.getPosX(),p.getPosY());
+            }
         }
-        
-        
         
         public class MoveBoatView extends BoxView{
             
@@ -239,7 +258,6 @@ public class VuePartie extends BorderPane implements Observer {
                             getStyleClass().add("mineA");
                 }else
                     getStyleClass().add("destPoss");
-                
                 setOnMouseClicked(e -> control.moveBoatClicked(np, x, y));
             }
             
