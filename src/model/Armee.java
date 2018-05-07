@@ -48,9 +48,6 @@ public class Armee  {
         return nbPBat;
     }
     
-    
-    
-    
     public int getSizeListBat(){
         return ListBat.size();
     }

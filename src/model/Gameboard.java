@@ -73,6 +73,10 @@ public class Gameboard {
         return mapPositions.get(s);
     }
     
+    public void setPosOccupadosClear() {
+        setPosOccupados = new HashSet<>();
+    }
+    
     public void setPosOccupadosAdd(Position p){
         setPosOccupados.add(p);
     }

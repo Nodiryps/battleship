@@ -105,6 +105,7 @@ public class Builder extends Observable {
     }
     
     public void updateMer(List<Armee> list){
+        gb = new Gameboard(gb.getTAILLE());
         for(int i = 0; i < gb.getTAILLE(); ++i)
             for(int j = 0; j < gb.getTAILLE(); ++j){
                 String s = gb.getAXE_X()[j] + "" + gb.getAXE_Y()[i];
@@ -121,7 +122,7 @@ public class Builder extends Observable {
         for(int i = 0; i < a.getSizeListBat(); ++i){
             int x = a.getBateauFromListPosX(i);
             int y = a.getBateauFromListPosY(i);
-            gb.getMer()[x][y] = new Case();
+            //gb.getMer()[x][y] = new Case();
             gb.getMer()[x][y].setBat(a.getBatFromList(i));
             a.setPosBatFromList(a.getBateauFromListPosX(i), a.getBateauFromListPosY(i), i);
             leSet.add(a.getBateauFromListPos(i));

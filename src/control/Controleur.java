@@ -5,7 +5,9 @@
  */
 package control;
 
+import java.util.List;
 import model.Armee;
+import model.Bateau;
 import model.NouvPartie;
 import view.VueConsole;
 
@@ -29,21 +31,24 @@ public class Controleur {
         np.addObserver(v);
         np.setChangedAndNotify();
         
-        if (!v.partieFinie()){
+        while (v.partiEnCours()){
             for (Armee a : np.getListArmees()) {
                 String posBatChoisi = v.affTir(a);
-                np.tir(a, posBatChoisi);
-                v.tirMsg(a,posBatChoisi);
+                v.tirMsg(a, posBatChoisi);
 
-                if(!v.partieFinie()){
-                    String destChoisi = "";
-                    v.affMoveBat(a,destChoisi);
-                    np.moveBat(a, np.getBatFromPos(a, destChoisi), destChoisi);
-                }else
-                    v.partieFinieMsg();
-            } 
-        }else
-            v.partieFinieMsg();
+                if(v.partiEnCours()){
+                    List<String> choix = v.affMoveBat(a);
+                    if(choix.get(0).equals("y")) {
+                        String batChoisi = choix.get(1);
+                        String destChoisi = choix.get(2);
+                        if(!destChoisi.equals("")) {
+                            np.moveBat(a, np.getBatFromPos(a, batChoisi), destChoisi);
+                        }
+                    }
+                }
+            }
+        }
+        v.partieFinieMsg();
     }
     
     public static void main(String[] args) {

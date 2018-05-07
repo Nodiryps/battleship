@@ -93,7 +93,7 @@ public class VuePartie extends BorderPane implements Observer {
         affEtatArmee();
         
         stage.setScene(new Scene(this, 1000, 600));
-        stage.setTitle("Bataille Navale leFilmAvecRihanna (déplacer avec souris)");
+        stage.setTitle("BATTLESHIP leFilmAvecRihannaLol (déplacer avec souris)");
         stage.show();
         
     }
@@ -188,7 +188,7 @@ public class VuePartie extends BorderPane implements Observer {
                     if(!p.equals(b.getXY()))
                         this.add(new SeaView.MoveBoatView(p.getPosX(), p.getPosY()), p.getPosX(), p.getPosY());
             }else
-                printLN("!! Attention, bateau ennemi !! \\°o°/ ");
+                msgMauvaisBat();
         }
 
         private void nouvMer() {
@@ -306,5 +306,8 @@ public class VuePartie extends BorderPane implements Observer {
         
     }
     
+    public void msgMauvaisBat(){
+        printLN("Attention! Bateau ennemi!");
+    }
     
 }

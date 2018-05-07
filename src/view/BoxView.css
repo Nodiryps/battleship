@@ -4,21 +4,36 @@
     -fx-background-size: stretch;
     -fx-background-image: url("sea.gif");
 }
-
-.mine {
-    -fx-border-color: #6666ff;
+.destPoss{
+    -fx-border-color: lawngreen;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("sea.gif");
 }
-
+.mineN {
+    -fx-border-color: #6666ff;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+    -fx-background-image: url("mineN.gif");
+}
+.mineA {
+    -fx-border-color: #6666ff;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+    -fx-background-image: url("mineA.gif");
+}
+.caseRadio{
+    -fx-border-color: #6666ff;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+    -fx-background-image: url("seaRadio.gif");
+}
 .batG {
     -fx-border-color: #6666ff;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("grandBateau.gif");
 }
-
 .batP {
     -fx-border-color: #6666ff;
     -fx-background-position: center;

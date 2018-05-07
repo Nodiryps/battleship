@@ -7,6 +7,7 @@ package view;
 
 
 import control.Controleur;
+import java.util.ArrayList;
 import model.Armee;
 import model.Bateau;
 import model.NouvPartie;
@@ -110,11 +111,12 @@ public class VueConsole implements Observer {
         
     }
 
-    public boolean partieFinie() {
-        for (Armee a : ctrlNP.getListArmees()) 
-            if(a.getSizeListBat() == 0)
-                return true;
-        return false;
+    public boolean partiEnCours() {
+        for (Armee a : ctrlNP.getListArmees()) {
+            if(a.getSizeListBat() <= 0)
+                return false;
+        }
+        return true;
     }
     
     public void partieFinieMsg(){
@@ -141,41 +143,42 @@ public class VueConsole implements Observer {
         if(ctrlNP.tir(a, ctrlNP.convertPosToStr(b.getXY())))
             printLN("PEW! PEW!");
         else
-            printLN("Vous avez fait "+ b.getPortee() +" de portée... -____-\"");
-            
+            printLN("Vous avez fait " + b.getPortee() + " de portée... -____-\"");
     }
 
-    public boolean affMoveBat(Armee joueur, String destChoisi) {
-        String ouiNon = "";
+    public List<String> affMoveBat(Armee joueur) {
+        List<String> choix = new ArrayList();
         print("Déplacer un bateau de votre armée? (y/n): ");
-        ouiNon = insert.nextLine();
+        String ouiNon = insert.nextLine();
         
-        while(!ouiNon.equals("y")){
+        while(!ouiNon.equals("y") && !ouiNon.equals("n")){
             print("Yes ou No?: ");
             ouiNon = insert.nextLine();
         }
-        
+        choix.add(ouiNon);
         
         if (ouiNon.equals("y")) {
-            String batChoisi = "";
+            
             print("Quel bateau déplacer? (ex: B5): ");
-            batChoisi = toUpperCase(insert.nextLine());
+            String batChoisi = toUpperCase(insert.nextLine());
             while(!ctrlNP.checkBatBonneArmee(joueur, batChoisi)){
-                
+                System.out.println("Veuillez choisir un de vos bateaux !");
+                batChoisi = toUpperCase(insert.nextLine());
             }
             Position posCour = ctrlNP.convertStrToPos(batChoisi);
-            
+            choix.add(batChoisi);
             Bateau b = joueur.getBatFromPos(posCour);
 
             print("Sélectionner une des destinations suivantes: ");
             affDestPoss(b);
             printLN("");
-            destChoisi = toUpperCase(insert.nextLine());
-            return true;
+            String posChoisi = toUpperCase(insert.nextLine());
+            choix.add(posChoisi);
+            return choix;
         }
         else if(ouiNon.equals("n"))
-            return false;
-        return false;
+            return choix;
+        return choix;
     }
 
     private String toString(Case c) {

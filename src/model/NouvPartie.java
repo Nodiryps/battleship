@@ -93,19 +93,19 @@ public class NouvPartie extends Observable {
     }
     
     public Bateau getBatFromPos(Armee a, String pos) {
-        Position p = new Position(convertStrToPosX(pos), ocnvertStrToPosY(pos));
+        Position p = new Position(convertStrToPosX(pos), convertStrToPosY(pos));
         for(Bateau b : a.getListBat())
-            if(b.getXY() == p)
-            return b;
+            if(b.getXY().equals(p))
+                return b;
         return null;
     }
     
     public int convertStrToPosX(String s) {
-        return convertStrToPos(s).getPosX();
+        return gb.getPosFromMapPositions(s).getPosX();
     }
 
-    public int ocnvertStrToPosY(String s) {
-        return convertStrToPos(s).getPosY();
+    public int convertStrToPosY(String s) {
+        return gb.getPosFromMapPositions(s).getPosY();
     }
 
     public Position convertStrToPos(String s) {
