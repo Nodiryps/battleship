@@ -19,22 +19,22 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Builder extends Observable {
     private Gameboard gb;
     private final int NBJ = 2;
-    private List<Armee> listArmee = new LinkedList<>();
+    private List<Armee> listArmees = new LinkedList<>();
     private List<Mine> listeMines = new LinkedList<>();
             
     public Builder(int size, List<String> noms, boolean placementAuto) {
         this.gb = new Gameboard(size);
-        this.listArmee = creationArmees(noms);
+        this.listArmees = creationArmees(noms);
         
         this.nouvMer();
-        if(true){
-            for(Armee armee : listArmee)
+        if(true) {
+            for(Armee armee : listArmees)
                 randPosBat(armee);
             randPosMine();
         }
     }
     
-    public NouvPartie build(){
+    public NouvPartie build() {
         return new NouvPartie(this);
     }
 
@@ -46,12 +46,12 @@ public class Builder extends Observable {
         return NBJ;
     }
 
-    public List<Armee> getListArmee() {
-        return listArmee;
+    public List<Armee> getListArmees() {
+        return listArmees;
     }
     
     public Armee getArmeeFromList(int i){
-        return listArmee.get(i);
+        return listArmees.get(i);
     }
 
     private static List<Armee> creationArmees(List<String> noms) {
@@ -125,7 +125,7 @@ public class Builder extends Observable {
             //gb.getMer()[x][y] = new Case();
             gb.getMer()[x][y].setBat(a.getBatFromList(i));
             a.setPosBatFromList(a.getBateauFromListPosX(i), a.getBateauFromListPosY(i), i);
-            leSet.add(a.getBateauFromListPos(i));
+            leSet.add(a.getPosBateauFromListPos(i));
         }
     }
     

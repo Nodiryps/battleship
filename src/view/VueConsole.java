@@ -23,14 +23,8 @@ import model.TypeB;
 
 enum Couleur {
     RESET("\u001B[0m"),
-    BLACK("\u001B[30m"),
-    RED("\u001B[31m"),
-    GREEN("\u001B[32m"),
     YELLOW("\u001B[33m"),
-    BLUE("\u001B[34m"),
-    PURPLE("\u001B[35m"),
-    CYAN("\u001B[36m"),
-    WHITE("\u001B[37m");
+    PURPLE("\u001B[35m");
 
     private final String code;
     private Couleur(String code) { this.code = code; }
@@ -111,18 +105,20 @@ public class VueConsole implements Observer {
         
     }
 
-    public boolean partiEnCours() {
+    public boolean partieFinie() {
         for (Armee a : ctrlNP.getListArmees()) {
-            if(a.getSizeListBat() <= 0)
-                return false;
+            if(a.getSizeListBat() <= 0){
+                return true;
+            }
         }
-        return true;
+        return false;
     }
     
     public void partieFinieMsg(){
         for(Armee a : ctrlNP.getListArmees())
-            if(a.getSizeListBat()>0)
-                print("GAME OVER\n" + a.getNom() + " a gagné! ^^");
+            if(a.getSizeListBat() > 0){
+                print("\nGAME OVER\n" + a.getNom() + " a gagné! ^^");
+            }
     }
 
     public String affTir(Armee joueur) {
@@ -141,7 +137,7 @@ public class VueConsole implements Observer {
         Position pos = ctrlNP.convertStrToPos(p);
         Bateau b = a.getBatFromPos(pos);
         if(ctrlNP.tir(a, ctrlNP.convertPosToStr(b.getXY())))
-            printLN("PEW! PEW!");
+            printLN("PEW! PEW!(portée: " + b.getPortee() + ")");
         else
             printLN("Vous avez fait " + b.getPortee() + " de portée... -____-\"");
     }
@@ -162,7 +158,7 @@ public class VueConsole implements Observer {
             print("Quel bateau déplacer? (ex: B5): ");
             String batChoisi = toUpperCase(insert.nextLine());
             while(!ctrlNP.checkBatBonneArmee(joueur, batChoisi)){
-                System.out.println("Veuillez choisir un de vos bateaux !");
+                printLN("Veuillez entrer une position valide ou un bateau vous appartenant, s.v.p.");
                 batChoisi = toUpperCase(insert.nextLine());
             }
             Position posCour = ctrlNP.convertStrToPos(batChoisi);
@@ -197,7 +193,6 @@ public class VueConsole implements Observer {
  
     @Override
     public void update(Observable obs, Object o) {
-       
         affMer();
         affEtatArmees();
     }

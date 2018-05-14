@@ -176,12 +176,12 @@ public class ControleurFx extends Application {
         
         if(!placementAuto && cptBatTot < NB_TOT_BAT * 2){
             if(placementJ1 && cptBatJ1 < 3){
-                distribBat(listBatJ1, cptPtBatJ1, cptBatJ1, x, y);
+                distribBat(listBatJ1, cptPtBatJ1, NB_TOT_BAT, x, y);
                 placementJ1 = false;
                 placementJ2 = true;
             }
             else if(placementJ2 && cptBatJ2 < 3){
-                distribBat(listBatJ2, cptPtBatJ2, cptBatJ2, x, y);
+                distribBat(listBatJ2, cptPtBatJ2, NB_TOT_BAT, x, y);
                 placementJ1 = true;
                 placementJ2 = false;
             }

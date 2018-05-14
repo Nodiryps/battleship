@@ -18,12 +18,12 @@ import static view.VueConsole.print;
 public class NouvPartie extends Observable {
     private Builder bldr;
     private Gameboard gb;
-    private final List<Armee> listArmee;
+    private final List<Armee> listArmees;
 
     public NouvPartie(Builder bldr) {
         this.bldr = bldr;
         this.gb = bldr.getGb();
-        this.listArmee = bldr.getListArmee();
+        this.listArmees = bldr.getListArmees();
     }
 
     public static NouvPartie getNP(int nbj) {
@@ -81,7 +81,7 @@ public class NouvPartie extends Observable {
     }
     
     public List<Armee> getListArmees() {
-        return this.listArmee;
+        return this.listArmees;
     }
 
     public int getListArmeesSize() {
@@ -148,7 +148,7 @@ public class NouvPartie extends Observable {
                     b.touché();
                 else if(caseMineeA(convertStrToPos(destChoisi)))
                     coulé(a,b); 
-                bldr.updateMer(listArmee);
+                bldr.updateMer(listArmees);
                 setChangedAndNotify(this);
             }
     }
@@ -213,22 +213,22 @@ public class NouvPartie extends Observable {
     public List<Position> getListDestPoss(Bateau b) {
         List<Position> dest = new LinkedList<>();
         Position p = b.getXY();
-        for (int i = 0; i < b.getPm(); ++i) {
-            Position top = goUp(p, b.getPm());
-            Position bot = goDown(p, b.getPm());
-            Position left = goLeft(p, b.getPm());
-            Position right = goRight(p, b.getPm());
+        for (int i = 1; i <= b.getPm(); ++i) {
+            Position top = goUp(p, i);
+            Position bot = goDown(p, i);
+            Position left = goLeft(p, i);
+            Position right = goRight(p, i);
 
-            if (posValide(convertPosToStr(p))) {
+            if (posValide(convertPosToStr(p)) && !dest.contains(top)) {
                 dest.add(top);
             }
-            if (posValide(convertPosToStr(p))) {
+            if (posValide(convertPosToStr(p)) && !dest.contains(bot)) {
                 dest.add(bot);
             }
-            if (posValide(convertPosToStr(p))) {
+            if (posValide(convertPosToStr(p)) && !dest.contains(left)) {
                 dest.add(left);
             }
-            if (posValide(convertPosToStr(p))) {
+            if (posValide(convertPosToStr(p)) && !dest.contains(right)) {
                 dest.add(right);
             }
         }
@@ -257,7 +257,7 @@ public class NouvPartie extends Observable {
             Bateau b = a.getBatFromPos(posBatChoisi);
             b.randomPortee();
             if (!(b.getPortee() == 0)) {
-                for (Armee ar : this.listArmee) 
+                for (Armee ar : this.listArmees) 
                     if (!ar.getNom().equals(a.getNom()))//si bat == ennemi => pewpew!
                         for (Position p : porteeTir(b)) 
                             for (Bateau bat : ar.getListBat()) {
@@ -268,7 +268,7 @@ public class NouvPartie extends Observable {
                                         coulé(ar, bat);
                                 }
                             }
-                bldr.updateMer(listArmee);
+                bldr.updateMer(listArmees);
                 setChangedAndNotify(this);
                 return true;
             }
