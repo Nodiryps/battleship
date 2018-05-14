@@ -41,14 +41,14 @@ public class BateauPetit extends Bateau {
     @Override
     public void randomPortee(){
         Random rand = new Random();
-        double d = rand.nextDouble();
-        if(d <= 0.5){
+        double d = rand.nextInt(100);
+        if(d >= 50){
             setPortee(0);
         }
-        else if(d <= 0.3){
+        else if(d > 20 && d < 50){
             setPortee(1);
         }
-        else if(d <= 0.2){
+        else if(d <= 20){
             setPortee(2);
         }
     }

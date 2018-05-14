@@ -41,15 +41,26 @@ public class BateauGrand extends Bateau {
     @Override
     public void randomPortee(){
         Random rand = new Random();
-        double d = rand.nextDouble();
-        if(d <= 0.5){
+        double d = rand.nextInt(100);
+        if(d >= 50){
             setPortee(2);
         }
-        else if(d <= 0.3){
+        else if(d > 20 && d < 50){
             setPortee(1);
         }
-        else if(d <= 0.2){
+        else if(d <= 20){
             setPortee(0);
         }
     }
+    
+//    public void tirBatGrand(Armee ar, Bateau b){
+//        for (Position p : porteeTir(b)) 
+//            for (Bateau bat : ar.getListBat()) {
+//                if (p.equals(bat.getXY())) {
+//                        bat.touché();
+//                        if (bat.getPv() <= 0) 
+//                            coulé(ar, bat);
+//                    }
+//            }
+//    }
 }

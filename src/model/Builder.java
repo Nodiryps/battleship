@@ -49,6 +49,10 @@ public class Builder extends Observable {
     public List<Armee> getListArmees() {
         return listArmees;
     }
+
+    public List<Mine> getListeMines() {
+        return listeMines;
+    }
     
     public Armee getArmeeFromList(int i){
         return listArmees.get(i);
@@ -80,7 +84,7 @@ public class Builder extends Observable {
             int x = p.getPosX(), y = p.getPosY();
             gb.getMer()[x][y] = new Case(a.getBatFromList(i));
             a.setPosBatFromList(x, y, i);
-            gb.setPosOccupadosAdd(p);
+            gb.posOccupadosAdd(p);
         }
     }
     
@@ -102,39 +106,6 @@ public class Builder extends Observable {
                             listeMines.add(MineN);
                         }
             }
-    }
-    
-    public void updateMer(List<Armee> list){
-        gb = new Gameboard(gb.getTAILLE());
-        for(int i = 0; i < gb.getTAILLE(); ++i)
-            for(int j = 0; j < gb.getTAILLE(); ++j){
-                String s = gb.getAXE_X()[j] + "" + gb.getAXE_Y()[i];
-                gb.mapPositionsPut(s, new Position(i, j));
-                gb.getMer()[i][j] = new Case();
-            }
-        for(Armee armee : list)
-            updatePosBat(armee);
-        updatePosMine();
-    }
-    
-    private void updatePosBat(Armee a){
-        Set<Position> leSet = new HashSet<>();
-        for(int i = 0; i < a.getSizeListBat(); ++i){
-            int x = a.getBateauFromListPosX(i);
-            int y = a.getBateauFromListPosY(i);
-            //gb.getMer()[x][y] = new Case();
-            gb.getMer()[x][y].setBat(a.getBatFromList(i));
-            a.setPosBatFromList(a.getBateauFromListPosX(i), a.getBateauFromListPosY(i), i);
-            leSet.add(a.getPosBateauFromListPos(i));
-        }
-    }
-    
-    private void updatePosMine(){
-        for(Mine m : listeMines){
-            int x = m.getX();
-            int y = m.getY();
-            gb.getMer()[x][y] = new Case(m);
-        }
     }
     
     //    rand de 1 à taille du tab

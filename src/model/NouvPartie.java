@@ -5,10 +5,13 @@
  */
 package model;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 import static view.VueConsole.print;
 
 /**
@@ -19,11 +22,13 @@ public class NouvPartie extends Observable {
     private Builder bldr;
     private Gameboard gb;
     private final List<Armee> listArmees;
+    private List<Mine> listeMines;
 
     public NouvPartie(Builder bldr) {
         this.bldr = bldr;
         this.gb = bldr.getGb();
         this.listArmees = bldr.getListArmees();
+        this.listeMines = bldr.getListeMines();
     }
 
     public static NouvPartie getNP(int nbj) {
@@ -148,9 +153,42 @@ public class NouvPartie extends Observable {
                     b.touché();
                 else if(caseMineeA(convertStrToPos(destChoisi)))
                     coulé(a,b); 
-                bldr.updateMer(listArmees);
+                updateMer(listArmees);
                 setChangedAndNotify(this);
             }
+    }
+    
+    public void updateMer(List<Armee> list){
+        for(int i = 0; i < gb.getTAILLE(); ++i)
+            for(int j = 0; j < gb.getTAILLE(); ++j){
+                String s = gb.getAXE_X()[j] + "" + gb.getAXE_Y()[i];
+                gb.mapPositionsPut(s, new Position(i, j));
+                gb.getMer()[i][j] = new Case();
+            }
+        for(Armee armee : list)
+            updatePosBat(armee);
+        updatePosMine();
+    }
+    
+    private void updatePosBat(Armee a){
+        Set<Position> leSet = new HashSet<>();
+        for(int i = 0; i < a.getSizeListBat(); ++i){
+            int x = a.getBateauFromListPosX(i);
+            int y = a.getBateauFromListPosY(i);
+            gb.getMer()[x][y] = new Case();
+            gb.getMer()[x][y].setBat(a.getBatFromList(i));
+            a.setPosBatFromList(a.getBateauFromListPosX(i), a.getBateauFromListPosY(i), i);
+            leSet.add(a.getPosBateauFromListPos(i));
+        }
+        gb.setPosOccupados(leSet);
+    }
+    
+    private void updatePosMine(){
+        for(Mine m : listeMines){
+            int x = m.getX();
+            int y = m.getY();
+            gb.getMer()[x][y] = new Case(m);
+        }
     }
 
     private Position goLeft(Position p, int pm) {
@@ -252,6 +290,7 @@ public class NouvPartie extends Observable {
     }
 
     public boolean tir(Armee a, String pos) {
+        List<Bateau> listB = new LinkedList<>();
         if (checkBatBonneArmee(a, pos)) {
             Position posBatChoisi = convertStrToPos(pos);
             Bateau b = a.getBatFromPos(posBatChoisi);
@@ -259,30 +298,62 @@ public class NouvPartie extends Observable {
             if (!(b.getPortee() == 0)) {
                 for (Armee ar : this.listArmees) 
                     if (!ar.getNom().equals(a.getNom()))//si bat == ennemi => pewpew!
-                        for (Position p : porteeTir(b)) 
-                            for (Bateau bat : ar.getListBat()) {
-                                permCircul(p);
-                                if (p.equals(bat.getXY())) {
-                                    bat.touché();
-                                    if (bat.getPv() <= 0) 
-                                        coulé(ar, bat);
-                                }
-                            }
-                bldr.updateMer(listArmees);
+                        if(b.getTypeB() == TypeB.GRAND)
+                            tirBatGrand(ar,b);
+                        else
+                            tirBatPetit(ar,b,listB);
+                updateMer(listArmees);
                 setChangedAndNotify(this);
                 return true;
             }
         }return false;
     }
+    
+    public void tirBatGrand(Armee ar, Bateau b){
+        for (Position p : porteeTir(b)) 
+            for (Bateau bat : ar.getListBat()) {
+                if (p.equals(bat.getXY())) {
+                        bat.touché();
+                        if (bat.getPv() <= 0) 
+                            coulé(ar, bat);
+                    }
+            }
+    }
+    
+    public void tirBatPetit(Armee ar, Bateau b, List<Bateau> list){
+        for (Position p : porteeTir(b))
+            for (Bateau adv : ar.getListBat()) {
+                if (p.equals(adv.getXY())) 
+                    list.add(adv);
+            }
+        Bateau adv = randBatFromListPortee(list);
+        if(adv!=null){
+            adv.touché();
+            if (adv.getPv() <= 0) 
+                coulé(ar, adv);
+        }
+    }
+    
+    public Bateau randBatFromListPortee(List<Bateau> list){
+        Random rand = new Random();
+        int posRand;
+        if(list.size()>0){
+            posRand = rand.nextInt(list.size());
+            return list.get(posRand);
+        }  
+        return null;
+    }
 
     public List<Position> porteeTir(Bateau b) {
         List<Position> zoneTir = new LinkedList<>();
-        for (int i = b.getX() - b.getPortee(); i <= b.getX() + b.getPortee(); ++i) {      //les cases à gauche du bateau
-            for (int j = b.getY() - b.getPortee(); j <= b.getY() + b.getPortee(); ++j) {  //les cases à droite
+        for (int i = b.getX() - b.getPortee(); i <= (b.getX() + b.getPortee()); ++i) {      //les cases à gauche du bateau
+            for (int j = b.getY() - b.getPortee(); j <= (b.getY() + b.getPortee()); ++j) {  //les cases à droite
                 Position pos = new Position(i, j);
+                permCircul(pos);
                 zoneTir.add(pos);
             }
         }
+    
         return zoneTir;
     }
 

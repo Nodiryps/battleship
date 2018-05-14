@@ -13,19 +13,26 @@ public class Case {
     
     private Bateau bat;
     private Mine mine;
-
+    private boolean empty;
+    
     public Case() {
+        this.empty = true;
     }
     
     public Case(Bateau b){
         this.bat = b;
+        this.empty = false;
     }
     
     public Case(Mine m){
         this.mine =  m;
+        this.empty = false;
     }
     
-
+    public boolean isEmpty(){
+        return this.empty;
+    }
+    
     public Bateau getBat() {
         return bat;
     }
@@ -42,8 +49,13 @@ public class Case {
         return mine.type;
     }
 
+    public void setEmpty(boolean b){
+        this.empty = b;
+    }
+    
     public void setBat(Bateau bat) {
         this.bat = bat;
+        this.empty = false;
     }
 
     public void setMine(Mine mine) {

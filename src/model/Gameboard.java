@@ -25,7 +25,7 @@ public class Gameboard {
     private final int TAILLE;
     private Case[][] mer;
     private Map<String, Position> mapPositions = new HashMap<>();
-    private Set<Position> setPosOccupados = new HashSet<>(); //enregistre les pos occupées
+    private Set<Position> posOccupados = new HashSet<>(); //enregistre les pos occupées
     
     
     public Gameboard(int size) {
@@ -49,12 +49,8 @@ public class Gameboard {
         return mer;
     }
 
-    public Set<Position> getSetPosOccupados() {
-        return setPosOccupados;
-    }
-
     public boolean setPosOccupadosContains(Position p){
-        return setPosOccupados.contains(p);
+        return posOccupados.contains(p);
     }
 
     public boolean mapPositionsContains(Position p){
@@ -73,22 +69,24 @@ public class Gameboard {
         return mapPositions.get(s);
     }
     
-    public void setPosOccupadosClear() {
-        setPosOccupados = new HashSet<>();
+    public void posOccupadosClear() {
+        posOccupados = new HashSet<>();
     }
     
-    public void setPosOccupadosAdd(Position p){
-        setPosOccupados.add(p);
+    public void posOccupadosAdd(Position p){
+        posOccupados.add(p);
     }
 
     public Set<Position> getPosOccupados() {
-        return setPosOccupados;
+        return posOccupados;
     }
 
     public void setMer(Case[][] m) {
         this.mer = m;
     }
     
-    
+    public void setPosOccupados(Set<Position> s) {
+        posOccupados = s;
+    }
 
 }
