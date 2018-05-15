@@ -47,19 +47,17 @@ public class VueConsole implements Observer {
     }
     
     public void affMer() {
-        printLN("");
-        print("   ");
+        print("\n   ");
         for (int i = 0; i < ctrlNP.getTailleGb(); i++) {
-            print(ctrlNP.getAxeXGb()[i] + " ");
+            print(ctrlNP.getAxeXGb()[i] + " " + Couleur.RESET);
         }
         printLN("");
         for (int i = 0; i < ctrlNP.getTailleGb(); i++) {
-            print(ctrlNP.getAxeYGb()[i] + " ");
+            print(ctrlNP.getAxeYGb()[i] + " " + Couleur.RESET);
             for (int j = 0; j < ctrlNP.getTailleGb(); j++) {
-
-                print("|" + toString(ctrlNP.getCaseGb(i,j)));
+                print(Couleur.RESET + "|" + toString(ctrlNP.getCaseGb(i,j)));
             }
-            printLN("|");
+            printLN(Couleur.RESET + "|");
         }
     }
 
@@ -85,12 +83,20 @@ public class VueConsole implements Observer {
         String out = "";
         for (Armee a : ctrlNP.getListArmees()) {
             for (Bateau bat : a.getListBat()) {
-                out += ctrlNP.convertPosToStr(bat.getXY());
-                out += "\t\t\t" + a.getNom();
-                out += "\t\t" + bat.getTypeB();
-                out += "\t\t" + (bat.getPv()*1.0 / bat.getMaxPv()) * 100 + "%\t";
-                out += "\n";
-                
+                if(a.equals(ctrlNP.getArmeeFromList(0))){
+                    out += Couleur.PURPLE + ctrlNP.convertPosToStr(bat.getXY());
+                    out += "\t\t\t" + Couleur.PURPLE + a.getNom();
+                    out += "\t\t" + Couleur.PURPLE + bat.getTypeB();
+                    out += "\t\t" + Couleur.PURPLE + (bat.getPv()*1.0 / bat.getMaxPv()) * 100 + "%\t";
+                    out += "\n";
+                }
+                else{
+                    out += Couleur.YELLOW + ctrlNP.convertPosToStr(bat.getXY());
+                    out += "\t\t\t" + Couleur.YELLOW + a.getNom();
+                    out += "\t\t" + Couleur.YELLOW + bat.getTypeB();
+                    out += "\t\t" + Couleur.YELLOW + (bat.getPv()*1.0 / bat.getMaxPv()) * 100 + "%\t";
+                    out += "\n";
+                }
             }
         }
         return out;
@@ -102,7 +108,6 @@ public class VueConsole implements Observer {
             if(ctrlNP.caseAccessible(p.getPosX(), p.getPosY()))
                 print(ctrlNP.convertPosToStr(p) + " | ");
         }
-        
     }
 
     public boolean partieFinie() {
@@ -178,17 +183,32 @@ public class VueConsole implements Observer {
     }
 
     private String toString(Case c) {
-        if (c.getBat() != null) {
-            if (c.getTypeBat() == TypeB.PETIT) {
-                return "b";
-            } else if (c.getTypeBat() == TypeB.GRAND) {
-                return "B";
-            } else {
+        Bateau batCase = c.getBat();
+        if (batCase != null) {
+            if (null == c.getTypeBat()) {
                 return " ";
+            } else switch (c.getTypeBat()) {
+                case PETIT:
+                    for(Armee a : ctrlNP.getListArmees())
+                        for(Bateau b : a.getListBat())
+                            if(batCase.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(0)))
+                                return Couleur.PURPLE + "b";
+                            else if(batCase.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(1)))
+                                return Couleur.YELLOW + "b";
+                    break;
+                case GRAND:
+                    for(Armee a : ctrlNP.getListArmees())
+                        for(Bateau b : a.getListBat())
+                            if(batCase.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(0)))
+                                return Couleur.PURPLE + "B";
+                            else if(batCase.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(1)))
+                                return Couleur.YELLOW + "B";
+                    break;
+                default:
+                    return " ";
             }
-        } else {
-            return " ";
         }
+        return " ";
     }
  
     @Override
