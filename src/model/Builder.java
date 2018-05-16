@@ -5,11 +5,9 @@
  */
 package model;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -22,7 +20,7 @@ public class Builder extends Observable {
     private List<Armee> listArmees = new LinkedList<>();
     private List<Mine> listeMines = new LinkedList<>();
             
-    public Builder(int size, List<String> noms, boolean placementAuto) {
+    public Builder(int size, List<String> noms, boolean placementAuto, boolean placementManuelFini) {
         this.gb = new Gameboard(size);
         this.listArmees = creationArmees(noms);
         

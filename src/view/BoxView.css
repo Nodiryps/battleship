@@ -28,14 +28,26 @@
     -fx-background-size: stretch;
     -fx-background-image: url("seaRadio.gif");
 }
-.batG {
-    -fx-border-color: #6666ff;
+.batG1 {
+    -fx-border-color: PURPLE;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("grandBateau.gif");
 }
-.batP {
-    -fx-border-color: #6666ff;
+.batP1 {
+    -fx-border-color: PURPLE;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+    -fx-background-image: url("petitBateau.gif");
+}
+.batG2 {
+    -fx-border-color: YELLOW;
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+    -fx-background-image: url("grandBateau.gif");
+}
+.batP2 {
+    -fx-border-color: YELLOW;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("petitBateau.gif");

@@ -18,7 +18,6 @@ import java.util.Observer;
 import java.util.Scanner;
 import static jdk.nashorn.internal.objects.NativeString.toUpperCase;
 import model.Case;
-import model.TypeB;
 
 
 enum Couleur {
@@ -110,22 +109,6 @@ public class VueConsole implements Observer {
         }
     }
 
-    public boolean partieFinie() {
-        for (Armee a : ctrlNP.getListArmees()) {
-            if(a.getSizeListBat() <= 0){
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public void partieFinieMsg(){
-        for(Armee a : ctrlNP.getListArmees())
-            if(a.getSizeListBat() > 0){
-                print("\nGAME OVER\n" + a.getNom() + " a gagné! ^^");
-            }
-    }
-
     public String affTir(Armee joueur) {
         String batChoisi = "";
         print("Avec quel bateau voulez-vous tirer, " + joueur.getNom() + "? (ex: B5): ");
@@ -209,6 +192,13 @@ public class VueConsole implements Observer {
             }
         }
         return " ";
+    }
+    
+    public void partieFinieMsg(){
+        for(Armee a : ctrlNP.getListArmees())
+            if(a.getSizeListBat() > 0){
+                print("\nGAME OVER\n" + a.getNom() + " a gagné! ^^");
+            }
     }
  
     @Override

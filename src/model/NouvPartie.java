@@ -32,7 +32,7 @@ public class NouvPartie extends Observable {
     }
 
     public static NouvPartie getNP(int nbj) {
-        boolean auto = true;                    //pcq console
+        boolean auto = true;     
         Scanner insert = new Scanner(System.in);
         List<String> noms = new LinkedList<>();
         print("Taille de votre mer (5 à 26): ");
@@ -42,7 +42,7 @@ public class NouvPartie extends Observable {
             String s = insert.next();
             noms.add(s);
         }
-        return new NouvPartie(new Builder(size, noms, auto));
+        return new NouvPartie(new Builder(size, noms, auto, auto));
     }
    
     public int getTailleGb() {
@@ -367,6 +367,15 @@ public class NouvPartie extends Observable {
                 a.getListBat().remove(b);
             }
         }
+    }
+    
+    public boolean partieFinie() {
+        for (Armee a : listArmees) {
+            if(a.getSizeListBat() <= 0){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setChangedAndNotify() {

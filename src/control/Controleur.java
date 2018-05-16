@@ -31,12 +31,12 @@ public class Controleur {
         np.addObserver(v);
         np.setChangedAndNotify();
 
-        while (!v.partieFinie()) {
+        while (!np.partieFinie()) {
             for (Armee a : np.getListArmees()) 
-                if(!v.partieFinie()){
+                if(!np.partieFinie()){
                     String posBatChoisi = v.affTir(a);
                     v.tirMsg(a, posBatChoisi);
-                    if (v.partieFinie()) 
+                    if (np.partieFinie()) 
                         v.partieFinieMsg();
                     else{
                         List<String> choix = v.affMoveBat(a);

@@ -18,6 +18,7 @@ import model.Armee;
 import model.Bateau;
 import model.Case;
 import model.Position;
+import view.VueBuilder;
 
 /**
  *
@@ -26,28 +27,36 @@ import model.Position;
 public class ControleurFx extends Application {
     private Stage stage;
     private NouvPartie np;
+    private Builder bldr;
+    private VueBuilder vueBldr;
     private Position posBatChoisi;
     private Bateau batChoisi;
     private Armee a1;
     private Armee a2;
+    
     private final static int NB_GD_BAT = Armee.getNbGBat();
     private final static int NB_PT_BAT = Armee.getNbPBat();
     private final static int NB_TOT_BAT = NB_GD_BAT + NB_PT_BAT;
+   
     private static int cptBatJ1;
     private static int cptBatJ2;
     private static int cptPtBatJ1;
     private static int cptPtBatJ2;
     private static int cptBatTot;
-    private final boolean placementAuto = true;
+    
+    private boolean placementAuto = true;
     private boolean placementJ1 = true;
     private boolean placementJ2 = false;
-    private boolean tourTirJ1 = true;
-    private boolean tourTirJ2 = false;
-    private boolean tourMoveJ1 = false;
-    private boolean tourMoveJ2 = false;
+    
+    private boolean tourJ1Tir = true;
+    private boolean tourJ1Move = true;
     
     public NouvPartie getNp() {
         return np;
+    }
+    
+    public Builder getBldr(){
+        return bldr;
     }
     
     public Armee getArmee1(){
@@ -114,36 +123,28 @@ public class ControleurFx extends Application {
         return placementAuto;
     }
     
-    public boolean isTourTirJ1() {
-        return tourTirJ1;
+    public boolean isTourJ1Tir() {
+        return tourJ1Tir;
     }
 
-    public boolean isTourTirJ2() {
-        return tourTirJ2;
+    public boolean isTourJ2Tir() {
+        return !tourJ1Tir;
     }
 
-    public boolean isTourMoveJ1() {
-        return tourMoveJ1;
+    public boolean isTourJ1Move() {
+        return tourJ1Move;
     }
 
-    public boolean isTourMoveJ2() {
-        return tourMoveJ2;
+    public boolean isTourJ2Move() {
+        return !tourJ1Move;
     }
 
-    public void setTourTirJ1(boolean tourTirJ1) {
-        this.tourTirJ1 = tourTirJ1;
+    public void setTourJ1Tir(boolean tourTirJ1) {
+        this.tourJ1Tir = tourTirJ1;
     }
 
-    public void setTourTirJ2(boolean tourTirJ2) {
-        this.tourTirJ2 = tourTirJ2;
-    }
-
-    public void setTourMoveJ1(boolean tourMoveJ1) {
-        this.tourMoveJ1 = tourMoveJ1;
-    }
-
-    public void setTourMoveJ2(boolean tourMoveJ2) {
-        this.tourMoveJ2 = tourMoveJ2;
+    public void setTourJ1Move(boolean tourMoveJ1) {
+        this.tourJ1Move = tourMoveJ1;
     }
     
     public static void main(String[] args) {
@@ -156,12 +157,16 @@ public class ControleurFx extends Application {
         new VueParamPartie(stage, this); // Fenêtre initiale (saisie taille)
     }
 
+    private void switchToBuildWindow(int size){
+        vueBldr = new VueBuilder(size, this, stage);
+    }
+    
     // fait apparaître la fenêtre principale de l'application
     public void switchToMainWindow(String j1, String j2, int size) {
         List<String> noms = new LinkedList();
         noms.add(j1);
         noms.add(j2);
-        Builder bldr = new Builder(size, noms, placementAuto);
+        bldr = new Builder(size, noms, placementAuto, false);
         np = bldr.build();
         a1 = np.getArmeeFromList(0);
         a2 = np.getArmeeFromList(1);
@@ -220,26 +225,26 @@ public class ControleurFx extends Application {
     
     public void tirMoveBoatClicked(NouvPartie np, int x, int y){
         Position p = new Position(x, y);
-        if(isTourTirJ1())
+        if(isTourJ1Tir())
             if(np.checkBatBonneArmee(a1, np.convertPosToStr(p))){
                 np.tir(a1, np.convertPosToStr(p));
-                setTourTirJ1(false);
-                setTourMoveJ1(true);
+                setTourJ1Tir(false);
+                setTourJ1Move(true);
             }else
                 
-        if(isTourTirJ2())
+        if(isTourJ2Tir())
             if(np.checkBatBonneArmee(a2, np.convertPosToStr(p))){
                 np.tir(a2, np.convertPosToStr(p));
-                setTourTirJ2(false);
-                setTourMoveJ2(true);
+                setTourJ1Tir(true);
+                setTourJ1Move(false);
             }
-        if(isTourMoveJ1())
-            boatToMoveClicked(a1, p);
-        if(isTourMoveJ2())
-            boatToMoveClicked(a2, p);
+        if(isTourJ1Move())
+            boatClickedToMove(a1, p);
+        if(isTourJ2Move())
+            boatClickedToMove(a2, p);
     }
     
-    public void boatToMoveClicked(Armee a, Position p){
+    public void boatClickedToMove(Armee a, Position p){
         if(np.checkBatBonneArmee(a, np.convertPosToStr(p)))
             posBatChoisi = p;
         else
@@ -254,19 +259,19 @@ public class ControleurFx extends Application {
     
     public void moveBoatClicked(NouvPartie np, int x, int y){
         Position p = new Position(x, y);
-        if(isTourMoveJ1())
+        if(isTourJ1Move())
             if(np.checkBatBonneArmee(a1, np.convertPosToStr(posBatChoisi))){
                 batChoisi = a1.getBatFromPos(posBatChoisi);
-                move(a1,batChoisi,p,tourMoveJ1);
+                move(a1,batChoisi,p,tourJ1Move);
                 posBatChoisi = null;
-                setTourTirJ2(true);
+                setTourJ1Tir(false);
             }
-        if(isTourMoveJ2())
+        if(isTourJ2Move())
             if(np.checkBatBonneArmee(a2, np.convertPosToStr(posBatChoisi))){
                 batChoisi = a2.getBatFromPos(posBatChoisi);
-                move(a2,batChoisi,p,tourMoveJ2);
+                move(a2,batChoisi,p,!tourJ1Move);
                 posBatChoisi = null;
-                setTourTirJ2(true);
+                setTourJ1Tir(true);
             }
     }
     
