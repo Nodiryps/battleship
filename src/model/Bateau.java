@@ -60,7 +60,7 @@ public abstract class Bateau implements Positionnable{
     }
     
     public TypeB getTypeB() {
-        return TYPE;
+        return this.TYPE;
     }
     
     public TypeB getTypeGrandBat(){

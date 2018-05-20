@@ -1,5 +1,5 @@
 .empty {
-    -fx-border-color: #6666ff;
+    /*-fx-border-color: #6666ff;*/
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("sea.gif");
@@ -11,44 +11,49 @@
     -fx-background-image: url("sea.gif");
 }
 .mineN {
-    -fx-border-color: #6666ff;
+    /*-fx-border-color: #6666ff;*/
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("mineN.gif");
 }
 .mineA {
-    -fx-border-color: #6666ff;
+    /*-fx-border-color: #6666ff;*/
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("mineA.gif");
 }
 .caseRadio{
-    -fx-border-color: #6666ff;
+    /*-fx-border-color: #6666ff;*/
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("seaRadio.gif");
 }
 .batG1 {
-    -fx-border-color: PURPLE;
+    -fx-border-color: purple;
+    -fx-border-width: 3;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("grandBateau.gif");
 }
 .batP1 {
-    -fx-border-color: PURPLE;
+    -fx-border-color: purple;
+    -fx-border-width: 3;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("petitBateau.gif");
 }
 .batG2 {
-    -fx-border-color: YELLOW;
+    -fx-border-color: yellow;
+    -fx-border-width: 3;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("grandBateau.gif");
 }
 .batP2 {
-    -fx-border-color: YELLOW;
+    -fx-border-color: yellow;
+    -fx-border-width: 3;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("petitBateau.gif");
 }
+

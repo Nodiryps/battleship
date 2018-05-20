@@ -102,11 +102,11 @@ public class VuePartie extends BorderPane implements Observer {
     public void affEtatArmee(){
             vboxEA1.getChildren().clear();
             vboxEA2.getChildren().clear();
-            etatArmee(npVueP.getArmeeFromList(0), vboxEA1, npVueP);
-            etatArmee(npVueP.getArmeeFromList(1), vboxEA2, npVueP);
+            etatArmee(npVueP.getArmeeFromList(0), vboxEA1);
+            etatArmee(npVueP.getArmeeFromList(1), vboxEA2);
         }
     
-    private void etatArmee(Armee a, VBox vb, NouvPartie np) {
+    private void etatArmee(Armee a, VBox vb) {
             Text nomA = new Text(a.getNom() + "\n");
             nomA.setTextAlignment(TextAlignment.CENTER);
             nomA.setFont(Font.font("Arial",FontWeight.BLACK,25));
@@ -153,14 +153,14 @@ public class VuePartie extends BorderPane implements Observer {
         if(CTRL.isTourJ1Tir()){
             instr = new Text("Avec quel bateau voulez-vous tirer, " + a1.getNom() + "?");
             vb.getChildren().add(instr);}
-        if(!CTRL.isTourJ1Tir() && CTRL.isTourJ1Move()){
+        if(CTRL.isTourJ1Move()){
             instr = new Text("Vous pouvez déplacer un de vos bateaux, " + a1.getNom());
             vb.getChildren().add(instr);}
         
         if(CTRL.isTourJ2Tir()){
             instr = new Text("Avec quel bateau voulez-vous tirer, " + a2.getNom() + "?");
             vb.getChildren().add(instr);}
-        if(!CTRL.isTourJ2Tir() && CTRL.isTourJ2Move()){
+        if(CTRL.isTourJ2Move()){
             instr = new Text("Vous pouvez déplacer un de vos bateaux, " + a2.getNom());
             vb.getChildren().add(instr);}
         
@@ -238,7 +238,7 @@ public class VuePartie extends BorderPane implements Observer {
         }
         
         private void affDestPoss(Armee a){
-            Bateau b = npVueP.getBatFromPos(a, npVueP.convertPosToStr(posB));
+            Bateau b = npVueP.getBatFromPos(npVueP.convertPosToStr(posB));
             List<Position> list = npVueP.getListDestPoss(b);
             
             for (Position p : list) 
@@ -272,42 +272,57 @@ public class VuePartie extends BorderPane implements Observer {
                     }
                 }else
                     getStyleClass().add("empty");
-                setOnMouseClicked(e -> CTRL.emptyBoxClicked(x, y));
             }
         }
         
         private class BoatView extends BoxView{
             public BoatView(int x, int y){
-                Position p = new Position(x,y);
-                boatType(a1,p);
-                boatType(a2,p);
+                Position p = new Position(y,x);
+                distribBat(p);
+//                Bateau b = npVueP.getBatFromPos(p);
+//                if(b != null){   
+//                    if(npVueP.checkBatBonneArmee(a1, p)){
+//                        if(b.getTypeB() == TypeB.GRAND)
+//                            getStyleClass().add("batG1");
+//                        else 
+//                            getStyleClass().add("batP1");
+//                    }else if(npVueP.checkBatBonneArmee(a2, p)){
+//                        if(b.getTypeB() == TypeB.GRAND)
+//                            getStyleClass().add("batG2");
+//                        else 
+//                            getStyleClass().add("batP2");
+//                    }
+//                }
                 
                 if(!npVueP.partieFinie()){
-                    if(CTRL.isTourJ1Move() && npVueP.checkBatBonneArmee(a1, npVueP.convertPosToStr(CTRL.getPosBatChoisi())))
+                    if(CTRL.isTourJ1Move() && npVueP.checkBatBonneArmee(a1, CTRL.getPosBatChoisi()))
                         posB = CTRL.getPosBatChoisi();
-                    else if(CTRL.isTourJ2Move() && npVueP.checkBatBonneArmee(a2, npVueP.convertPosToStr(CTRL.getPosBatChoisi())))
+                    else if(CTRL.isTourJ2Move() && npVueP.checkBatBonneArmee(a2, CTRL.getPosBatChoisi()))
                         posB = CTRL.getPosBatChoisi();
                     else
                         posB = null;
-                    setOnMouseClicked(e -> CTRL.boatClicked(npVueP, x, y));
+                    setOnMouseClicked(e -> CTRL.boatClicked(x, y));
                 }else
                     msgPartieFinie();
             }
-                
         }
             
-            private void boatType(Armee a, Position p){
-                if(a == a1){
-                    if(npVueP.getTypeBatFromMer(p.getPosX(),p.getPosY()) == TypeB.GRAND)
-                        add(new BatGdA1View(p.getPosX(),p.getPosY()), p.getPosX(),p.getPosY());
+        private void distribBat(Position p){
+            Bateau b = npVueP.getBatFromPos(p);
+            
+            if(b != null){   
+                if(npVueP.checkBatBonneArmee(a1, p)){
+                    if(b.getTypeB() == TypeB.GRAND)
+                        add(new BatGdA1View(p.getPosX(),p.getPosY()), p.getPosY(), p.getPosX());
                     else 
-                        add(new BatPtA1View(p.getPosX(),p.getPosY()), p.getPosX(),p.getPosY());
-                }else{
-                    if(npVueP.getTypeBatFromMer(p.getPosX(),p.getPosY()) == TypeB.GRAND)
-                        add(new BatGdA2View(p.getPosX(),p.getPosY()), p.getPosX(),p.getPosY());
+                        add(new BatPtA1View(p.getPosX(),p.getPosY()), p.getPosY(), p.getPosX());
+                }else if(npVueP.checkBatBonneArmee(a2, p)){
+                    if(b.getTypeB() == TypeB.GRAND)
+                        add(new BatGdA2View(p.getPosX(),p.getPosY()), p.getPosY(), p.getPosX());
                     else 
-                        add(new BatPtA2View(p.getPosX(),p.getPosY()), p.getPosX(),p.getPosY());
+                        add(new BatPtA2View(p.getPosX(),p.getPosY()), p.getPosY(), p.getPosX());
                 }
+            }
         }
         
         private class MoveBoatView extends BoxView{
@@ -317,66 +332,61 @@ public class VuePartie extends BorderPane implements Observer {
                     if(c.getMine() != null)
                         if(c.getTypeMine() == TypeM.NORMALE)
                             getStyleClass().add("mineN");
-                        else 
+                        else if(c.getTypeMine() == TypeM.ATOMIQUE)
                             getStyleClass().add("mineA");
+                        else
+                            getStyleClass().add("destPoss");
                 }else
                     getStyleClass().add("destPoss");
-                setOnMouseClicked(e -> CTRL.moveBoatClicked(npVueP, x, y));
+                setOnMouseClicked(e -> CTRL.moveBoatClicked(x, y));
             }
             
         }
         
         public class BatGdA1View extends BoxView{
-                public BatGdA1View(int x, int y){
-                    getStyleClass().add("batG1");
-                    setOnMouseClicked(e -> CTRL.boatClicked(npVueP, x, y));
-                }
+            public BatGdA1View(int x, int y){
+                getStyleClass().add("batG1");
+            }
         }
         
         public class BatPtA1View extends BoxView{
             public BatPtA1View(int x, int y){
                 getStyleClass().add("batP1");
-                setOnMouseClicked(e -> CTRL.boatClicked(npVueP, x, y));
             }
         }
         public class BatGdA2View extends BoxView{
-                public BatGdA2View(int x, int y){
-                    getStyleClass().add("batG2");
-                    setOnMouseClicked(e -> CTRL.boatClicked(npVueP, x, y));
-                }
+            public BatGdA2View(int x, int y){
+                getStyleClass().add("batG2");
+            }
         }
         
         public class BatPtA2View extends BoxView{
             public BatPtA2View(int x, int y){
                 getStyleClass().add("batP2");
-                setOnMouseClicked(e -> CTRL.boatClicked(npVueP, x, y));
             }
         }
             
         public class MineNormView extends BoxView{
             public MineNormView(int x, int y){
                 getStyleClass().add("mineN");
-                setOnMouseClicked(e -> CTRL.emptyBoxClicked(x, y));
             }
         }
         
         public class MineAtomView extends BoxView{
             public MineAtomView(int x, int y){
                 getStyleClass().add("mineA");
-                setOnMouseClicked(e -> CTRL.emptyBoxClicked(x, y));
             }
         }
         
         public class CaseRadioactiveView extends BoxView{
             public CaseRadioactiveView(int x, int y){
                 getStyleClass().add("caseRadio");
-                setOnMouseClicked(e -> CTRL.emptyBoxClicked(x, y));
             }
         }
     }
     
     public void msgMauvaisBat(){
-        printLN("Veuillez sélectioner un bateau vous appartant, s.v.p.");
+        printLN("Veuillez sélectioner un bateau vous appartenant, s.v.p.");
     }
     
     public void msgPartieFinie(){

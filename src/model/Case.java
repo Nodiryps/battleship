@@ -42,11 +42,11 @@ public class Case {
     }
     
     public TypeB getTypeBat(){
-        return bat.TYPE;
+        return bat.getTypeB();
     }
     
     public TypeM getTypeMine(){
-        return mine.type;
+        return mine.getTypeM();
     }
 
     public void setEmpty(boolean b){

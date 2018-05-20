@@ -66,11 +66,16 @@ public class NouvPartie extends Observable {
     }
     
     public TypeB getTypeBatFromMer(int x, int y){
-        return getCaseGb(x,y).getTypeBat();
+        Bateau b = getBatFromCase(x, y);
+        return b.getTypeB();
+    }
+    
+    private Mine getMineFromCase(int x, int y) {
+        return getCaseGb(x, y).getMine();    
     }
 
     public TypeM getTypeMineFromMer(int x, int y){
-        return getCaseGb(x,y).getTypeMine();
+        return getMineFromCase(x, y).getTypeM();
     }
     
     public boolean caseAccessible(int x, int y) {
@@ -97,11 +102,20 @@ public class NouvPartie extends Observable {
         return getListArmees().get(i);
     }
     
-    public Bateau getBatFromPos(Armee a, String pos) {
+    public Bateau getBatFromPos(String pos) {
         Position p = new Position(convertStrToPosX(pos), convertStrToPosY(pos));
-        for(Bateau b : a.getListBat())
-            if(b.getXY().equals(p))
-                return b;
+            for(Armee a : listArmees)
+                for(Bateau b : a.getListBat())
+                    if(b.getXY().equals(p))
+                        return b;
+        return null;
+    }
+    
+    public Bateau getBatFromPos(Position pos) {
+            for(Armee a : listArmees)
+                for(Bateau b : a.getListBat())
+                    if(b.getXY().equals(pos))
+                        return b;
         return null;
     }
     
@@ -135,13 +149,20 @@ public class NouvPartie extends Observable {
                     return true;
             return false;
     }
-
+    
+    public boolean checkBatBonneArmee(Armee armeeCou, Position posBatChoisi) {
+            for(Bateau b : armeeCou.getListBat())
+                if(b.getXY().equals((posBatChoisi)))
+                    return true;
+            return false;
+    }
+    
     public boolean posValide(String s) {
         Position p = convertStrToPos(s);
         return (p.getPosX() >= 0 && p.getPosX() < gb.getTAILLE()) ||
                (p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE());
     }
-
+    
     public void moveBat(Armee a, Bateau b, String destChoisi) {
         if (getListDestPoss(b).contains(convertStrToPos(destChoisi))) 
             if (posValide(convertPosToStr(b.getXY())) && 
@@ -388,5 +409,4 @@ public class NouvPartie extends Observable {
         notifyObservers(o);
     }
 
-    
 }

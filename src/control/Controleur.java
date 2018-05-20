@@ -44,7 +44,7 @@ public class Controleur {
                             String batChoisi = choix.get(1);
                             String destChoisi = choix.get(2);
                             if (!destChoisi.equals("")) 
-                                np.moveBat(a, np.getBatFromPos(a, batChoisi), destChoisi);
+                                np.moveBat(a, np.getBatFromPos(batChoisi), destChoisi);
                         }
                     }
                 }

@@ -50,6 +50,8 @@ public class ControleurFx extends Application {
     
     private boolean tourJ1Tir = true;
     private boolean tourJ1Move = true;
+    private boolean tourJ2Tir = false;
+    private boolean tourJ2Move = false;
     
     public NouvPartie getNp() {
         return np;
@@ -124,27 +126,35 @@ public class ControleurFx extends Application {
     }
     
     public boolean isTourJ1Tir() {
-        return tourJ1Tir;
+        return tourJ2Move && tourJ1Tir;
     }
 
     public boolean isTourJ2Tir() {
-        return !tourJ1Tir;
+        return !tourJ1Move && !tourJ2Tir;
     }
 
     public boolean isTourJ1Move() {
-        return tourJ1Move;
+        return tourJ1Move && !tourJ1Tir;
     }
 
     public boolean isTourJ2Move() {
-        return !tourJ1Move;
+        return tourJ2Tir && !tourJ2Move;
     }
 
-    public void setTourJ1Tir(boolean tourTirJ1) {
-        this.tourJ1Tir = tourTirJ1;
+    public void setTourJ1Tir(boolean b) {
+        this.tourJ1Tir = b;
+    }
+    
+    public void setTourJ2Tir(boolean b) {
+        tourJ2Tir = b;
     }
 
-    public void setTourJ1Move(boolean tourMoveJ1) {
-        this.tourJ1Move = tourMoveJ1;
+    public void setTourJ1Move(boolean b) {
+        this.tourJ1Move = b;
+    }
+    
+    public void setTourJ2Move(boolean b) {
+        this.tourJ2Move = b;
     }
     
     public static void main(String[] args) {
@@ -177,23 +187,23 @@ public class ControleurFx extends Application {
     
     // Quand l'utilisateur clique sur une case vide
     public void emptyBoxClicked(int x, int y) {
-        List<Bateau> listBatJ1 = a1.getListBat(), listBatJ2 = a2.getListBat();
-        
-        if(!placementAuto && cptBatTot < NB_TOT_BAT * 2){
+        List<Bateau> listBatJ1 = a1.getListBat(), 
+                     listBatJ2 = a2.getListBat();
+        if(placementAuto && cptBatTot < (NB_TOT_BAT * 2)){
             if(placementJ1 && cptBatJ1 < 3){
-                distribBat(listBatJ1, cptPtBatJ1, NB_TOT_BAT, x, y);
+                cptBatTot = dispositionBat(listBatJ1, cptPtBatJ1, cptBatTot, x, y);
                 placementJ1 = false;
                 placementJ2 = true;
             }
             else if(placementJ2 && cptBatJ2 < 3){
-                distribBat(listBatJ2, cptPtBatJ2, NB_TOT_BAT, x, y);
+                cptBatTot = dispositionBat(listBatJ2, cptPtBatJ2, cptBatTot, x, y);
                 placementJ1 = true;
                 placementJ2 = false;
             }
         }
     }
     
-    private void distribBat(List<Bateau> listBat, int cptPtBat, int nbBatJ, int x, int y){
+    private int dispositionBat(List<Bateau> listBat, int cptPtBat, int nbBatJ, int x, int y){
         if(batChoisi != null && batChoisi.getTypeB() == batChoisi.getTypeGrandBat()){
             setBatInBox(listBat.get(0), x, y);
             ++cptBatTot;
@@ -209,7 +219,7 @@ public class ControleurFx extends Application {
                 ++nbBatJ;
                 ++cptPtBat;
             }
-        }
+        } return nbBatJ;
     }
     
     private void setBatInBox(Bateau b, int x, int y){
@@ -219,25 +229,30 @@ public class ControleurFx extends Application {
     }
     
     // Quand l'utilisateur clique sur un bateau
-    public void boatClicked(NouvPartie np,int x, int y) {
-        tirMoveBoatClicked(np, x, y);
+    public void boatClicked(int x, int y) {
+        tirMoveBoatClicked(x, y);
     }
     
-    public void tirMoveBoatClicked(NouvPartie np, int x, int y){
+    public void tirMoveBoatClicked(int x, int y){
         Position p = new Position(x, y);
-        if(isTourJ1Tir())
-            if(np.checkBatBonneArmee(a1, np.convertPosToStr(p))){
-                np.tir(a1, np.convertPosToStr(p));
-                setTourJ1Tir(false);
-                setTourJ1Move(true);
-            }else
-                
-        if(isTourJ2Tir())
-            if(np.checkBatBonneArmee(a2, np.convertPosToStr(p))){
-                np.tir(a2, np.convertPosToStr(p));
-                setTourJ1Tir(true);
-                setTourJ1Move(false);
+        for(Armee a : np.getListArmees()){
+            if(a.equals(a1)){
+                if(isTourJ1Tir())
+                    if(np.checkBatBonneArmee(a, np.convertPosToStr(p))){
+                        np.tir(a, np.convertPosToStr(p));
+                        setTourJ1Tir(false);
+                        setTourJ1Move(true);
+                    }
             }
+            if(a.equals(a2)){
+                if(isTourJ2Tir())
+                    if(np.checkBatBonneArmee(a, np.convertPosToStr(p))){
+                        np.tir(a, np.convertPosToStr(p));
+                        setTourJ2Tir(false);
+                        setTourJ2Move(true);
+                    }
+            }
+        }
         if(isTourJ1Move())
             boatClickedToMove(a1, p);
         if(isTourJ2Move())
@@ -257,25 +272,26 @@ public class ControleurFx extends Application {
         move = true;
     }
     
-    public void moveBoatClicked(NouvPartie np, int x, int y){
+    public void moveBoatClicked(int x, int y){
         Position p = new Position(x, y);
+        Bateau b;
         if(isTourJ1Move())
             if(np.checkBatBonneArmee(a1, np.convertPosToStr(posBatChoisi))){
-                batChoisi = a1.getBatFromPos(posBatChoisi);
-                move(a1,batChoisi,p,tourJ1Move);
+                b = a1.getBatFromPos(posBatChoisi);
+                tourJ1Move = move(a1,b,p,tourJ1Move);
                 posBatChoisi = null;
                 setTourJ1Tir(false);
             }
         if(isTourJ2Move())
             if(np.checkBatBonneArmee(a2, np.convertPosToStr(posBatChoisi))){
-                batChoisi = a2.getBatFromPos(posBatChoisi);
-                move(a2,batChoisi,p,!tourJ1Move);
+                b = a2.getBatFromPos(posBatChoisi);
+                tourJ2Move = move(a2,b,p,!tourJ1Move);
                 posBatChoisi = null;
                 setTourJ1Tir(true);
             }
     }
     
-    private void move(Armee a, Bateau b, Position p, boolean tourMove){
+    private boolean move(Armee a, Bateau b, Position p, boolean tourMove){
         b = a.getBatFromPos(posBatChoisi);
             if(np.listDestPossContains(b,p)){
                 np.moveBat(a, b, np.convertPosToStr(p));
@@ -285,6 +301,7 @@ public class ControleurFx extends Application {
                     if(b.getPv() <= 0)
                         np.coulé(a,b);
             }
+        return tourMove;
     }
 
     

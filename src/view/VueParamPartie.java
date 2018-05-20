@@ -25,17 +25,17 @@ public class VueParamPartie extends VBox {
 
     // Mise en place de la (racine de la) scene
     private void setup() {
-        TextField tf = new InputNumber();
+        TextField size = new InputNumber();
         TextField j1 = new InputJoueur();
         TextField j2 = new InputJoueur();
         Button bt = new Button("OK");
         bt.setOnAction(e -> {
-            if (!tf.getText().isEmpty()) 
-                switchToMainWindow(j1.getText(), j2.getText(), Integer.valueOf(tf.getText()));
+            if (!size.getText().isEmpty()) 
+                switchToMainWindow(j1.getText(), j2.getText(), Integer.valueOf(size.getText()));
             else
-                tf.requestFocus(); // Laisse le focus au TextField
+                size.requestFocus(); // Laisse le focus au TextField
         });
-        getChildren().addAll(j1, j2, tf, bt);
+        getChildren().addAll(j1, j2, size, bt);
  
         setAlignment(Pos.CENTER_LEFT);
         setPadding(new Insets(20));
@@ -58,7 +58,7 @@ public class VueParamPartie extends VBox {
         private void installListeners() {
             // N'accepte que les chiffres
             textProperty().addListener((obs, oldValue, newValue) -> {
-                if (!newValue.matches("\\d*")){ ////////////////////////&& (newValue >= 5 && newValue <= 26)) {
+                if (!newValue.matches("\\d*")){ 
                     setText(oldValue);
                 }
             });
@@ -77,11 +77,10 @@ public class VueParamPartie extends VBox {
             super("AAA");
             setAlignment(Pos.CENTER_LEFT);
             setMaxWidth(150);
-            installListeners();
+            pressEnter();
         }
         
-        private void installListeners() {
-            // Capture du Enter pour valider saisie
+        private void pressEnter() {
             setOnKeyPressed(ke -> {
                 if (ke.getCode().equals(KeyCode.ENTER) && !getText().isEmpty()) {
                     switchToMainWindow(getText(), getText(),Integer.valueOf(getText()));
