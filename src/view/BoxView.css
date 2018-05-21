@@ -3,57 +3,66 @@
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("sea.gif");
+    -fx-border-collapse: separate;
 }
 .destPoss{
-    -fx-border-color: lawngreen;
+    -fx-border-color: BEIGE;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("sea.gif");
+    -fx-border-collapse: separate;
 }
 .mineN {
     /*-fx-border-color: #6666ff;*/
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("mineN.gif");
+    -fx-border-collapse: separate;
 }
 .mineA {
     /*-fx-border-color: #6666ff;*/
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("mineA.gif");
+    -fx-border-collapse: separate;
 }
 .caseRadio{
     /*-fx-border-color: #6666ff;*/
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("seaRadio.gif");
+    -fx-border-collapse: separate;
 }
 .batG1 {
-    -fx-border-color: purple;
+    -fx-border-color: BLUEVIOLET;
     -fx-border-width: 3;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("grandBateau.gif");
+    -fx-border-collapse: separate;
 }
 .batP1 {
-    -fx-border-color: purple;
+    -fx-border-color: BLUEVIOLET;
     -fx-border-width: 3;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("petitBateau.gif");
+    -fx-border-collapse: separate;
 }
 .batG2 {
-    -fx-border-color: yellow;
+    -fx-border-color: GREENYELLOW;
     -fx-border-width: 3;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("grandBateau.gif");
+    -fx-border-collapse: separate;
 }
 .batP2 {
-    -fx-border-color: yellow;
+    -fx-border-color: GREENYELLOW;
     -fx-border-width: 3;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("petitBateau.gif");
+    -fx-border-collapse: separate;
 }
 

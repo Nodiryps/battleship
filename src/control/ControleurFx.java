@@ -18,6 +18,7 @@ import model.Armee;
 import model.Bateau;
 import model.Case;
 import model.Position;
+import model.TypeB;
 import view.VueBuilder;
 
 /**
@@ -36,20 +37,20 @@ public class ControleurFx extends Application {
     
     private final static int NB_GD_BAT = Armee.getNbGBat();
     private final static int NB_PT_BAT = Armee.getNbPBat();
-    private final static int NB_TOT_BAT = NB_GD_BAT + NB_PT_BAT;
+    private final static int TOT_BAT_PAR_J = NB_GD_BAT + NB_PT_BAT;
    
-    private static int cptBatJ1;
-    private static int cptBatJ2;
+    private static int cptTotBatJ1;
+    private static int cptTotBatJ2;
     private static int cptPtBatJ1;
     private static int cptPtBatJ2;
-    private static int cptBatTot;
+    private static int cptBatTotMer;
     
     private boolean placementAuto = true;
     private boolean placementJ1 = true;
     private boolean placementJ2 = false;
     
     private boolean tourJ1Tir = true;
-    private boolean tourJ1Move = true;
+    private boolean tourJ1Move = false;
     private boolean tourJ2Tir = false;
     private boolean tourJ2Move = false;
     
@@ -90,15 +91,15 @@ public class ControleurFx extends Application {
     }
 
     public static int getNB_TOT_BAT() {
-        return NB_TOT_BAT;
+        return TOT_BAT_PAR_J;
     }
 
     public static int getCptBatJ1() {
-        return cptBatJ1;
+        return cptTotBatJ1;
     }
 
     public static int getCptBatJ2() {
-        return cptBatJ2;
+        return cptTotBatJ2;
     }
 
     public static int getCptPtBatJ1() {
@@ -110,7 +111,7 @@ public class ControleurFx extends Application {
     }
 
     public static int getCptBatTot() {
-        return cptBatTot;
+        return cptBatTotMer;
     }
 
     public boolean isPlacementJ1() {
@@ -126,19 +127,19 @@ public class ControleurFx extends Application {
     }
     
     public boolean isTourJ1Tir() {
-        return tourJ2Move && tourJ1Tir;
+        return tourJ1Tir;
     }
 
     public boolean isTourJ2Tir() {
-        return !tourJ1Move && !tourJ2Tir;
+        return tourJ2Tir;
     }
 
     public boolean isTourJ1Move() {
-        return tourJ1Move && !tourJ1Tir;
+        return tourJ1Move;
     }
 
     public boolean isTourJ2Move() {
-        return tourJ2Tir && !tourJ2Move;
+        return tourJ2Move;
     }
 
     public void setTourJ1Tir(boolean b) {
@@ -169,6 +170,8 @@ public class ControleurFx extends Application {
 
     private void switchToBuildWindow(int size){
         vueBldr = new VueBuilder(size, this, stage);
+        np.addObserver(vueBldr);
+        np.setChangedAndNotify();
     }
     
     // fait apparaître la fenêtre principale de l'application
@@ -189,37 +192,50 @@ public class ControleurFx extends Application {
     public void emptyBoxClicked(int x, int y) {
         List<Bateau> listBatJ1 = a1.getListBat(), 
                      listBatJ2 = a2.getListBat();
-        if(placementAuto && cptBatTot < (NB_TOT_BAT * 2)){
-            if(placementJ1 && cptBatJ1 < 3){
-                cptBatTot = dispositionBat(listBatJ1, cptPtBatJ1, cptBatTot, x, y);
+        if(!placementAuto && cptBatTotMer < (TOT_BAT_PAR_J * 2)){
+            if(placementJ1 && cptTotBatJ1 < 3){
+                if(batChoisi != null){
+                    if(batChoisi.getTypeB() == TypeB.GRAND){
+                        setBatInBox(listBatJ1.get(0), x, y);
+                        ++cptBatTotMer;
+                        ++cptTotBatJ1;
+                    }else if (batChoisi.getTypeB() == TypeB.PETIT && cptPtBatJ1 < 2) {
+                        if(cptPtBatJ1 == 1){
+                            setBatInBox(listBatJ1.get(1), x, y);
+                            ++cptBatTotMer;
+                        }else{
+                            setBatInBox(listBatJ1.get(2), x, y);
+                            ++cptBatTotMer;
+                        }
+                        ++cptTotBatJ1;
+                        ++cptPtBatJ1;
+                    }
+                }                
                 placementJ1 = false;
                 placementJ2 = true;
             }
-            else if(placementJ2 && cptBatJ2 < 3){
-                cptBatTot = dispositionBat(listBatJ2, cptPtBatJ2, cptBatTot, x, y);
+            else if(placementJ2 && cptTotBatJ2 < 3){
+                if(batChoisi != null){
+                    if(batChoisi.getTypeB() == TypeB.GRAND){
+                        setBatInBox(listBatJ2.get(0), x, y);
+                        ++cptBatTotMer;
+                        ++cptTotBatJ2;
+                    }else if (batChoisi.getTypeB() == TypeB.PETIT && cptPtBatJ2 < 2) {
+                        if(cptPtBatJ2 == 1){
+                            setBatInBox(listBatJ2.get(1), x, y);
+                            ++cptBatTotMer;
+                        }else{
+                            setBatInBox(listBatJ2.get(2), x, y);
+                            ++cptBatTotMer;
+                        }
+                        ++cptTotBatJ2;
+                        ++cptPtBatJ2;
+                    }
+                }  
                 placementJ1 = true;
                 placementJ2 = false;
             }
         }
-    }
-    
-    private int dispositionBat(List<Bateau> listBat, int cptPtBat, int nbBatJ, int x, int y){
-        if(batChoisi != null && batChoisi.getTypeB() == batChoisi.getTypeGrandBat()){
-            setBatInBox(listBat.get(0), x, y);
-            ++cptBatTot;
-            ++cptBatJ1;
-            if (batChoisi != null && batChoisi.getTypeB() == batChoisi.getTypePetitBat() && cptPtBat < 2) {
-                if(cptPtBat == 1){
-                    setBatInBox(listBat.get(1), x, y);
-                    ++cptBatTot;
-                }else{
-                    setBatInBox(listBat.get(2), x, y);
-                    ++cptBatTot;
-                }
-                ++nbBatJ;
-                ++cptPtBat;
-            }
-        } return nbBatJ;
     }
     
     private void setBatInBox(Bateau b, int x, int y){
@@ -230,79 +246,84 @@ public class ControleurFx extends Application {
     
     // Quand l'utilisateur clique sur un bateau
     public void boatClicked(int x, int y) {
-        tirMoveBoatClicked(x, y);
+        Position p = new Position(y, x);
+        
+        tir(x, y);
+        move(p);
     }
     
-    public void tirMoveBoatClicked(int x, int y){
+    public void tir(int x, int y){
         Position p = new Position(x, y);
-        for(Armee a : np.getListArmees()){
-            if(a.equals(a1)){
-                if(isTourJ1Tir())
-                    if(np.checkBatBonneArmee(a, np.convertPosToStr(p))){
-                        np.tir(a, np.convertPosToStr(p));
-                        setTourJ1Tir(false);
-                        setTourJ1Move(true);
-                    }
+        if(isTourJ1Tir())
+            if(np.checkBatBonneArmee(a1, np.convertPosToStr(p))){
+                np.tir(a1, np.convertPosToStr(p));
+                setTourJ1Tir(false);
+                setTourJ1Move(true);
             }
-            if(a.equals(a2)){
-                if(isTourJ2Tir())
-                    if(np.checkBatBonneArmee(a, np.convertPosToStr(p))){
-                        np.tir(a, np.convertPosToStr(p));
-                        setTourJ2Tir(false);
-                        setTourJ2Move(true);
-                    }
+
+        if(isTourJ2Tir())
+            if(np.checkBatBonneArmee(a2, np.convertPosToStr(p))){
+                np.tir(a2, np.convertPosToStr(p));
+                setTourJ2Tir(false);
+                setTourJ2Move(true);
             }
-        }
+    }
+    
+    public void move(Position p){
         if(isTourJ1Move())
-            boatClickedToMove(a1, p);
+            if(np.checkBatBonneArmee(a1, p))
+                posBatChoisi = p;
+            else
+                posBatChoisi = null;
+        
         if(isTourJ2Move())
-            boatClickedToMove(a2, p);
-    }
-    
-    public void boatClickedToMove(Armee a, Position p){
-        if(np.checkBatBonneArmee(a, np.convertPosToStr(p)))
-            posBatChoisi = p;
-        else
-            posBatChoisi = null;
-    }
-    
-    public void tirToMove(Armee a, Position p, boolean tir, boolean move){
-        np.tir(a,np.convertPosToStr(p));
-        tir = false;
-        move = true;
+            if(np.checkBatBonneArmee(a2, p))
+                posBatChoisi = p;
+            else
+                posBatChoisi = null;
     }
     
     public void moveBoatClicked(int x, int y){
         Position p = new Position(x, y);
         Bateau b;
         if(isTourJ1Move())
-            if(np.checkBatBonneArmee(a1, np.convertPosToStr(posBatChoisi))){
+            if(np.checkBatBonneArmee(a1, posBatChoisi)){
                 b = a1.getBatFromPos(posBatChoisi);
-                tourJ1Move = move(a1,b,p,tourJ1Move);
+                if(np.listDestPossContains(b,p)){
+                    np.moveBat(a1, b, np.convertPosToStr(p));
+                    tourJ1Move = false;
+                    Case c = np.getCaseGb(p.getPosX(), p.getPosY());
+                    if(c.explosionMineN()){
+                        b.touché();
+                        if(b.getPv() <= 0)
+                            np.coulé(a1,b);
+                    }
+                    if(c.explosionMineA()){
+                        np.coulé(a1,b);
+                    }
+                }
                 posBatChoisi = null;
-                setTourJ1Tir(false);
+                setTourJ2Tir(true);
             }
         if(isTourJ2Move())
-            if(np.checkBatBonneArmee(a2, np.convertPosToStr(posBatChoisi))){
+            if(np.checkBatBonneArmee(a2, posBatChoisi)){
                 b = a2.getBatFromPos(posBatChoisi);
-                tourJ2Move = move(a2,b,p,!tourJ1Move);
+                if(np.listDestPossContains(b,p)){
+                    np.moveBat(a2, b, np.convertPosToStr(p));
+                    tourJ2Move = false;
+                    Case c = np.getCaseGb(p.getPosX(), p.getPosY());
+                    if(c.explosionMineN()){
+                        b.touché();
+                        if(b.getPv() <= 0)
+                            np.coulé(a2,b);
+                    }
+                    if(c.explosionMineA()){
+                        np.coulé(a2,b);
+                    }
+                }
                 posBatChoisi = null;
                 setTourJ1Tir(true);
             }
     }
-    
-    private boolean move(Armee a, Bateau b, Position p, boolean tourMove){
-        b = a.getBatFromPos(posBatChoisi);
-            if(np.listDestPossContains(b,p)){
-                np.moveBat(a, b, np.convertPosToStr(p));
-                tourMove = false;
-                Case c = np.getCaseGb(p.getPosX(),p.getPosY());
-                if(c.explosionMineN())
-                    if(b.getPv() <= 0)
-                        np.coulé(a,b);
-            }
-        return tourMove;
-    }
-
     
 }

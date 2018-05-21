@@ -67,7 +67,7 @@ public class Case {
     }
     
     public boolean explosionMineN(){
-        return bat != null && mine.getTypeMAtom() != null;
+        return bat != null && mine.getTypeMNormale() != null;
     }
     
     public boolean caseAccessible() {

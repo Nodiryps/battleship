@@ -62,14 +62,6 @@ public abstract class Bateau implements Positionnable{
     public TypeB getTypeB() {
         return this.TYPE;
     }
-    
-    public TypeB getTypeGrandBat(){
-        return TypeB.GRAND;
-    }
-    
-    public TypeB getTypePetitBat(){
-        return TypeB.PETIT;
-    }
 
     public void setPortee(int portee) {
         this.portee = portee;
