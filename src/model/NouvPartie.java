@@ -42,7 +42,7 @@ public class NouvPartie extends Observable {
             String s = insert.next();
             noms.add(s);
         }
-        return new NouvPartie(new Builder(size, noms, auto, auto));
+        return new NouvPartie(new Builder(size, noms, auto));
     }
    
     public int getTailleGb() {

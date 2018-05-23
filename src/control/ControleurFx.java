@@ -54,6 +54,215 @@ public class ControleurFx extends Application {
     private boolean tourJ2Tir = false;
     private boolean tourJ2Move = false;
     
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+    @Override
+    public void start(Stage primaryStage) {
+        stage = primaryStage;
+        new VueParamPartie(stage, this); // Fenêtre initiale (saisie taille)
+    }
+
+    private void switchToBuildWindow(int size){
+        vueBldr = new VueBuilder(size, this, stage);
+        np.addObserver(vueBldr);
+        np.setChangedAndNotify();
+    }
+    
+    // fait apparaître la fenêtre principale de l'application
+    public void switchToMainWindow(String j1, String j2, int size) {
+        List<String> noms = new LinkedList();
+        noms.add(j1);
+        noms.add(j2);
+        build(size, noms, placementAuto);
+        if(!placementAuto){
+            build(size, noms, false);
+            switchToBuildWindow(size);
+        }
+        a1 = np.getArmeeFromList(0);
+        a2 = np.getArmeeFromList(1);
+        VuePartie mainWindow = new VuePartie(stage, np.getTailleGb(), this);
+        np.addObserver(mainWindow);
+        np.setChangedAndNotify(); // Provoque un 1er affichage
+    }
+    
+    private void build(int size, List<String> noms, boolean b){
+        bldr = new Builder(size, noms, b);
+        np = bldr.build();
+    }
+    
+    // Quand l'utilisateur clique sur un bateau
+    public void boatClicked(int x, int y) {
+        tir(y, x);
+        move(y, x);
+    }
+    
+    public void moveBoatClicked(int x, int y){
+        if(tourJ1Move)
+            moveBoatClickedA1(y, x);
+        if(tourJ2Move)
+            moveBoatClickedA2(y, x);
+    }
+    
+    public void tir(int x, int y){
+        if(tourJ1Tir)
+            tirA1(x, y);
+        if(tourJ2Tir)
+            tirA2(x, y);
+    }
+    // quand l'utilisateur clique sur une case vide pour déplacer le bateau sélectionné
+    public void move(int x, int y){
+        if(tourJ1Move)
+            moveA1(x, y);
+        if(tourJ2Move)
+            moveA2(x, y);
+    }
+    
+    // Quand l'utilisateur clique sur une case vide pour placer le bateau sélectionné
+    public void putBoatClickedManualy(int x, int y) {
+        List<Bateau> listBatJ1 = a1.getListBat(), listBatJ2 = a2.getListBat();
+        if(!placementAuto && cptBatTotMer < (TOT_BAT_PAR_J * 2)){
+            putBoatA1(listBatJ1,y, x);
+            putBoatA2(listBatJ2, y, x);
+        }
+    }
+    
+    private void tirA1(int x, int y){
+        Position p = new Position(x, y);
+        if(np.checkBatBonneArmee(a1, p)){
+            np.tir(a1, np.convertPosToStr(p));
+            setTourJ1Tir(false);
+            setTourJ1Move(true);
+        }
+    }
+    
+    private void tirA2(int x, int y){
+        Position p = new Position(x, y);
+        if(np.checkBatBonneArmee(a2, p)){
+            np.tir(a2, np.convertPosToStr(p));
+            setTourJ2Tir(false);
+            setTourJ2Move(true);
+        }
+    }
+    
+    private void moveA1(int x, int y){
+        Position p = new Position(x, y);
+        if(np.checkBatBonneArmee(a1, p))
+            posBatChoisi = p;
+        else
+            posBatChoisi = null;
+    }
+    
+    private void moveA2(int x, int y){
+        Position p = new Position(x, y);
+        if(tourJ2Move)
+            if(np.checkBatBonneArmee(a2, p))
+                posBatChoisi = p;
+            else
+                posBatChoisi = null;
+    }
+    
+    private void moveBoatClickedA1(int x, int y){
+        Position p = new Position(x, y);
+        Bateau b;
+        if(np.checkBatBonneArmee(a1, posBatChoisi)){
+            b = a1.getBatFromPos(posBatChoisi);
+            if(np.listDestPossContains(b,p)){
+                np.moveBat(a1, b, np.convertPosToStr(p));
+                tourJ1Move = false;
+                Case c = np.getCaseGb(p.getPosX(), p.getPosY());
+                if(c.explosionMineN()){
+                    b.touché();
+                    if(b.getPv() <= 0)
+                        np.coulé(a1,b);
+                }
+                if(c.explosionMineA()){
+                    np.coulé(a1,b);
+                }
+            }
+            posBatChoisi = null;
+            setTourJ2Tir(true);
+        }
+    }
+    
+    private void moveBoatClickedA2(int x, int y){
+        Position p = new Position(x, y);
+        Bateau b;   
+        if(np.checkBatBonneArmee(a2, posBatChoisi)){
+            b = a2.getBatFromPos(posBatChoisi);
+            if(np.listDestPossContains(b,p)){
+                np.moveBat(a2, b, np.convertPosToStr(p));
+                tourJ2Move = false;
+                Case c = np.getCaseGb(p.getPosX(), p.getPosY());
+                if(c.explosionMineN()){
+                    b.touché();
+                    if(b.getPv() <= 0)
+                        np.coulé(a2,b);
+                }
+                if(c.explosionMineA()){
+                    np.coulé(a2,b);
+                }
+            }
+            posBatChoisi = null;
+            setTourJ1Tir(true);
+        }
+    }
+    
+    private void putBoatA1(List<Bateau> list, int x, int y){
+        if(placementJ1 && cptTotBatJ1 < 3){
+            if(batChoisi != null){
+                if(batChoisi.getTypeB() == TypeB.GRAND){
+                    setBatInBox(list.get(0), x, y);
+                    ++cptBatTotMer;
+                    ++cptTotBatJ1;
+                }else if (batChoisi.getTypeB() == TypeB.PETIT && cptPtBatJ1 < 2) {
+                    if(cptPtBatJ1 == 1){
+                        setBatInBox(list.get(1), x, y);
+                        ++cptBatTotMer;
+                    }else{
+                        setBatInBox(list.get(2), x, y);
+                        ++cptBatTotMer;
+                    }
+                    ++cptTotBatJ1;
+                    ++cptPtBatJ1;
+                }
+            }                
+            placementJ1 = false;
+            placementJ2 = true;
+        }
+    }
+    
+    private void putBoatA2(List<Bateau> list, int x, int y){
+        if(placementJ2 && cptTotBatJ2 < 3){
+            if(batChoisi != null){
+                if(batChoisi.getTypeB() == TypeB.GRAND){
+                    setBatInBox(list.get(0), x, y);
+                    ++cptBatTotMer;
+                    ++cptTotBatJ2;
+                }else if (batChoisi.getTypeB() == TypeB.PETIT && cptPtBatJ2 < 2) {
+                    if(cptPtBatJ2 == 1){
+                        setBatInBox(list.get(1), x, y);
+                        ++cptBatTotMer;
+                    }else{
+                        setBatInBox(list.get(2), x, y);
+                        ++cptBatTotMer;
+                    }
+                    ++cptTotBatJ2;
+                    ++cptPtBatJ2;
+                }
+            }  
+            placementJ1 = true;
+            placementJ2 = false;
+        }
+    }
+    
+    private void setBatInBox(Bateau b, int x, int y){
+        b.setPos(new Position(x, y));
+        Case box = np.getCaseGb(x, y);
+        box.setBat(b);
+    }
+    
     public NouvPartie getNp() {
         return np;
     }
@@ -110,10 +319,10 @@ public class ControleurFx extends Application {
         return cptPtBatJ2;
     }
 
-    public static int getCptBatTot() {
+    public int getCptBatTot() {
         return cptBatTotMer;
     }
-
+    
     public boolean isPlacementJ1() {
         return placementJ1;
     }
@@ -141,6 +350,10 @@ public class ControleurFx extends Application {
     public boolean isTourJ2Move() {
         return tourJ2Move;
     }
+    
+    public void setPlacementAuto(boolean b){
+        this.placementAuto = b;
+    }
 
     public void setTourJ1Tir(boolean b) {
         this.tourJ1Tir = b;
@@ -156,174 +369,6 @@ public class ControleurFx extends Application {
     
     public void setTourJ2Move(boolean b) {
         this.tourJ2Move = b;
-    }
-    
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
-    @Override
-    public void start(Stage primaryStage) {
-        stage = primaryStage;
-        new VueParamPartie(stage, this); // Fenêtre initiale (saisie taille)
-    }
-
-    private void switchToBuildWindow(int size){
-        vueBldr = new VueBuilder(size, this, stage);
-        np.addObserver(vueBldr);
-        np.setChangedAndNotify();
-    }
-    
-    // fait apparaître la fenêtre principale de l'application
-    public void switchToMainWindow(String j1, String j2, int size) {
-        List<String> noms = new LinkedList();
-        noms.add(j1);
-        noms.add(j2);
-        bldr = new Builder(size, noms, placementAuto, false);
-        np = bldr.build();
-        a1 = np.getArmeeFromList(0);
-        a2 = np.getArmeeFromList(1);
-        VuePartie mainWindow = new VuePartie(stage, np.getTailleGb(), this);
-        np.addObserver(mainWindow);
-        np.setChangedAndNotify(); // Provoque un 1er affichage
-    }
-    
-    // Quand l'utilisateur clique sur une case vide
-    public void emptyBoxClicked(int x, int y) {
-        List<Bateau> listBatJ1 = a1.getListBat(), 
-                     listBatJ2 = a2.getListBat();
-        if(!placementAuto && cptBatTotMer < (TOT_BAT_PAR_J * 2)){
-            if(placementJ1 && cptTotBatJ1 < 3){
-                if(batChoisi != null){
-                    if(batChoisi.getTypeB() == TypeB.GRAND){
-                        setBatInBox(listBatJ1.get(0), x, y);
-                        ++cptBatTotMer;
-                        ++cptTotBatJ1;
-                    }else if (batChoisi.getTypeB() == TypeB.PETIT && cptPtBatJ1 < 2) {
-                        if(cptPtBatJ1 == 1){
-                            setBatInBox(listBatJ1.get(1), x, y);
-                            ++cptBatTotMer;
-                        }else{
-                            setBatInBox(listBatJ1.get(2), x, y);
-                            ++cptBatTotMer;
-                        }
-                        ++cptTotBatJ1;
-                        ++cptPtBatJ1;
-                    }
-                }                
-                placementJ1 = false;
-                placementJ2 = true;
-            }
-            else if(placementJ2 && cptTotBatJ2 < 3){
-                if(batChoisi != null){
-                    if(batChoisi.getTypeB() == TypeB.GRAND){
-                        setBatInBox(listBatJ2.get(0), x, y);
-                        ++cptBatTotMer;
-                        ++cptTotBatJ2;
-                    }else if (batChoisi.getTypeB() == TypeB.PETIT && cptPtBatJ2 < 2) {
-                        if(cptPtBatJ2 == 1){
-                            setBatInBox(listBatJ2.get(1), x, y);
-                            ++cptBatTotMer;
-                        }else{
-                            setBatInBox(listBatJ2.get(2), x, y);
-                            ++cptBatTotMer;
-                        }
-                        ++cptTotBatJ2;
-                        ++cptPtBatJ2;
-                    }
-                }  
-                placementJ1 = true;
-                placementJ2 = false;
-            }
-        }
-    }
-    
-    private void setBatInBox(Bateau b, int x, int y){
-        b.setPos(new Position(x, y));
-        Case box = np.getCaseGb(x, y);
-        box.setBat(b);
-    }
-    
-    // Quand l'utilisateur clique sur un bateau
-    public void boatClicked(int x, int y) {
-        Position p = new Position(y, x);
-        
-        tir(x, y);
-        move(p);
-    }
-    
-    public void tir(int x, int y){
-        Position p = new Position(x, y);
-        if(isTourJ1Tir())
-            if(np.checkBatBonneArmee(a1, np.convertPosToStr(p))){
-                np.tir(a1, np.convertPosToStr(p));
-                setTourJ1Tir(false);
-                setTourJ1Move(true);
-            }
-
-        if(isTourJ2Tir())
-            if(np.checkBatBonneArmee(a2, np.convertPosToStr(p))){
-                np.tir(a2, np.convertPosToStr(p));
-                setTourJ2Tir(false);
-                setTourJ2Move(true);
-            }
-    }
-    
-    public void move(Position p){
-        if(isTourJ1Move())
-            if(np.checkBatBonneArmee(a1, p))
-                posBatChoisi = p;
-            else
-                posBatChoisi = null;
-        
-        if(isTourJ2Move())
-            if(np.checkBatBonneArmee(a2, p))
-                posBatChoisi = p;
-            else
-                posBatChoisi = null;
-    }
-    
-    public void moveBoatClicked(int x, int y){
-        Position p = new Position(x, y);
-        Bateau b;
-        if(isTourJ1Move())
-            if(np.checkBatBonneArmee(a1, posBatChoisi)){
-                b = a1.getBatFromPos(posBatChoisi);
-                if(np.listDestPossContains(b,p)){
-                    np.moveBat(a1, b, np.convertPosToStr(p));
-                    tourJ1Move = false;
-                    Case c = np.getCaseGb(p.getPosX(), p.getPosY());
-                    if(c.explosionMineN()){
-                        b.touché();
-                        if(b.getPv() <= 0)
-                            np.coulé(a1,b);
-                    }
-                    if(c.explosionMineA()){
-                        np.coulé(a1,b);
-                    }
-                }
-                posBatChoisi = null;
-                setTourJ2Tir(true);
-            }
-        if(isTourJ2Move())
-            if(np.checkBatBonneArmee(a2, posBatChoisi)){
-                b = a2.getBatFromPos(posBatChoisi);
-                if(np.listDestPossContains(b,p)){
-                    np.moveBat(a2, b, np.convertPosToStr(p));
-                    tourJ2Move = false;
-                    Case c = np.getCaseGb(p.getPosX(), p.getPosY());
-                    if(c.explosionMineN()){
-                        b.touché();
-                        if(b.getPv() <= 0)
-                            np.coulé(a2,b);
-                    }
-                    if(c.explosionMineA()){
-                        np.coulé(a2,b);
-                    }
-                }
-                posBatChoisi = null;
-                setTourJ1Tir(true);
-            }
     }
     
 }

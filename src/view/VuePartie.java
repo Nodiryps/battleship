@@ -1,13 +1,11 @@
 package view;
 
 import control.ControleurFx;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -49,38 +47,25 @@ public class VuePartie extends BorderPane implements Observer {
         npVueP = CTRL.getNp();
         a1 = CTRL.getArmee1();
         a2 = CTRL.getArmee2();
-        SIZE = size + 1;
+        SIZE = size +1;
         
         sv = new SeaView();
-        sv.setSizeConstraints();
-        sv.setMinSize(500, 500);
-        sv.setMaxSize(500, 500);
-        sv.scaleXProperty();
-        sv.scaleYProperty();
-        sv.setPadding(new Insets(10,0,0,0));
+        settingsSeaview(sv);
         this.setCenter(sv);
         
         vboxEA1 = new VBox();
-        vboxEA1.setAlignment(Pos.TOP_CENTER);
-        vboxEA1.setMinSize(200, 250);
-        vboxEA1.setMaxSize(400, 500);
+        settingsEA(vboxEA1);
         vboxEA1.setPadding(new Insets(10,110,0,10));//H D B G
         this.setLeft(vboxEA1);
         
         vboxEA2 = new VBox();
-        vboxEA2.setAlignment(Pos.TOP_CENTER);
-        vboxEA2.setMinSize(200, 250);
-        vboxEA2.setMaxSize(400, 500);
-        vboxEA2.setPadding(new Insets(10,10,0,0));
+        settingsEA(vboxEA2);
+        vboxEA2.setPadding(new Insets(10,10,0,0));//H D B G
         this.setRight(vboxEA2);
         
         vboxInstr = new VBox();
-        vboxInstr.setAlignment(Pos.TOP_CENTER);
-        vboxInstr.setMinSize(1000, 100);
-        vboxInstr.setPadding(new Insets(20));
-//        instructionsJContent();
+        settingsInstr(vboxInstr);
         this.setBottom(vboxInstr);
-        
         
         affEtatArmee();
         
@@ -108,16 +93,16 @@ public class VuePartie extends BorderPane implements Observer {
     private void styleEtatArmee(Armee a, VBox vb) {
             Text nomA = new Text(a.getNom() + "\n");
             nomA.setTextAlignment(TextAlignment.CENTER);
-            nomA.setFont(Font.font("Arial",FontWeight.BLACK,25));
+            nomA.setFont(Font.font("Monospaced",FontWeight.BLACK,25));
             vb.getChildren().add(nomA);
             if(a.equals(a1))
                 nomA.setFill(Color.BLUEVIOLET);
             else
                 nomA.setFill(Color.GREENYELLOW);
             
-            Text headTab = new Text("Pos\t\t" + "Type\t\t" + "Pv(%)");
+            Text headTab = new Text("Pos\t" + "Type\t" + "Pv(%)");
             headTab.setTextAlignment(TextAlignment.CENTER);
-            headTab.setFont(Font.font("Arial",FontWeight.BLACK,15));
+            headTab.setFont(Font.font("Monospaced",FontWeight.BLACK,15));
             vb.getChildren().add(headTab);
             
             printLN("\n" + contentEtatArmee(a, vb));
@@ -125,7 +110,7 @@ public class VuePartie extends BorderPane implements Observer {
         
     private Text contentEtatArmee(Armee a, VBox vb){
         Text contentTab = new Text();
-        contentTab.setFont(Font.font("Arial",FontWeight.LIGHT,15));
+        contentTab.setFont(Font.font("Monospaced",FontWeight.LIGHT,15));
         contentTab.setTextAlignment(TextAlignment.LEFT);
         for(Bateau b : a.getListBat()){
             contentTab = new Text
@@ -173,7 +158,7 @@ public class VuePartie extends BorderPane implements Observer {
         if(CTRL.isTourJ2Move())
             instr = new Text("Vous pouvez déplacer un de vos bateaux, " + a2.getNom());
         
-        instr.setFont(Font.font("Arial",FontWeight.BOLD,18));
+        instr.setFont(Font.font("Monospaced",FontWeight.BOLD,18));
         instr.setTextAlignment(TextAlignment.CENTER);
         
         if(npVueP.partieFinie())
@@ -189,25 +174,24 @@ public class VuePartie extends BorderPane implements Observer {
         for(int i = 0; i < SIZE-1; ++i){
             char x = npVueP.getAxeXGb()[i];
             String y = Integer.toString(i + 1);
-           
-            Text desChiffres = new Text(" " + y + "\n\n");
-            Text desLettres = new Text("\t    " + x + "\n\n");
-            
-            desChiffres.setFont(Font.font("Arial",FontWeight.BLACK,18));
-            desChiffres.setTextAlignment(TextAlignment.LEFT);
-            desChiffres.setFill(Color.CYAN);
-            desLettres.setFont(Font.font("Arial",FontWeight.BLACK,18));
-            desLettres.setTextAlignment(TextAlignment.RIGHT);
-            desLettres.setFill(Color.CYAN);
-            
-            sv.add(desChiffres, 0, i);
-            sv.add(desLettres, i, 0);
+            Text desChiffres;
+            Text desLettres;
+                desChiffres = new Text("\n\n\n" + y + " ");
+                desLettres = new Text("      " + x + "\n\n\n");
+                desChiffres.setFont(Font.font("Monospaced",18));
+                desChiffres.setTextAlignment(TextAlignment.LEFT);
+                desChiffres.setFill(Color.CYAN);
+                desLettres.setFont(Font.font("Monospaced",18));
+                desLettres.setTextAlignment(TextAlignment.RIGHT);
+                desLettres.setFill(Color.CYAN);
+                sv.add(desChiffres, 0, i);
+                sv.add(desLettres, i, 0);
         }
     }
 
     protected class SeaView extends GridPane {
         private void setSizeConstraints() {
-            for (int i = 1; i < SIZE; ++i) {
+            for (int i = 0; i < SIZE; ++i) {
                 ColumnConstraints cc = new ColumnConstraints();
                 cc.setPercentWidth(100 / SIZE);
                 getColumnConstraints().add(cc);
@@ -217,18 +201,6 @@ public class VuePartie extends BorderPane implements Observer {
             }        
         }
         
-//        private void nouvMerVide(){
-//            for (int c = 0; c < npVueP.getTailleGb(); ++c) 
-//                for (int l = 0; l < npVueP.getTailleGb(); ++l){
-//                    if(CTRL.isPlacementAuto())
-//                        for(Armee a : npVueP.getListArmees())
-//                            for(Bateau b : a.getListBat())
-//                                if(b.getXY() != null)
-//                                    this.add(new SeaView.BoatView(c, l), c + 1, l + 1);
-//                    this.add(new SeaView.EmptyBoxView(c, l), c + 1, l + 1);
-//                }
-//        }
-
         private void nouvMer() {
             getChildren().clear();
             for (int c = 0; c < npVueP.getTailleGb(); ++c) 
@@ -270,10 +242,10 @@ public class VuePartie extends BorderPane implements Observer {
         }
 
         // La vue d'une "case" vide
-        private class EmptyBoxView extends BoxView {
+            private class EmptyBoxView extends BoxView {
             public EmptyBoxView(int x, int y) {
                 if (!CTRL.isPlacementAuto())
-                    setOnMouseClicked(e -> CTRL.emptyBoxClicked(x, y));
+                    setOnMouseClicked(e -> CTRL.putBoatClickedManualy(x, y));
                 if(modeDebug){
                     if (!CTRL.isPlacementAuto()) 
                         getStyleClass().add("empty");
@@ -383,6 +355,27 @@ public class VuePartie extends BorderPane implements Observer {
                 getStyleClass().add("caseRadio");
             }
         }
+    }
+    
+    private void settingsSeaview(SeaView sv){
+        sv.setSizeConstraints();
+        sv.setMinSize(500, 500);
+        sv.setMaxSize(500, 500);
+        sv.scaleXProperty();
+        sv.scaleYProperty();
+        sv.setPadding(new Insets(10,0,0,0));//H D B G
+    }
+    
+    private void settingsEA(VBox vb){
+        vb.setAlignment(Pos.TOP_CENTER);
+        vb.setMinSize(200, 250);
+        vb.setMaxSize(400, 500);
+    }
+    
+    private void settingsInstr(VBox vb){
+        vb.setAlignment(Pos.TOP_CENTER);
+        vb.setMinSize(1000, 100);
+        vb.setPadding(new Insets(20));
     }
     
 }

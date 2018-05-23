@@ -20,12 +20,12 @@ public class Builder extends Observable {
     private List<Armee> listArmees = new LinkedList<>();
     private List<Mine> listeMines = new LinkedList<>();
             
-    public Builder(int size, List<String> noms, boolean placementAuto, boolean placementManuelFini) {
+    public Builder(int size, List<String> noms, boolean placementAuto) {
         this.gb = new Gameboard(size);
         this.listArmees = creationArmees(noms);
         
         this.nouvMer();
-        if(true) {
+        if(placementAuto) {
             for(Armee armee : listArmees)
                 randPosBat(armee);
             randPosMine();

@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import control.ControleurFx;
+import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyCode;
 
 public class VueParamPartie extends VBox {
@@ -19,23 +20,39 @@ public class VueParamPartie extends VBox {
         control = ctrl;
         setup();
         stage.setTitle("Paramètres Partie");
-        stage.setScene(new Scene(this, 300, 200));
+        stage.setScene(new Scene(this, 300, 250));
         stage.show();
     }
 
     // Mise en place de la (racine de la) scene
     private void setup() {
         TextField size = new InputNumber();
-        TextField j1 = new InputJoueur();
-        TextField j2 = new InputJoueur();
+        TextField j1 = new InputJoueur1();
+        TextField j2 = new InputJoueur2();
         Button bt = new Button("OK");
         bt.setOnAction(e -> {
-            if (!size.getText().isEmpty()) 
+            if (!size.getText().isEmpty())
                 switchToMainWindow(j1.getText(), j2.getText(), Integer.valueOf(size.getText()));
             else
                 size.requestFocus(); // Laisse le focus au TextField
         });
-        getChildren().addAll(j1, j2, size, bt);
+        setOnKeyPressed(ke -> {
+                if (ke.getCode().equals(KeyCode.ENTER) && !j1.getText().isEmpty() && !j2.getText().isEmpty() 
+                                                       && Integer.valueOf(size.getText()) >= 5
+                                                       && Integer.valueOf(size.getText()) <= 26) {
+                    switchToMainWindow(j1.getText(), j2.getText(), Integer.valueOf(size.getText()));
+                }else
+                size.requestFocus(); // Laisse le focus au TextField
+            }); 
+        
+        CheckBox checkbox = new CheckBox("Disposer les vaisseaux MANUELLEMENT");
+        checkbox.setIndeterminate(false);
+        
+        checkbox.setOnAction(e -> {
+            control.setPlacementAuto(false);
+        });
+        
+        getChildren().addAll(j1, j2, size, bt, checkbox);
  
         setAlignment(Pos.CENTER_LEFT);
         setPadding(new Insets(20));
@@ -62,30 +79,24 @@ public class VueParamPartie extends VBox {
                     setText(oldValue);
                 }
             });
-            // Capture du Enter pour valider saisie
-            setOnKeyPressed(ke -> {
-                if (ke.getCode().equals(KeyCode.ENTER) && !getText().isEmpty()) {
-                    switchToMainWindow(getText(), getText(), Integer.valueOf(getText()));
-                }
-            });            
         }
 
     }
     
-    private class InputJoueur extends TextField {
-        InputJoueur() {
-            super("AAA");
+    private class InputJoueur1 extends TextField {
+        InputJoueur1() {
+            super("AL1");
             setAlignment(Pos.CENTER_LEFT);
             setMaxWidth(150);
-            pressEnter();
         }
-        
-        private void pressEnter() {
-            setOnKeyPressed(ke -> {
-                if (ke.getCode().equals(KeyCode.ENTER) && !getText().isEmpty()) {
-                    switchToMainWindow(getText(), getText(),Integer.valueOf(getText()));
-                }
-            });            
+
+    }
+    
+    private class InputJoueur2 extends TextField {
+        InputJoueur2() {
+            super("SPY");
+            setAlignment(Pos.CENTER_LEFT);
+            setMaxWidth(150);
         }
 
     }
