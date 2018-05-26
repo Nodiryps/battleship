@@ -20,6 +20,7 @@ import model.Case;
 import model.Position;
 import model.TypeB;
 import view.VueBuilder;
+import static view.VueConsole.printLN;
 
 /**
  *
@@ -34,6 +35,8 @@ public class ControleurFx extends Application {
     private Bateau batChoisi;
     private Armee a1;
     private Armee a2;
+    private List<Position> listePosA1 = new LinkedList<>();
+    private List<Position> listePosA2 = new LinkedList<>();
     
     private final static int NB_GD_BAT = Armee.getNbGBat();
     private final static int NB_PT_BAT = Armee.getNbPBat();
@@ -46,13 +49,16 @@ public class ControleurFx extends Application {
     private static int cptBatTotMer;
     
     private boolean placementAuto = true;
-    private boolean placementJ1 = true;
-    private boolean placementJ2 = false;
+    private boolean placementManuBatJ1 = true;
+    private boolean placementManuBatJ2 = false;
     
     private boolean tourJ1Tir = true;
     private boolean tourJ1Move = false;
     private boolean tourJ2Tir = false;
     private boolean tourJ2Move = false;
+    
+    private boolean tirFiniJ1 = false;
+    private boolean tirFiniJ2 = false;
     
     public static void main(String[] args) {
         launch(args);
@@ -63,8 +69,13 @@ public class ControleurFx extends Application {
         stage = primaryStage;
         new VueParamPartie(stage, this); // Fenêtre initiale (saisie taille)
     }
+    
+    public void placementBatManuel(Bateau b){
+        if(!this.placementAuto)
+            batChoisi = b;
+    }
 
-    private void switchToBuildWindow(int size){
+    public void switchToBuildWindow(int size){
         vueBldr = new VueBuilder(size, this, stage);
         np.addObserver(vueBldr);
         np.setChangedAndNotify();
@@ -72,19 +83,17 @@ public class ControleurFx extends Application {
     
     // fait apparaître la fenêtre principale de l'application
     public void switchToMainWindow(String j1, String j2, int size) {
-        List<String> noms = new LinkedList();
-        noms.add(j1);
-        noms.add(j2);
-        build(size, noms, placementAuto);
         if(!placementAuto){
-            build(size, noms, false);
+            build(size, nomsArmees(j1, j2), false);
             switchToBuildWindow(size);
+        }else{
+            build(size, nomsArmees(j1, j2), placementAuto);
+            a1 = np.getArmeeFromList(0);
+            a2 = np.getArmeeFromList(1);
+            VuePartie mainWindow = new VuePartie(stage, np.getTailleGb(), this);
+            np.addObserver(mainWindow);
+            np.setChangedAndNotify(); // Provoque un 1er affichage
         }
-        a1 = np.getArmeeFromList(0);
-        a2 = np.getArmeeFromList(1);
-        VuePartie mainWindow = new VuePartie(stage, np.getTailleGb(), this);
-        np.addObserver(mainWindow);
-        np.setChangedAndNotify(); // Provoque un 1er affichage
     }
     
     private void build(int size, List<String> noms, boolean b){
@@ -94,15 +103,11 @@ public class ControleurFx extends Application {
     
     // Quand l'utilisateur clique sur un bateau
     public void boatClicked(int x, int y) {
-        tir(y, x);
-        move(y, x);
-    }
-    
-    public void moveBoatClicked(int x, int y){
-        if(tourJ1Move)
-            moveBoatClickedA1(y, x);
-        if(tourJ2Move)
-            moveBoatClickedA2(y, x);
+        if(tourJ1Tir || tourJ2Tir)
+            tir(y, x);
+        else 
+            clickOnBoatToMove(y, x);
+        np.setChangedAndNotify();
     }
     
     public void tir(int x, int y){
@@ -111,42 +116,52 @@ public class ControleurFx extends Application {
         if(tourJ2Tir)
             tirA2(x, y);
     }
-    // quand l'utilisateur clique sur une case vide pour déplacer le bateau sélectionné
-    public void move(int x, int y){
+    
+    public void clickOnBoatToMove(int x, int y){
         if(tourJ1Move)
-            moveA1(x, y);
+            selectBatA1(x, y);
         if(tourJ2Move)
-            moveA2(x, y);
+            selectBatA2(x, y);
     }
     
-    // Quand l'utilisateur clique sur une case vide pour placer le bateau sélectionné
+    public void moveBoatClicked(int x, int y){
+        if(tourJ1Move)
+            moveBoatClickedA1(y, x);
+        if(tourJ2Move)
+            moveBoatClickedA2(y, x);
+        np.setChangedAndNotify();
+    }
+    
+    // clique sur une case vide pour placer le bateau sélectionné manuellemt
     public void putBoatClickedManualy(int x, int y) {
         List<Bateau> listBatJ1 = a1.getListBat(), listBatJ2 = a2.getListBat();
-        if(!placementAuto && cptBatTotMer < (TOT_BAT_PAR_J * 2)){
-            putBoatA1(listBatJ1,y, x);
-            putBoatA2(listBatJ2, y, x);
-        }
+        putBoatA1(listBatJ1,y, x);
+        putBoatA2(listBatJ2, y, x);
     }
     
-    private void tirA1(int x, int y){
+    public boolean tirA1(int x, int y){
         Position p = new Position(x, y);
         if(np.checkBatBonneArmee(a1, p)){
             np.tir(a1, np.convertPosToStr(p));
             setTourJ1Tir(false);
+            setTirFiniJ1(true);
             setTourJ1Move(true);
-        }
+            return true;
+        } return false;
     }
     
-    private void tirA2(int x, int y){
+    public boolean tirA2(int x, int y){
         Position p = new Position(x, y);
         if(np.checkBatBonneArmee(a2, p)){
             np.tir(a2, np.convertPosToStr(p));
             setTourJ2Tir(false);
+            setTirFiniJ2(true);
             setTourJ2Move(true);
-        }
+            return true;
+        } return false;
     }
     
-    private void moveA1(int x, int y){
+    private void selectBatA1(int x, int y){
         Position p = new Position(x, y);
         if(np.checkBatBonneArmee(a1, p))
             posBatChoisi = p;
@@ -154,7 +169,7 @@ public class ControleurFx extends Application {
             posBatChoisi = null;
     }
     
-    private void moveA2(int x, int y){
+    private void selectBatA2(int x, int y){
         Position p = new Position(x, y);
         if(tourJ2Move)
             if(np.checkBatBonneArmee(a2, p))
@@ -168,21 +183,11 @@ public class ControleurFx extends Application {
         Bateau b;
         if(np.checkBatBonneArmee(a1, posBatChoisi)){
             b = a1.getBatFromPos(posBatChoisi);
-            if(np.listDestPossContains(b,p)){
-                np.moveBat(a1, b, np.convertPosToStr(p));
-                tourJ1Move = false;
-                Case c = np.getCaseGb(p.getPosX(), p.getPosY());
-                if(c.explosionMineN()){
-                    b.touché();
-                    if(b.getPv() <= 0)
-                        np.coulé(a1,b);
-                }
-                if(c.explosionMineA()){
-                    np.coulé(a1,b);
-                }
-            }
+            np.move(a1,b,p);
+            tourJ1Move = false;
             posBatChoisi = null;
             setTourJ2Tir(true);
+            
         }
     }
     
@@ -191,26 +196,15 @@ public class ControleurFx extends Application {
         Bateau b;   
         if(np.checkBatBonneArmee(a2, posBatChoisi)){
             b = a2.getBatFromPos(posBatChoisi);
-            if(np.listDestPossContains(b,p)){
-                np.moveBat(a2, b, np.convertPosToStr(p));
-                tourJ2Move = false;
-                Case c = np.getCaseGb(p.getPosX(), p.getPosY());
-                if(c.explosionMineN()){
-                    b.touché();
-                    if(b.getPv() <= 0)
-                        np.coulé(a2,b);
-                }
-                if(c.explosionMineA()){
-                    np.coulé(a2,b);
-                }
-            }
+            np.move(a2,b,p);
+            tourJ2Move = false;
             posBatChoisi = null;
             setTourJ1Tir(true);
         }
     }
     
     private void putBoatA1(List<Bateau> list, int x, int y){
-        if(placementJ1 && cptTotBatJ1 < 3){
+        if(placementManuBatJ1 && cptTotBatJ1 < 3){
             if(batChoisi != null){
                 if(batChoisi.getTypeB() == TypeB.GRAND){
                     setBatInBox(list.get(0), x, y);
@@ -228,13 +222,14 @@ public class ControleurFx extends Application {
                     ++cptPtBatJ1;
                 }
             }                
-            placementJ1 = false;
-            placementJ2 = true;
+            placementManuBatJ1 = false;
+            placementManuBatJ2 = true;
+            listePosA1.add(new Position(x, y));
         }
     }
     
     private void putBoatA2(List<Bateau> list, int x, int y){
-        if(placementJ2 && cptTotBatJ2 < 3){
+        if(placementManuBatJ2 && cptTotBatJ2 < 3){
             if(batChoisi != null){
                 if(batChoisi.getTypeB() == TypeB.GRAND){
                     setBatInBox(list.get(0), x, y);
@@ -252,8 +247,9 @@ public class ControleurFx extends Application {
                     ++cptPtBatJ2;
                 }
             }  
-            placementJ1 = true;
-            placementJ2 = false;
+            placementManuBatJ1 = true;
+            placementManuBatJ2 = false;
+            listePosA2.add(new Position(x, y));
         }
     }
     
@@ -291,6 +287,14 @@ public class ControleurFx extends Application {
         return batChoisi;
     }
 
+    public boolean listePosA1Contains(Position p) {
+        return listePosA1.contains(p);
+    }
+
+    public boolean listePosA2Contains(Position p) {
+        return listePosA2.contains(p);
+    }
+
     public static int getNB_GD_BAT() {
         return NB_GD_BAT;
     }
@@ -324,11 +328,11 @@ public class ControleurFx extends Application {
     }
     
     public boolean isPlacementJ1() {
-        return placementJ1;
+        return placementManuBatJ1;
     }
 
     public boolean isPlacementJ2() {
-        return placementJ2;
+        return placementManuBatJ2;
     }
 
     public boolean isPlacementAuto(){
@@ -350,7 +354,23 @@ public class ControleurFx extends Application {
     public boolean isTourJ2Move() {
         return tourJ2Move;
     }
-    
+
+    public boolean isTirFiniJ1() {
+        return tirFiniJ1;
+    }
+
+    public void setTirFiniJ1(boolean tirFiniJ1) {
+        this.tirFiniJ1 = tirFiniJ1;
+    }
+
+    public boolean isTirFiniJ2() {
+        return tirFiniJ2;
+    }
+
+    public void setTirFiniJ2(boolean tirFiniJ2) {
+        this.tirFiniJ2 = tirFiniJ2;
+    }
+
     public void setPlacementAuto(boolean b){
         this.placementAuto = b;
     }
@@ -371,4 +391,10 @@ public class ControleurFx extends Application {
         this.tourJ2Move = b;
     }
     
+    private List<String> nomsArmees(String j1, String j2){
+        List<String> noms = new LinkedList();
+        noms.add(j1);
+        noms.add(j2);
+        return noms;
+    }
 }

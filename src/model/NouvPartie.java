@@ -164,19 +164,39 @@ public class NouvPartie extends Observable {
     }
     
     public void moveBat(Armee a, Bateau b, String destChoisi) {
-        if (getListDestPoss(b).contains(convertStrToPos(destChoisi))) 
-            if (posValide(convertPosToStr(b.getXY())) && 
-                    caseAccessible(convertStrToPos(destChoisi).getPosX(), convertStrToPos(destChoisi).getPosY())) {
-                b.getXY().setPosX(convertStrToPos(destChoisi).getPosX());
-                b.getXY().setPosY(convertStrToPos(destChoisi).getPosY());
-                b.setPos(b.getXY().getPosX(), b.getXY().getPosY());
-                if(caseMineeN(convertStrToPos(destChoisi)))
-                    b.touché();
-                else if(caseMineeA(convertStrToPos(destChoisi)))
-                    coulé(a,b); 
+        Position p = convertStrToPos(destChoisi);
+        if (getListDestPoss(b).contains(p)) 
+            if (posValide(convertPosToStr(b.getXY())) && caseAccessible(p.getPosX(), p.getPosY())) {
+                b.setPos(p);
+//                b.getXY().setPosX(p.getPosX());
+//                b.getXY().setPosY(p.getPosY());
+//                b.setPos(b.getXY().getPosX(), b.getXY().getPosY());
+                
+                gestionExplosionsMines(a, b);
                 updateMer(listArmees);
                 setChangedAndNotify(this);
             }
+    }
+    
+    public void move(Armee a, Bateau b, Position pos){
+        b.setPos(pos);
+        gestionExplosionsMines(a,b);
+        setChangedAndNotify(this);
+    }
+    
+    public boolean gestionExplosionsMines(Armee a, Bateau b){
+        Case c = this.getCaseGb(b.getX(), b.getY());
+        if(c.explosionMineN()){
+            b.touché();
+            if(b.getPv() <= 0)
+                this.coulé(a,b);
+            return true;
+        }
+        if(c.explosionMineA()){
+            this.coulé(a,b);
+            return true;
+        }
+        return false;
     }
     
     public void updateMer(List<Armee> list){

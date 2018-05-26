@@ -77,7 +77,7 @@ public abstract class Bateau implements Positionnable{
     }
 
     public void setPos(Position p){
-        this.setPos(p.getPosX(), p.getPosY());
+        this.posBat = p;
     }
     
     @Override

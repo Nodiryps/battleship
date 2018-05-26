@@ -18,6 +18,7 @@ import java.util.Observer;
 import java.util.Scanner;
 import static jdk.nashorn.internal.objects.NativeString.toUpperCase;
 import model.Case;
+import model.TypeM;
 
 
 enum Couleur {
@@ -199,6 +200,14 @@ public class VueConsole implements Observer {
             if(a.getSizeListBat() > 0){
                 print("\nGAME OVER\n" + a.getNom() + " a gagné! ^^");
             }
+    }
+    
+    public void mineMsg(Bateau b){
+        Case c = ctrlNP.getCaseGb(b.getX(), b.getY());
+        if(c.getTypeMine() == TypeM.NORMALE)
+            printLN("OUPS! Vous êtes tombé sur une mine...");
+        if(c.getTypeMine() == TypeM.NORMALE)
+            printLN("HOLLY SHIT! Vous êtes tombé sur une mine ATOMIQUE!!!");
     }
  
     @Override

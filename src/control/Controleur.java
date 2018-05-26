@@ -7,6 +7,7 @@ package control;
 
 import java.util.List;
 import model.Armee;
+import model.Bateau;
 import model.NouvPartie;
 import view.VueConsole;
 
@@ -43,8 +44,12 @@ public class Controleur {
                         if (choix.get(0).equals("y")) {
                             String batChoisi = choix.get(1);
                             String destChoisi = choix.get(2);
-                            if (!destChoisi.equals("")) 
-                                np.moveBat(a, np.getBatFromPos(batChoisi), destChoisi);
+                            if (!destChoisi.equals("")){ 
+                                Bateau b = np.getBatFromPos(batChoisi);
+                                np.moveBat(a, b, destChoisi);
+                                if(np.gestionExplosionsMines(a, b))
+                                    v.mineMsg(b);
+                            }
                         }
                     }
                 }

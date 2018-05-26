@@ -1,37 +1,36 @@
 .empty {
-    /*-fx-border-color: #6666ff;*/
+    -fx-border-color: #00013f;
+    -fx-border-width: 0.5;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("sea.gif");
-    -fx-border-collapse: separate;
 }
 .destPoss{
-    -fx-border-color: BEIGE;
+    -fx-border-color: #00013f;
     -fx-background-position: center;
     -fx-background-size: stretch;
-    -fx-background-image: url("sea.gif");
-    -fx-border-collapse: separate;
+    -fx-background-color: #00013f;
 }
 .mineN {
-    /*-fx-border-color: #6666ff;*/
+    -fx-border-color: #00013f;
+    -fx-border-width: 0.5;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("mineN.gif");
-    -fx-border-collapse: separate;
 }
 .mineA {
-    /*-fx-border-color: #6666ff;*/
+    -fx-border-color: #00013f;
+    -fx-border-width: 0.5;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("mineA.gif");
-    -fx-border-collapse: separate;
 }
 .caseRadio{
-    /*-fx-border-color: #6666ff;*/
+    -fx-border-color: #00013f;
+    -fx-border-width: 0.5;
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("seaRadio.gif");
-    -fx-border-collapse: separate;
 }
 .batG1 {
     -fx-border-color: BLUEVIOLET;
@@ -39,7 +38,6 @@
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("grandBateau.gif");
-    -fx-border-collapse: separate;
 }
 .batP1 {
     -fx-border-color: BLUEVIOLET;
@@ -47,7 +45,6 @@
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("petitBateau.gif");
-    -fx-border-collapse: separate;
 }
 .batG2 {
     -fx-border-color: GREENYELLOW;
@@ -55,7 +52,6 @@
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("grandBateau.gif");
-    -fx-border-collapse: separate;
 }
 .batP2 {
     -fx-border-color: GREENYELLOW;
@@ -63,6 +59,5 @@
     -fx-background-position: center;
     -fx-background-size: stretch;
     -fx-background-image: url("petitBateau.gif");
-    -fx-border-collapse: separate;
 }
 
