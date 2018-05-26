@@ -62,11 +62,11 @@ public class VueBuilder extends BorderPane implements Observer{
         
         gpA1 = new ListeBateaux();
         settingsListesBat(gpA1);
-        gpA1.putBoatInListes(a1);
+        gpA1.putBoatInListesA1();
         
         gpA2 = new ListeBateaux();
         settingsListesBat(gpA2);
-        gpA2.putBoatInListes(a2);
+        gpA2.putBoatInListesA2();
         
         bpA1 = new BorderPane();
         settingsBorderpane(bpA1);
@@ -84,7 +84,7 @@ public class VueBuilder extends BorderPane implements Observer{
         settingsInstr(vbInstr);
         this.setBottom(vbInstr);
 
-        stage.setScene(new Scene(this, 1120, 600));
+        stage.setScene(new Scene(this, 1300, 600));
         stage.setTitle("BATTLESHIP (placer avec souris)");
         stage.show();
     }
@@ -99,8 +99,8 @@ public class VueBuilder extends BorderPane implements Observer{
     }
     
     public void affListesBatAPlacer(){
-        gpA1.putBoatInListes(a1);
-        gpA2.putBoatInListes(a2);
+        gpA1.putBoatInListesA1();
+        gpA2.putBoatInListesA2();
     }
     
     private void affInstrJoueurs(){
@@ -119,9 +119,8 @@ public class VueBuilder extends BorderPane implements Observer{
         // La vue d'une "case" vide
         private class EmptyBoxView extends BoxView {
             public EmptyBoxView(int x, int y) {
-                 getStyleClass().add("empty");
-                 setOnMouseClicked(e -> CTRL.putBoatClickedManualy(x, y));
-                 
+                getStyleClass().add("empty");
+                setOnMouseClicked(e -> CTRL.putBoatClickedManualy(x, y));
             }
         }
         
@@ -248,41 +247,43 @@ public class VueBuilder extends BorderPane implements Observer{
 //        }
         
         
-        private void putBoatInListes(Armee a){
+        private void putBoatInListesA1(){
             getChildren().clear();
             int cpt = 0;
-            Bateau b = a.getBatFromList(cpt);
-            if(cpt == 0 && b.getXY() == null){
-                this.add(new ListeBateaux.BatGdA1View(0, 0, b), 0 + 0, 0 + 1); 
+            Bateau b = a1.getBatFromList(cpt);
+            if(cpt == 0 && b.getX() == 0 && b.getY() == 0){
+                this.add(new ListeBateaux.BatGdA1View(0, 0, b), 0 + 1, 0 + 0); 
                 ++cpt;
             }
-            if (cpt == 1 && b.getXY() == null) {
-                this.add(new ListeBateaux.BatPtA1View(1, 0, b), 1 + 0, 0 + 1);
+            if (cpt == 1 && b.getX() == 0 && b.getY()== 0) {
+                this.add(new ListeBateaux.BatPtA1View(0, 1, b), 1 + 0, 0 + 1);
                 ++cpt;
             }
-            if (cpt == 2 && b.getXY() == null) {
-                this.add(new ListeBateaux.BatPtA1View(1, 0, b), 2 + 0, 0 + 1);
-                ++cpt;
+            if (cpt == 2 && b.getX() == 0 && b.getY()== 0) {
+                this.add(new ListeBateaux.BatPtA1View(0, 1, b), 0 + 1, 0 + 2);
             }
         }
         
-//        private void putBoatInListesA2(){
-//            getChildren().clear();
-//            int cpt = 0;
-//            Bateau b = a2.getBatFromList(cpt);
-//            if(cpt == 0 && b.getXY() == null){
-//                this.add(new ListeBateaux.BatGdA2View(0, 0, b), 0 + 0, 0 + 1); 
-//                ++cpt;
-//            }
-//            if (cpt == 1 && b.getXY() == null) {
-//                this.add(new ListeBateaux.BatPtA2View(1, 0, b), 1 + 0, 0 + 1);
-//                ++cpt;
-//            }
-//            if (cpt == 2 && b.getXY() == null) {
-//                this.add(new ListeBateaux.BatPtA2View(1, 0, b), 2 + 0, 0 + 1);
-//                ++cpt;
-//            }
-//        }
+        public String toStringPos(Position p){
+            return "x: "+p.getPosX()+" y: "+p.getPosY();
+        }
+        
+        private void putBoatInListesA2(){
+            getChildren().clear();
+            int cpt = 0;
+            Bateau b = a2.getBatFromList(cpt);
+            if(cpt == 0 && b.getX() == 0 && b.getY() == 0){
+                this.add(new ListeBateaux.BatGdA2View(0, 0, b), 0 + 1, 0 + 0); 
+                ++cpt;
+            }
+            if (cpt == 1 && b.getX() == 0 && b.getY() == 0) {
+                this.add(new ListeBateaux.BatPtA2View(0, 1, b), 1 + 0, 0 + 1);
+                ++cpt;
+            }
+            if (cpt == 2 && b.getX() == 0 && b.getY() == 0) {
+                this.add(new ListeBateaux.BatPtA2View(0, 1, b), 0 + 1, 0 + 2);
+            }
+        }
         
     }
     
@@ -322,18 +323,21 @@ public class VueBuilder extends BorderPane implements Observer{
         vbInstr.getChildren().add(instr);
     }
     
-    private void placementTerminé(){
-        if(CTRL.getCptBatTot() == 6)
+    private boolean placementTerminé(){
+        if(CTRL.getCptBatTot() == 6){
             CTRL.switchToMainWindow(a1.getNom(), a2.getNom(), SIZE);
+            return true;
+        }
+        return false;
     }
     
     public void setSizeConstraints(GridPane gp) {
             for (int i = 0; i < 3; ++i) {
                 ColumnConstraints cc = new ColumnConstraints();
-                cc.setPercentWidth(100/6);
+                cc.setPercentWidth(100/5);
                 gp.getColumnConstraints().add(cc);
                 RowConstraints rc = new RowConstraints();
-                rc.setPercentHeight(100/6);
+                rc.setPercentHeight(100/5);
                 gp.getRowConstraints().add(rc);
             }
         }
@@ -350,8 +354,8 @@ public class VueBuilder extends BorderPane implements Observer{
     private void settingsListesBat(GridPane gp){
         setSizeConstraints(gp);
         gp.setAlignment(Pos.TOP_CENTER);
-        gp.setMinSize(200, 250);
-        gp.setMaxSize(400, 500);
+        gp.setMinSize(500, 500);
+        //gp.setMaxSize(400, 400);
     }
     
     private void settingsBorderpane(BorderPane b){

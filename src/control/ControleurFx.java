@@ -133,8 +133,8 @@ public class ControleurFx extends Application {
     // clique sur une case vide pour placer le bateau sélectionné manuellemt
     public void putBoatClickedManualy(int x, int y) {
         List<Bateau> listBatJ1 = a1.getListBat(), listBatJ2 = a2.getListBat();
-        putBoatA1(listBatJ1,y, x);
-        putBoatA2(listBatJ2, y, x);
+        putBoatA1(listBatJ1, x, y);
+        putBoatA2(listBatJ2, x, y);
     }
     
     public boolean tirA1(int x, int y){
@@ -209,7 +209,7 @@ public class ControleurFx extends Application {
         np.setChangedAndNotify();
     }
     
-    private void putBoatA1(List<Bateau> list, int x, int y){
+    private void putBoatA1(List<Bateau> list, int y, int x){
         if(placementManuBatJ1 && cptTotBatJ1 < 3){
             if(batChoisi != null){
                 if(batChoisi.getTypeB() == TypeB.GRAND){
@@ -234,7 +234,7 @@ public class ControleurFx extends Application {
         }
     }
     
-    private void putBoatA2(List<Bateau> list, int x, int y){
+    private void putBoatA2(List<Bateau> list, int y, int x){
         if(placementManuBatJ2 && cptTotBatJ2 < 3){
             if(batChoisi != null){
                 if(batChoisi.getTypeB() == TypeB.GRAND){
