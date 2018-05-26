@@ -219,7 +219,7 @@ public class NouvPartie extends Observable {
             gb.getMer()[x][y] = new Case();
             gb.getMer()[x][y].setBat(a.getBatFromList(i));
             a.setPosBatFromList(a.getBateauFromListPosX(i), a.getBateauFromListPosY(i), i);
-            leSet.add(a.getPosBateauFromListPos(i));
+            leSet.add(a.getPosBateauFromList(i));
         }
         gb.setPosOccupados(leSet);
     }

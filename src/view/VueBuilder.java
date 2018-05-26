@@ -11,11 +11,8 @@ import java.util.Observer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
@@ -28,12 +25,9 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import model.Armee;
 import model.Bateau;
-import model.Builder;
-import model.Case;
 import model.NouvPartie;
 import model.Position;
 import model.TypeB;
-import model.TypeM;
 
 /**
  *
@@ -46,10 +40,11 @@ public class VueBuilder extends BorderPane implements Observer{
     Armee a1;
     Armee a2;
     private SeaView gbVide;
-    private listesBatPlcmntManuel flowp1 = new listesBatPlcmntManuel();
-    private listesBatPlcmntManuel flowp2= new listesBatPlcmntManuel();
+    private BorderPane bpA1 = new BorderPane();
+    private BorderPane bpA2 = new BorderPane();
+    private ListeBateaux gpA1;
+    private ListeBateaux gpA2;
     private VBox vbInstr;
-    private boolean modeDebug = false;
     private boolean placementManual;
     
     public VueBuilder(int size, ControleurFx ctrl, Stage stage) {
@@ -64,18 +59,26 @@ public class VueBuilder extends BorderPane implements Observer{
         gbVide.nouvMerVide();
         settingsSeaview(gbVide);
         this.setCenter(gbVide);
+        
+        gpA1 = new ListeBateaux();
+        settingsListesBat(gpA1);
+        gpA1.putBoatInListes(a1);
+        
+        gpA2 = new ListeBateaux();
+        settingsListesBat(gpA2);
+        gpA2.putBoatInListes(a2);
+        
+        bpA1 = new BorderPane();
+        settingsBorderpane(bpA1);
+        bpA1.setCenter(gpA1);
+        this.setLeft(bpA1);
 
+        bpA2 = new BorderPane();
+        settingsBorderpane(bpA2);
+        bpA2.setCenter(gpA2);
+        this.setRight(bpA2);
         
-        settingsFlowpane(flowp1);
-        flowp1.setPadding(new Insets(10,110,0,10));//HDBG
-        this.setLeft(flowp1);
-
-        
-        settingsFlowpane(flowp2);
-        flowp2.setPadding(new Insets(10,10,0,0));//HDBG
-        this.setRight(flowp2);
-        
-        affListesBatAPlacer();
+//        affListesBatAPlacer();
 
         vbInstr = new VBox();
         settingsInstr(vbInstr);
@@ -92,15 +95,12 @@ public class VueBuilder extends BorderPane implements Observer{
         gbVide.nouvMer();
         affListesBatAPlacer();
         affInstrJoueurs();
-        index();
+//        index();
     }
     
     public void affListesBatAPlacer(){
-        flowp1.getChildren().clear();
-        flowp2.getChildren().clear();
-        flowp1.distribBatFlowpane();
-        flowp2.distribBatFlowpane();
-        
+        gpA1.putBoatInListes(a1);
+        gpA2.putBoatInListes(a2);
     }
     
     private void affInstrJoueurs(){
@@ -178,7 +178,7 @@ public class VueBuilder extends BorderPane implements Observer{
         }
     }
     
-    public class listesBatPlcmntManuel extends FlowPane{
+    private class ListeBateaux extends GridPane{
         private abstract class BoxView extends Pane {
             public BoxView() {
                 getStylesheets().add("view/BoxView.css");
@@ -186,72 +186,104 @@ public class VueBuilder extends BorderPane implements Observer{
         }
         
         public class BatGdA1View extends BoxView{
-            public BatGdA1View(int x, int y){
+            private Bateau b;
+            
+            public BatGdA1View(int x, int y, Bateau b){
+                this.b = b;
                 getStyleClass().add("batG1");
+                setOnMouseClicked(e->CTRL.placementBatManuel(b));
             }
         }
         
         public class BatPtA1View extends BoxView{
-            public BatPtA1View(int x, int y){
+            private Bateau b;
+            
+            public BatPtA1View(int x, int y, Bateau b){
+                this.b = b;
                 getStyleClass().add("batP1");
+                setOnMouseClicked(e->CTRL.placementBatManuel(b));
             }
         }
         public class BatGdA2View extends BoxView{
-            public BatGdA2View(int x, int y){
+            private Bateau b;
+            
+            public BatGdA2View(int x, int y, Bateau b){
+                this.b = b;
                 getStyleClass().add("batG2");
+                setOnMouseClicked(e->CTRL.placementBatManuel(b));
             }
         }
         
         public class BatPtA2View extends BoxView{
-            public BatPtA2View(int x, int y){
+            private Bateau b;
+            
+            public BatPtA2View(int x, int y, Bateau b){
+                this.b = b;
                 getStyleClass().add("batP2");
+                setOnMouseClicked(e->CTRL.placementBatManuel(b));
             }
         }
         
-//        public void distribBatFlowpaneF1(){
-//            flowp1.getChildren().add(new BatGdA1View(0,0));
+//        public class BatGdA1View extends BoxView{
+//            public BatGdA1View(int x, int y){
+//                getStyleClass().add("batG1");
+//            }
 //        }
-        public void setSizeConstraints(GridPane gp) {
-            for (int i = 0; i < 3; ++i) {
-                ColumnConstraints cc = new ColumnConstraints();
-                cc.setPercentWidth(100/9);
-                gp.getColumnConstraints().add(cc);
-                RowConstraints rc = new RowConstraints();
-                rc.setPercentHeight(100/9);
-                gp.getRowConstraints().add(rc);
+//        
+//        public class BatPtA1View extends BoxView{
+//            public BatPtA1View(int x, int y){
+//                getStyleClass().add("batP1");
+//            }
+//        }
+//        public class BatGdA2View extends BoxView{
+//            public BatGdA2View(int x, int y){
+//                getStyleClass().add("batG2");
+//            }
+//        }
+//        
+//        public class BatPtA2View extends BoxView{
+//            public BatPtA2View(int x, int y){
+//                getStyleClass().add("batP2");
+//            }
+//        }
+        
+        
+        private void putBoatInListes(Armee a){
+            getChildren().clear();
+            int cpt = 0;
+            Bateau b = a.getBatFromList(cpt);
+            if(cpt == 0 && b.getXY() == null){
+                this.add(new ListeBateaux.BatGdA1View(0, 0, b), 0 + 0, 0 + 1); 
+                ++cpt;
+            }
+            if (cpt == 1 && b.getXY() == null) {
+                this.add(new ListeBateaux.BatPtA1View(1, 0, b), 1 + 0, 0 + 1);
+                ++cpt;
+            }
+            if (cpt == 2 && b.getXY() == null) {
+                this.add(new ListeBateaux.BatPtA1View(1, 0, b), 2 + 0, 0 + 1);
+                ++cpt;
             }
         }
         
-        public void distribBatFlowpane(){
-            getChildren().clear();
-            ImageView image;
-            GridPane gridP1 = new GridPane();
-            setSizeConstraints(gridP1);
-            GridPane gridP2 = new GridPane();
-            setSizeConstraints(gridP2);
-            for(Armee a : np.getListArmees()){
-                int cpt = 0;
-                for(Bateau b : a.getListBat()){
-                    if(b.getTypeB() == TypeB.GRAND)
-                        if(a == a1){
-                            image = new ImageView("view/grandBateau.gif");
-                            gridP1.add(image, cpt, 0);
-                        }else{
-                            image = new ImageView("view/grandBateau.gif");
-                            gridP2.add(image, cpt, 0);
-                        }else if(a == a1){
-                            image = new ImageView("view/petitBateau.gif");
-                            gridP1.add(image, cpt, 0);
-                        }else{
-                            image = new ImageView("view/petitBateau.gif");
-                            gridP2.add(image, cpt, 0);
-                        }
-                    ++cpt;
-                }
-            }
-            flowp1.getChildren().add(gridP1);
-            flowp2.getChildren().add(gridP2);
-        }
+//        private void putBoatInListesA2(){
+//            getChildren().clear();
+//            int cpt = 0;
+//            Bateau b = a2.getBatFromList(cpt);
+//            if(cpt == 0 && b.getXY() == null){
+//                this.add(new ListeBateaux.BatGdA2View(0, 0, b), 0 + 0, 0 + 1); 
+//                ++cpt;
+//            }
+//            if (cpt == 1 && b.getXY() == null) {
+//                this.add(new ListeBateaux.BatPtA2View(1, 0, b), 1 + 0, 0 + 1);
+//                ++cpt;
+//            }
+//            if (cpt == 2 && b.getXY() == null) {
+//                this.add(new ListeBateaux.BatPtA2View(1, 0, b), 2 + 0, 0 + 1);
+//                ++cpt;
+//            }
+//        }
+        
     }
     
     private void index(){
@@ -295,6 +327,17 @@ public class VueBuilder extends BorderPane implements Observer{
             CTRL.switchToMainWindow(a1.getNom(), a2.getNom(), SIZE);
     }
     
+    public void setSizeConstraints(GridPane gp) {
+            for (int i = 0; i < 3; ++i) {
+                ColumnConstraints cc = new ColumnConstraints();
+                cc.setPercentWidth(100/6);
+                gp.getColumnConstraints().add(cc);
+                RowConstraints rc = new RowConstraints();
+                rc.setPercentHeight(100/6);
+                gp.getRowConstraints().add(rc);
+            }
+        }
+    
     private void settingsSeaview(SeaView sv){
         sv.setSizeConstraints();
         sv.setMinSize(500, 500);
@@ -304,12 +347,16 @@ public class VueBuilder extends BorderPane implements Observer{
         sv.setPadding(new Insets(10,0,0,0));//H D B G
     }
     
-    private void settingsFlowpane(FlowPane f){
-        f.setAlignment(Pos.TOP_CENTER);
-        f.setAlignment(Pos.TOP_CENTER);
-        f.setMinSize(200, 250);
-        f.setMaxSize(400, 500);
-        
+    private void settingsListesBat(GridPane gp){
+        setSizeConstraints(gp);
+        gp.setAlignment(Pos.TOP_CENTER);
+        gp.setMinSize(200, 250);
+        gp.setMaxSize(400, 500);
+    }
+    
+    private void settingsBorderpane(BorderPane b){
+        b.setMinSize(200, 250);
+        b.setMaxSize(400, 500);
     }
     
     private void settingsInstr(VBox vb){

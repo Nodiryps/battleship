@@ -64,7 +64,7 @@ public class Armee  {
         return getBatFromList(i).getY();
     }
     
-    public Position getPosBateauFromListPos(int i){
+    public Position getPosBateauFromList(int i){
         return getBatFromList(i).getXY();
     }
     

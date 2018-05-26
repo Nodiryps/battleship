@@ -27,9 +27,11 @@ import model.Case;
 import model.Position;
 import model.TypeB;
 import model.TypeM;
-import static view.VueConsole.printLN;
 
-
+/**
+ *
+ * @author Spy
+ */
 public class VuePartie extends BorderPane implements Observer {
     private final int SIZE;
     private final ControleurFx CTRL;
@@ -37,11 +39,8 @@ public class VuePartie extends BorderPane implements Observer {
     private Armee a1;
     private Armee a2;
     private SeaView sv;
-    private SeaView gbVide;
     private VBox vboxEA1;
     private VBox vboxEA2;
-    private FlowPane flowp1;
-    private FlowPane flowp2;
     private VBox vboxInstr;
     private boolean modeDebug = false;
     private Position posB;
@@ -52,54 +51,30 @@ public class VuePartie extends BorderPane implements Observer {
         a1 = CTRL.getArmee1();
         a2 = CTRL.getArmee2();
         SIZE = size +1;
-//        if(CTRL.isPlacementAuto()){
-            sv = new SeaView();
-            settingsSeaview(sv);
-            this.setCenter(sv);
+        
+        sv = new SeaView();
+        settingsSeaview(sv);
+        this.setCenter(sv);
 
-            vboxEA1 = new VBox();
-            settingsEA(vboxEA1);
-            vboxEA1.setPadding(new Insets(10,110,0,10));//HDBG
-            this.setLeft(vboxEA1);
+        vboxEA1 = new VBox();
+        settingsEA(vboxEA1);
+        vboxEA1.setPadding(new Insets(10,110,0,10));//HDBG
+        this.setLeft(vboxEA1);
 
-            vboxEA2 = new VBox();
-            settingsEA(vboxEA2);
-            vboxEA2.setPadding(new Insets(10,10,0,0));//HDBG
-            this.setRight(vboxEA2);
+        vboxEA2 = new VBox();
+        settingsEA(vboxEA2);
+        vboxEA2.setPadding(new Insets(10,10,0,0));//HDBG
+        this.setRight(vboxEA2);
 
-            vboxInstr = new VBox();
-            settingsInstr(vboxInstr);
-            this.setBottom(vboxInstr);
+        vboxInstr = new VBox();
+        settingsInstr(vboxInstr);
+        this.setBottom(vboxInstr);
 
-            affEtatArmee();
+        affEtatArmee();
 
-            stage.setScene(new Scene(this, 1120, 600));
-            stage.setTitle("BATTLESHIP (cliquez pour déplacer)");
-            stage.show();
-//        }else{
-//            gbVide = new SeaView();
-//        gbVide.nouvMerVide();
-//        settingsSeaview(gbVide);
-//        this.setCenter(gbVide);
-//
-//        flowp1 = new FlowPane();
-//        settingsFlowpane(flowp1);
-//        flowp1.setPadding(new Insets(10,110,0,10));//HDBG
-//        this.setLeft(flowp1);
-//
-//        flowp2 = new FlowPane();
-//        settingsFlowpane(flowp2);
-//        flowp2.setPadding(new Insets(10,10,0,0));//HDBG
-//        this.setRight(flowp2);
-//
-//        vboxInstr = new VBox();
-//        settingsInstr(vboxInstr);
-//        this.setBottom(vboxInstr);
-//
-//        stage.setScene(new Scene(this, 1120, 600));
-//        stage.setTitle("BATTLESHIP (placer avec souris)");
-//        stage.show();
-//        }
+        stage.setScene(new Scene(this, 1120, 600));
+        stage.setTitle("BATTLESHIP (cliquez pour déplacer)");
+        stage.show();
     }
     
     @Override
@@ -142,32 +117,20 @@ public class VuePartie extends BorderPane implements Observer {
         contentTab.setTextAlignment(TextAlignment.LEFT);
         
         for(Bateau b : a.getListBat()){
-            contentTab = new Text
-                                ( 
-                                npVueP.convertPosToStr(b.getXY()) + "\t\t"
+            contentTab = new Text(npVueP.convertPosToStr(b.getXY()) + "\t\t"
                                 + b.getTypeB() + "\t\t"
-                                + (b.getPv()*1.0 / b.getMaxPv()) * 100 + "%"
-                                + "\nPortée de: " + b.getPortee() 
-                                + "\n"
-                                );
-//            if(npVueP.tir(a, b.getXY()))
+                                + (b.getPv()*1.0 / b.getMaxPv())*100 + "%"
+                                + "\nPortée du tir: " + porteeTir(b)
+                                + "\n");
             vb.getChildren().add(contentTab);
         }
-//        if(a==a1 && CTRL.isTirFiniJ1()){
-//                contentTab = new Text(npVueP.convertPosToStr(b.getXY()) + "\t\t"
-//                                + b.getTypeB() + "\t\t"
-//                                + (b.getPv()*1.0 / b.getMaxPv()) * 100 + "%"
-//                                + "\nPortée de: " + b.getPortee()
-//                                +"\n");
-//                CTRL.setTirFiniJ1(false);
-//            }else if(a==a2 && CTRL.isTirFiniJ2()){
-//                contentTab = new Text(npVueP.convertPosToStr(b.getXY()) + "\t\t"
-//                                + b.getTypeB() + "\t\t"
-//                                + (b.getPv()*1.0 / b.getMaxPv()) * 100 + "%"
-//                                + "\nPortée de: " + b.getPortee()
-//                                +"\n");
-//                CTRL.setTirFiniJ2(false);
-//            }
+    }
+    
+    private String porteeTir(Bateau b){
+        String s = ". . .   ¯\\_(ツ)_/¯";
+        if(b.getPortee() > 0)
+            s = b.getPortee() + " case(s).";
+        return s;
     }
     
     private void affInstrJoueurs(){
@@ -184,16 +147,16 @@ public class VuePartie extends BorderPane implements Observer {
             instr = new Text("Veuillez sélectioner un bateau vous appartenant, s.v.p.");
         
         if(CTRL.isTourJ1Tir())
-            instr = new Text("Cliquez sur un bateau vous appartenant pour tirer, " + a1.getNom() + ".");
+            instr = new Text(a1.getNom() + "\nCliquez sur un bateau vous appartenant pour tirer.");
           
         if(CTRL.isTourJ2Tir())
-            instr = new Text("Cliquez sur un bateau vous appartenant pour tirer, " + a2.getNom() + ".");
+            instr = new Text(a2.getNom() + "\nCliquez sur un bateau vous appartenant pour tirer.");
         
         if(CTRL.isTourJ1Move())
-            instr = new Text("Vous pouvez maintenant déplacer un de vos bateaux, " + a1.getNom() + ".");
+            instr = new Text(a1.getNom() + "\nVous pouvez maintenant déplacer un de vos bateaux.");
         
         if(CTRL.isTourJ2Move())
-            instr = new Text("Vous pouvez maintenant déplacer un de vos bateaux, " + a2.getNom() + ".");
+            instr = new Text(a2.getNom() + "\nVous pouvez maintenant déplacer un de vos bateaux.");
         
         if(npVueP.partieFinie())
             for(Armee a : npVueP.getListArmees())
@@ -212,16 +175,19 @@ public class VuePartie extends BorderPane implements Observer {
             String y = Integer.toString(i + 1);
             Text desChiffres;
             Text desLettres;
-                desChiffres = new Text("\n\n\n" + y + " ");
-                desLettres = new Text("      " + x + "\n\n\n");
-                desChiffres.setFont(Font.font("Monospaced",18));
-                desChiffres.setTextAlignment(TextAlignment.LEFT);
-                desChiffres.setFill(Color.CYAN);
-                desLettres.setFont(Font.font("Monospaced",18));
-                desLettres.setTextAlignment(TextAlignment.RIGHT);
-                desLettres.setFill(Color.CYAN);
-                sv.add(desChiffres, 0, i);
-                sv.add(desLettres, i, 0);
+            
+            desChiffres = new Text("\n\n\n" + y + " ");
+            desLettres = new Text("      " + x + "\n\n\n");
+            
+            desChiffres.setFont(Font.font("Monospaced",18));
+            desChiffres.setTextAlignment(TextAlignment.LEFT);
+            desChiffres.setFill(Color.CYAN);
+            desLettres.setFont(Font.font("Monospaced",18));
+            desLettres.setTextAlignment(TextAlignment.RIGHT);
+            desLettres.setFill(Color.CYAN);
+            
+            sv.add(desChiffres, 0, i);
+            sv.add(desLettres, i, 0);
         }
     }
 
@@ -244,8 +210,6 @@ public class VuePartie extends BorderPane implements Observer {
                 for (int l = 0; l < npVueP.getTailleGb(); ++l) 
                     if (npVueP.getBatFromCase(l, c) != null) 
                         this.add(new BoatView(c, l), c, l);
-//                    else if(npVueP.getListDestPoss(b).contains(new Position(l,c)))
-//                        this.add(new MoveBoxView(c, l),c,l);
                     else 
                         this.add(new EmptyBoxView(c, l), c , l);
             
@@ -269,9 +233,8 @@ public class VuePartie extends BorderPane implements Observer {
             List<Position> list = npVueP.getListDestPoss(b);
             for (Position p : list) {
                 int x = p.getPosY();int y = p.getPosX();
-            if(npVueP.caseAccessible(x, y))
-                this.add(new SeaView.MoveBoxView(p.getPosX(),p.getPosY()), 
-                         x, y);
+            if(npVueP.caseAccessible(y, x))
+                this.add(new SeaView.MoveBoxView(y, x), x, y);
             }
         }
         
@@ -283,7 +246,7 @@ public class VuePartie extends BorderPane implements Observer {
         }
 
         // La vue d'une "case" vide
-            private class EmptyBoxView extends BoxView {
+        private class EmptyBoxView extends BoxView {
             public EmptyBoxView(int x, int y) {
                 if(modeDebug){
                     Case c = npVueP.getCaseGb(y, x);
@@ -296,6 +259,7 @@ public class VuePartie extends BorderPane implements Observer {
                     getStyleClass().add("empty");
                 setOnMouseClicked(e -> CTRL.moveBoatClicked(x, y));
             }
+            
         }
         
         private class BoatView extends BoxView{
@@ -316,7 +280,6 @@ public class VuePartie extends BorderPane implements Observer {
             
         private void boatType(Position p){
             Bateau b = npVueP.getBatFromPos(p);
-            
             if(b != null){   
                 if(npVueP.checkBatBonneArmee(a1, p)){
                     if(b.getTypeB() == TypeB.GRAND)

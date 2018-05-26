@@ -107,7 +107,6 @@ public class ControleurFx extends Application {
             tir(y, x);
         else 
             clickOnBoatToMove(y, x);
-        np.setChangedAndNotify();
     }
     
     public void tir(int x, int y){
@@ -129,7 +128,6 @@ public class ControleurFx extends Application {
             moveBoatClickedA1(y, x);
         if(tourJ2Move)
             moveBoatClickedA2(y, x);
-        np.setChangedAndNotify();
     }
     
     // clique sur une case vide pour placer le bateau sélectionné manuellemt
@@ -147,7 +145,9 @@ public class ControleurFx extends Application {
             setTirFiniJ1(true);
             setTourJ1Move(true);
             return true;
-        } return false;
+        } 
+        np.setChangedAndNotify();
+        return false;
     }
     
     public boolean tirA2(int x, int y){
@@ -158,7 +158,9 @@ public class ControleurFx extends Application {
             setTirFiniJ2(true);
             setTourJ2Move(true);
             return true;
-        } return false;
+        } 
+        np.setChangedAndNotify();
+        return false;
     }
     
     private void selectBatA1(int x, int y){
@@ -167,6 +169,7 @@ public class ControleurFx extends Application {
             posBatChoisi = p;
         else
             posBatChoisi = null;
+        np.setChangedAndNotify();
     }
     
     private void selectBatA2(int x, int y){
@@ -176,6 +179,7 @@ public class ControleurFx extends Application {
                 posBatChoisi = p;
             else
                 posBatChoisi = null;
+        np.setChangedAndNotify();
     }
     
     private void moveBoatClickedA1(int x, int y){
@@ -189,6 +193,7 @@ public class ControleurFx extends Application {
             setTourJ2Tir(true);
             
         }
+        np.setChangedAndNotify();
     }
     
     private void moveBoatClickedA2(int x, int y){
@@ -201,6 +206,7 @@ public class ControleurFx extends Application {
             posBatChoisi = null;
             setTourJ1Tir(true);
         }
+        np.setChangedAndNotify();
     }
     
     private void putBoatA1(List<Bateau> list, int x, int y){
