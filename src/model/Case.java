@@ -29,10 +29,6 @@ public class Case {
         this.empty = false;
     }
     
-    public boolean isEmpty(){
-        return this.empty;
-    }
-    
     public Bateau getBat() {
         return bat;
     }
@@ -49,6 +45,26 @@ public class Case {
         return mine.getTypeM();
     }
 
+    public boolean isBatOnMineA(){
+        return bat != null && mine != null && mine.getTypeM() == TypeM.ATOMIQUE;
+    }
+    
+    public boolean isBatOnMineN(){
+        return bat != null && mine != null && mine.getTypeM() == TypeM.NORMALE;
+    }
+    
+    public boolean isAccessible() {
+        return bat == null && !isBatOnMineA();
+    }    
+    
+    public boolean isRadioactive(){
+        return !this.isAccessible();
+    }
+    
+    public boolean isEmpty(){
+        return this.empty;
+    }
+    
     public void setEmpty(boolean b){
         this.empty = b;
     }
@@ -61,19 +77,4 @@ public class Case {
     public void setMine(Mine mine) {
         this.mine = mine;
     }
-    
-    public boolean explosionMineA(){
-        return bat != null && mine.getTypeMAtom() != null;
-    }
-    
-    public boolean explosionMineN(){
-        return bat != null && mine.getTypeMNormale() != null;
-    }
-    
-    public boolean caseAccessible() {
-        return bat == null && !explosionMineA();
-    }
-    
-    
-    
 }

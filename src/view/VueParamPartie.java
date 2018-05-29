@@ -45,14 +45,21 @@ public class VueParamPartie extends VBox {
                 size.requestFocus(); // Laisse le focus au TextField
             }); 
         
-        CheckBox checkbox = new CheckBox("Disposer les vaisseaux MANUELLEMENT");
-        checkbox.setIndeterminate(false);
+        CheckBox placmt = new CheckBox("Disposer les vaisseaux MANUELLEMENT");
+        placmt.setIndeterminate(false);
         
-        checkbox.setOnAction(e -> {
+        placmt.setOnAction(e -> {
             control.setPlacementAuto(false);
         });
         
-        getChildren().addAll(j1, j2, size, bt, checkbox);
+        CheckBox modeDebug = new CheckBox("mode debug");
+        modeDebug.setIndeterminate(false);
+        
+        modeDebug.setOnAction(e -> {
+            control.setModeDebug(true);
+        });
+        
+        getChildren().addAll(j1, j2, size, bt, placmt, modeDebug);
  
         setAlignment(Pos.CENTER_LEFT);
         setPadding(new Insets(20));

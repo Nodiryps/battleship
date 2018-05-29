@@ -27,8 +27,12 @@ public class Controleur {
     public NouvPartie getNpCtrl() {
         return this.np;
     }
+    
+    
 
     public void lancer() {
+        v.setModeDebug(true);
+        
         np.addObserver(v);
         np.setChangedAndNotify();
 

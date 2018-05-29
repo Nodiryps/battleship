@@ -77,7 +77,8 @@ public class Armee  {
     }
     
     public void setPosBatFromList(int x, int y, int i){
-        getBatFromList(i).setPos(x, y);
+        Position p = new Position(x, y);
+        getBatFromList(i).setPos(p);
     }
     
 }

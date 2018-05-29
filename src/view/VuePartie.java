@@ -42,7 +42,7 @@ public class VuePartie extends BorderPane implements Observer {
     private VBox vboxEA1;
     private VBox vboxEA2;
     private VBox vboxInstr;
-    private boolean modeDebug = false;
+    private boolean modeDebug;
     private Position posB;
     
     public VuePartie(Stage stage, int size, ControleurFx ctrl) {
@@ -51,6 +51,7 @@ public class VuePartie extends BorderPane implements Observer {
         a1 = CTRL.getArmee1();
         a2 = CTRL.getArmee2();
         SIZE = size +1;
+        modeDebug = CTRL.getModeDebug();
         
         sv = new SeaView();
         settingsSeaview(sv);
@@ -121,7 +122,7 @@ public class VuePartie extends BorderPane implements Observer {
                                 + b.getTypeB() + "\t\t"
                                 + (b.getPv()*1.0 / b.getMaxPv())*100 + "%"
                                 + "\nPortée du tir: " + porteeTir(b)
-                                + "\n");
+                                + "\n\n");
             vb.getChildren().add(contentTab);
         }
     }
@@ -253,11 +254,13 @@ public class VuePartie extends BorderPane implements Observer {
                     if(c.getMine() != null)
                         if(c.getTypeMine() == TypeM.NORMALE)
                             getStyleClass().add("mineN");
-                        else 
+                        else if(c.getTypeMine() == TypeM.ATOMIQUE)
                             getStyleClass().add("mineA");
+                    else
+                        getStyleClass().add("empty");
                 }else
                     getStyleClass().add("empty");
-                setOnMouseClicked(e -> CTRL.moveBoatClicked(x, y));
+//                setOnMouseClicked(e -> CTRL.moveBoatClicked(x, y));
             }
             
         }

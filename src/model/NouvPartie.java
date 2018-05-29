@@ -23,6 +23,7 @@ public class NouvPartie extends Observable {
     private Gameboard gb;
     private final List<Armee> listArmees;
     private List<Mine> listeMines;
+    private List<Position> listePosRadioActives = new LinkedList<>();
 
     public NouvPartie(Builder bldr) {
         this.bldr = bldr;
@@ -43,6 +44,10 @@ public class NouvPartie extends Observable {
             noms.add(s);
         }
         return new NouvPartie(new Builder(size, noms, auto));
+    }
+
+    public List<Position> getListePosRadioActives() {
+        return listePosRadioActives;
     }
    
     public int getTailleGb() {
@@ -79,15 +84,15 @@ public class NouvPartie extends Observable {
     }
     
     public boolean caseAccessible(int x, int y) {
-        return gb.getMer()[x][y].caseAccessible();
+        return gb.getMer()[x][y].isAccessible();
     }
     
     public boolean caseMineeN(Position p){
-        return gb.getMer()[p.getPosX()][p.getPosY()].explosionMineN();
+        return gb.getMer()[p.getPosX()][p.getPosY()].isBatOnMineN();
     }
 
     public boolean caseMineeA(Position p){
-        return gb.getMer()[p.getPosX()][p.getPosY()].explosionMineA();
+        return gb.getMer()[p.getPosX()][p.getPosY()].isBatOnMineA();
     }
     
     public List<Armee> getListArmees() {
@@ -159,8 +164,9 @@ public class NouvPartie extends Observable {
     
     public boolean posValide(String s) {
         Position p = convertStrToPos(s);
-        return (p.getPosX() >= 0 && p.getPosX() < gb.getTAILLE()) ||
-               (p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE());
+        return (!listePosRadioActives.contains(p) && 
+               (p.getPosX() >= 0 && p.getPosX() < gb.getTAILLE()) ||
+               (p.getPosY() >= 0 && p.getPosY() < gb.getTAILLE()));
     }
     
     public void moveBat(Armee a, Bateau b, String destChoisi) {
@@ -168,10 +174,6 @@ public class NouvPartie extends Observable {
         if (getListDestPoss(b).contains(p)) 
             if (posValide(convertPosToStr(b.getXY())) && caseAccessible(p.getPosX(), p.getPosY())) {
                 b.setPos(p);
-//                b.getXY().setPosX(p.getPosX());
-//                b.getXY().setPosY(p.getPosY());
-//                b.setPos(b.getXY().getPosX(), b.getXY().getPosY());
-                
                 gestionExplosionsMines(a, b);
                 updateMer(listArmees);
                 setChangedAndNotify(this);
@@ -186,17 +188,35 @@ public class NouvPartie extends Observable {
     
     public boolean gestionExplosionsMines(Armee a, Bateau b){
         Case c = this.getCaseGb(b.getX(), b.getY());
-        if(c.explosionMineN()){
+        Mine m = c.getMine();
+        if(c.isBatOnMineN()){
             b.touché();
             if(b.getPv() <= 0)
                 this.coulé(a,b);
+            removeMineAfterExpl(c);
             return true;
         }
-        if(c.explosionMineA()){
+        if(c.isBatOnMineA()){
             this.coulé(a,b);
+            listePosRadioActives.add(m.getXY());
+            removeMineAfterExpl(c);
             return true;
         }
+        updateMer(listArmees);
         return false;
+    }
+    
+    private void removeMineAfterExpl(Case c){
+        Mine mineExpl = c.getMine();
+        List<Mine> list = new LinkedList<>();
+        for (Mine m : listeMines) {
+            list.add(m);
+        }
+        for (Mine m : list) {
+            if (m.equals(mineExpl)) {
+                listeMines.remove(mineExpl);
+            }
+        }
     }
     
     public void updateMer(List<Armee> list){

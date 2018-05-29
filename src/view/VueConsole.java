@@ -18,6 +18,7 @@ import java.util.Observer;
 import java.util.Scanner;
 import static jdk.nashorn.internal.objects.NativeString.toUpperCase;
 import model.Case;
+import model.Mine;
 import model.TypeM;
 
 
@@ -40,24 +41,29 @@ public class VueConsole implements Observer {
     private static final Scanner insert = new Scanner(System.in);
     private final Controleur ctrl;
     private NouvPartie ctrlNP;
+    private boolean modeDebug;
     
     public VueConsole(Controleur c){
         this.ctrl = c;
         this.ctrlNP = ctrl.getNpCtrl(); 
     }
     
+    public void setModeDebug(boolean b){
+        this.modeDebug = b;
+    }
+    
     public void affMer() {
         print("\n   ");
         for (int i = 0; i < ctrlNP.getTailleGb(); i++) {
-            print(ctrlNP.getAxeXGb()[i] + " " + Couleur.RESET);
+            print(Couleur.RESET + "" + ctrlNP.getAxeXGb()[i] + " " + Couleur.RESET);
         }
         printLN("");
         for (int i = 0; i < ctrlNP.getTailleGb(); i++) {
-            print(ctrlNP.getAxeYGb()[i] + " " + Couleur.RESET);
+            print(Couleur.RESET + "" + ctrlNP.getAxeYGb()[i] + " " + Couleur.RESET);
             for (int j = 0; j < ctrlNP.getTailleGb(); j++) {
-                print(Couleur.RESET + "|" + toString(ctrlNP.getCaseGb(i,j)));
+                print(Couleur.RESET + "|" + toString(ctrlNP.getCaseGb(i,j)) + Couleur.RESET + "");
             }
-            printLN(Couleur.RESET + "|");
+            printLN(Couleur.RESET + "|" + Couleur.RESET + "");
         }
     }
 
@@ -167,31 +173,41 @@ public class VueConsole implements Observer {
     }
 
     private String toString(Case c) {
-        Bateau batCase = c.getBat();
-        if (batCase != null) {
-            if (null == c.getTypeBat()) {
+        Bateau caseBat = c.getBat();
+        Mine caseMine = c.getMine();
+        
+        if (caseBat != null) {
+            if (c.getTypeBat() == null) {
                 return " ";
             } else switch (c.getTypeBat()) {
                 case PETIT:
                     for(Armee a : ctrlNP.getListArmees())
                         for(Bateau b : a.getListBat())
-                            if(batCase.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(0)))
+                            if(caseBat.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(0)))
                                 return Couleur.PURPLE + "b";
-                            else if(batCase.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(1)))
+                            else if(caseBat.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(1)))
                                 return Couleur.YELLOW + "b";
                     break;
                 case GRAND:
                     for(Armee a : ctrlNP.getListArmees())
                         for(Bateau b : a.getListBat())
-                            if(batCase.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(0)))
+                            if(caseBat.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(0)))
                                 return Couleur.PURPLE + "B";
-                            else if(batCase.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(1)))
+                            else if(caseBat.getXY().equals(b.getXY()) && a.equals(ctrlNP.getArmeeFromList(1)))
                                 return Couleur.YELLOW + "B";
                     break;
-                default:
-                    return " ";
             }
-        }
+        } if(modeDebug)
+            if (caseMine != null) 
+            if (c.getTypeMine()== null) 
+                return " ";
+             else switch (c.getTypeMine()) {
+                case NORMALE:
+                    return "m";
+                case ATOMIQUE:
+                    return "M";
+            }
+        
         return " ";
     }
     

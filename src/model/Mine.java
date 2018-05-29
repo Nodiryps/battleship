@@ -13,7 +13,6 @@ public abstract class Mine implements Positionnable {
     
     protected TypeM type;
     protected Position posM = new Position(0, 0);
-    protected boolean debugMode = false;
 
     public Mine(TypeM type){
         this.type = type;
@@ -21,14 +20,6 @@ public abstract class Mine implements Positionnable {
     
     public TypeM getTypeM() {
         return type;
-    }
-    
-    public TypeM getTypeMAtom() {
-        return TypeM.ATOMIQUE;
-    }
-    
-    public TypeM getTypeMNormale(){
-        return TypeM.NORMALE;
     }
     
     public Position getXY() {
@@ -54,7 +45,4 @@ public abstract class Mine implements Positionnable {
     public void setY(int y) {
         this.posM.setPosY(y);
     }
-    
-       
-    
 }

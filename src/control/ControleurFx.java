@@ -60,12 +60,15 @@ public class ControleurFx extends Application {
     private boolean tirFiniJ1 = false;
     private boolean tirFiniJ2 = false;
     
+    private boolean modeDebug;
+    
     public static void main(String[] args) {
         launch(args);
     }
     
     @Override
     public void start(Stage primaryStage) {
+        
         stage = primaryStage;
         new VueParamPartie(stage, this); // Fenêtre initiale (saisie taille)
     }
@@ -364,13 +367,21 @@ public class ControleurFx extends Application {
     public boolean isTirFiniJ1() {
         return tirFiniJ1;
     }
+    
+    public boolean isTirFiniJ2() {
+        return tirFiniJ2;
+    }
+    
+    public boolean getModeDebug(){
+        return this.modeDebug;
+    }
+    
+    public void setModeDebug(boolean b){
+        this.modeDebug = b;
+    }
 
     public void setTirFiniJ1(boolean tirFiniJ1) {
         this.tirFiniJ1 = tirFiniJ1;
-    }
-
-    public boolean isTirFiniJ2() {
-        return tirFiniJ2;
     }
 
     public void setTirFiniJ2(boolean tirFiniJ2) {
